@@ -1155,6 +1155,17 @@ input[type="number"] {
     transition: all 0.3s ease;
 }
 
+.ge-card-new {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
+    animation: gePulse 2s infinite ease-in-out;
+}
+@keyframes gePulse {
+    0% { border-color: #10b981; }
+    50% { border-color: #34d399; }
+    100% { border-color: #10b981; }
+}
+
 .ge-email-card:hover {
     border-color: rgba(99, 102, 241, 0.3);
 }

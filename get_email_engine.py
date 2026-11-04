@@ -347,11 +347,11 @@ def connect_imap(email_address, password):
         try:
             use_ssl = cfg.get('ssl', True)
             if cfg['port'] == 993 and use_ssl is not False:
-                mail = imaplib.IMAP4_SSL(cfg['server'], cfg['port'])
+                mail = imaplib.IMAP4_SSL(cfg['server'], cfg['port'], timeout=8)
             elif use_ssl is False:
-                mail = imaplib.IMAP4(cfg['server'], cfg['port'])
+                mail = imaplib.IMAP4(cfg['server'], cfg['port'], timeout=8)
             else:
-                mail = imaplib.IMAP4(cfg['server'], cfg['port'])
+                mail = imaplib.IMAP4(cfg['server'], cfg['port'], timeout=8)
                 mail.starttls()
             mail.login(email_address, password)
             return mail, None
@@ -392,8 +392,9 @@ def connect_imap(email_address, password):
 
 def fetch_emails(email_address, password, senders=None, keywords=None, search_days=365):
     """
-    Connect to IMAP, search for emails by senders and/or keywords, return top 20 (newest first) with full body.
-    Returns dict: {success, error, emails: [{subject, from, date, body_html, body_text, links}]}
+    Connect to IMAP, search for emails by senders and/or keywords, return top 10 (newest first) with full body.
+    Ultra-optimized: sorts UIDs in-memory (0 network roundtrips) instead of slow sequential INTERNALDATE fetches.
+    Returns dict: {success, error, emails: [{uid, subject, from, date, body_html, body_text, links}]}
     """
     senders = senders or []
     keywords = keywords or []
@@ -401,8 +402,7 @@ def fetch_emails(email_address, password, senders=None, keywords=None, search_da
     if not EMAIL_REGEX.match(email_address):
         return {"success": False, "error": "Format email tidak valid.", "emails": []}
 
-    if not senders and not keywords:
-        return {"success": False, "error": "Isi minimal salah satu: sender atau keyword.", "emails": []}
+    is_all_search = (senders == ["*"]) or (not senders and not keywords)
 
     # Connect using the unified connect_imap function
     mail, error = connect_imap(email_address, password)
@@ -414,52 +414,58 @@ def fetch_emails(email_address, password, senders=None, keywords=None, search_da
     try:
         mail.select("INBOX", readonly=True)
 
-        # Search by senders and keywords
         all_uids = set()
-        for sender in senders:
+        if is_all_search:
             try:
-                criteria = f'(SINCE "{since_date}" FROM "{sender}")'
-                status, messages = mail.uid('SEARCH', None, criteria)
-                if status == "OK" and messages[0]:
+                status, messages = mail.uid('SEARCH', None, f'(SINCE "{since_date}")')
+                if status == "OK" and messages and messages[0]:
                     all_uids.update(messages[0].split())
             except Exception:
-                continue
+                try:
+                    status, messages = mail.uid('SEARCH', None, 'ALL')
+                    if status == "OK" and messages and messages[0]:
+                        all_uids.update(messages[0].split())
+                except Exception:
+                    pass
+        else:
+            for sender in senders:
+                clean_s = sender.lstrip("@") if sender.startswith("@") else sender
+                try:
+                    criteria = f'(SINCE "{since_date}" FROM "{clean_s}")'
+                    status, messages = mail.uid('SEARCH', None, criteria)
+                    if status == "OK" and messages and messages[0]:
+                        all_uids.update(messages[0].split())
+                except Exception:
+                    continue
 
-        for kw in keywords:
-            try:
-                criteria = f'(SINCE "{since_date}" SUBJECT "{kw}")'
-                status, messages = mail.uid('SEARCH', None, criteria)
-                if status == "OK" and messages[0]:
-                    all_uids.update(messages[0].split())
-            except Exception:
-                continue
+            for kw in keywords:
+                try:
+                    criteria = f'(SINCE "{since_date}" SUBJECT "{kw}")'
+                    status, messages = mail.uid('SEARCH', None, criteria)
+                    if status == "OK" and messages and messages[0]:
+                        all_uids.update(messages[0].split())
+                except Exception:
+                    continue
 
         if not all_uids:
-            mail.logout()
+            try:
+                mail.logout()
+            except Exception:
+                pass
             return {"success": True, "error": None, "emails": [], "message": "Tidak ada email ditemukan."}
 
-        # Get dates to sort (newest first)
-        uid_dates = []
-        for uid in all_uids:
+        # UIDs are strictly ascending integers in IMAP (RFC 3501 Section 2.3.1.1).
+        # Sort in-memory directly — 0 network roundtrips! Instant!
+        def _uid_to_int(u):
             try:
-                _, date_data = mail.uid('FETCH', uid, '(INTERNALDATE)')
-                if date_data and date_data[0]:
-                    date_match = re.search(r'INTERNALDATE "([^"]+)"', date_data[0].decode())
-                    if date_match:
-                        from email.utils import parsedate_to_datetime
-                        dt = parsedate_to_datetime(date_match.group(1))
-                        uid_dates.append((uid, dt))
-                    else:
-                        uid_dates.append((uid, datetime.min))
+                return int(u.decode() if isinstance(u, bytes) else str(u))
             except Exception:
-                uid_dates.append((uid, datetime.min))
+                return 0
 
-        # Sort by date, newest first, take top 20
-        uid_dates.sort(key=lambda x: x[1], reverse=True)
-        top_uids = uid_dates[:20]
+        sorted_uids = sorted(all_uids, key=_uid_to_int, reverse=True)[:10]
 
         emails_result = []
-        for uid, dt in top_uids:
+        for uid in sorted_uids:
             try:
                 _, msg_data = mail.uid('FETCH', uid, '(RFC822)')
                 if msg_data and isinstance(msg_data[0], tuple):
@@ -469,28 +475,22 @@ def fetch_emails(email_address, password, senders=None, keywords=None, search_da
                     from_header = decode_mime_words(msg.get("From", ""))
                     date_header = decode_mime_words(msg.get("Date", ""))
 
-                    # Check if sender matches (skip if using keyword-only search)
                     _name, from_addr = email.utils.parseaddr(from_header)
-                    if senders and not sender_matches(from_addr, senders):
-                        # Only filter by sender if senders were specified
+                    if not is_all_search and senders and not sender_matches(from_addr, senders):
                         continue
 
                     body_html, body_text, links = get_email_body_html(msg)
 
-                    # Format date nicely
                     try:
                         dt_obj = email.utils.parsedate_to_datetime(date_header)
                         formatted_date = dt_obj.strftime('%d %b %Y, %H:%M')
                     except Exception:
                         formatted_date = date_header
 
-                    # Format links for JSON response
-                    links_data = []
-                    for label, url in links:
-                        links_data.append({
-                            "label": label if label and label != url else "",
-                            "url": url
-                        })
+                    links_data = [
+                        {"label": label if label and label != url else "", "url": url}
+                        for label, url in links
+                    ]
 
                     emails_result.append({
                         "uid": uid.decode() if isinstance(uid, bytes) else str(uid),
@@ -504,7 +504,10 @@ def fetch_emails(email_address, password, senders=None, keywords=None, search_da
             except Exception:
                 continue
 
-        mail.logout()
+        try:
+            mail.logout()
+        except Exception:
+            pass
         return {"success": True, "error": None, "emails": emails_result}
 
     except Exception as e:
