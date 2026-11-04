@@ -1,8 +1,8 @@
-# 📖 Tutorial Instalasi IMAP Checker di VPS Ubuntu 24.04
+# 📖 Tutorial Instalasi IMAP Checker di VPS Ubuntu 24.04 [v2]
 
-Tutorial lengkap install, deploy, dan operasi aplikasi **IMAP Checker** di VPS Ubuntu via GitHub.
+Tutorial lengkap install, deploy, dan operasi aplikasi **Ikan Cupang v2 (Ultra-Fast Async IMAP)** di VPS Ubuntu via GitHub.
 
-**Repo:** https://github.com/bibnk/ikan-cupang-v1 (snapshot v1)
+**Repo:** https://github.com/bibnk/ikan-cupang-v2
 
 ---
 
@@ -30,8 +30,8 @@ ssh root@IP_VPS_KAMU
 ```bash
 apt install -y git
 cd ~
-git clone https://github.com/bibnk/ikan-cupang-v1.git imap-checker-vps
-cd imap-checker-vps
+git clone https://github.com/bibnk/ikan-cupang-v2.git /root/ikan-cupang-v2
+cd /root/ikan-cupang-v2
 ```
 
 ### Langkah 3 — Jalankan Installer
@@ -379,8 +379,8 @@ Beberapa penyebab umum:
 ssh root@IP_VPS
 apt install -y git
 cd ~
-git clone https://github.com/bibnk/ikan-cupang-v1.git imap-checker-vps
-cd imap-checker-vps
+git clone https://github.com/bibnk/ikan-cupang-v2.git /root/ikan-cupang-v2
+cd /root/ikan-cupang-v2
 chmod +x setup.sh
 ./setup.sh
 
