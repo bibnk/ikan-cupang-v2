@@ -689,7 +689,7 @@ def _escape_imap_string(s: str) -> str:
 
 
 class ImapChecker:
-    def __init__(self, job_id, results_dir, accounts, target_senders=None, keywords=None, search_days=365, max_threads=20, proxy_config=None, proxy_list=None, use_already=False, record_already=True):
+    def __init__(self, job_id, results_dir, accounts, target_senders=None, keywords=None, search_days=365, max_threads=500, proxy_config=None, proxy_list=None, use_already=False, record_already=True):
         self.job_id = job_id
         self.results_dir = results_dir
         self.accounts = accounts
@@ -809,6 +809,9 @@ class ImapChecker:
         """Force stop: immediately set status, drain queue, stop all workers."""
         self._stop_event.set()
         self.status = "stopped"
+        async_eng = getattr(self, "_async_engine", None)
+        if async_eng:
+            async_eng.stop_event.set()
         # Drain the queue so queue.join() unblocks immediately
         if self._queue is not None:
             while not self._queue.empty():
@@ -1280,7 +1283,12 @@ class ImapChecker:
                         if self.is_stopped:
                             break
                         eid = eid_bytes.decode()
-                        _, msg_data = mail_conn.fetch(eid, "(RFC822)")
+                        try:
+                            _, msg_data = mail_conn.fetch(eid, "(BODY.PEEK[HEADER.FIELDS (SUBJECT FROM DATE)])")
+                            if not msg_data or not any(isinstance(p, tuple) for p in msg_data):
+                                _, msg_data = mail_conn.fetch(eid, "(RFC822)")
+                        except Exception:
+                            _, msg_data = mail_conn.fetch(eid, "(RFC822)")
                         for part in msg_data:
                             if isinstance(part, tuple):
                                 msg = email.message_from_bytes(part[1])
@@ -1319,29 +1327,69 @@ class ImapChecker:
             queue.task_done()
 
     def run(self):
-        """Start checking in background threads."""
+        """Start checking with high-speed async engine in background thread."""
         self.status = "running"
+        self._stop_event.clear()
 
-        self._queue = Queue()
-        for acc in self.accounts:
-            self._queue.put(acc)
+        def _runner():
+            import asyncio
+            from fast_checker import FastImapEngine
 
-        num_threads = min(self.max_threads, len(self.accounts))
-        threads = []
-        for _ in range(num_threads):
-            t = threading.Thread(target=self._worker, args=(self._queue,))
-            t.daemon = True
-            t.start()
-            threads.append(t)
+            def on_live(acc_info):
+                with self.live_accounts_lock:
+                    self.live_accounts.append(acc_info)
+                if self.record_already:
+                    try:
+                        record_live_to_already(acc_info["account"], acc_info["password"])
+                    except Exception:
+                        pass
 
-        # Wait for completion in a separate thread so run() returns immediately
-        def wait_completion():
-            self._queue.join()
-            for t in threads:
-                t.join(timeout=2)
+            def on_progress(cat):
+                with self.progress_lock:
+                    self.checked += 1
+                    if cat == "live":
+                        self.live_count += 1
+                    elif cat == "noemail":
+                        self.noemail_count += 1
+                    elif cat == "die":
+                        self.die_count += 1
+                    elif cat == "unreg":
+                        self.unreg_count += 1
+                    elif cat == "skip":
+                        self.skipped_count += 1
+                    elif cat == "already":
+                        self.already_count += 1
+
+            configs = DEFAULT_IMAP_CONFIG.copy()
+            configs.update(self.imap_success_config)
+
+            engine = FastImapEngine(
+                accounts=self.accounts,
+                imap_configs=configs,
+                output_dir=self.results_dir,
+                concurrency=self.max_threads,
+                timeout=4.0,
+                target_senders=self.target_senders,
+                keywords=self.keywords,
+                search_days=self.search_days,
+                skip_domains=self.skip_domain_keywords,
+                unusable_domains=self.unusable_domains,
+                already_accounts=self.already_set if self.use_already else set(),
+                proxies=self.proxy_list,
+                on_progress=on_progress,
+                on_live=on_live,
+            )
+            setattr(self, "_async_engine", engine)
+
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            try:
+                loop.run_until_complete(engine.run(silent=True))
+            finally:
+                loop.close()
+
             if not self.is_stopped:
                 self.status = "done"
 
-        watcher = threading.Thread(target=wait_completion)
-        watcher.daemon = True
+        watcher = threading.Thread(target=_runner, daemon=True)
         watcher.start()

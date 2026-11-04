@@ -562,13 +562,11 @@ def start_check():
     keywords_text = data.get("keywords", "").strip()
     proxies_text = data.get("proxies", "").strip()
     search_days = int(data.get("search_days", 365))
-    max_threads = int(data.get("max_threads", 20))
+    max_threads = int(data.get("max_threads", 500))
     use_already = bool(data.get("use_already", False))
 
     if not accounts_text:
         return jsonify({"error": "Accounts tidak boleh kosong"}), 400
-    if not senders_text and not keywords_text:
-        return jsonify({"error": "Isi minimal salah satu: Target Sender atau Keyword"}), 400
 
     # Count raw non-empty input lines BEFORE parsing for dedup-stats feedback.
     raw_input_lines = sum(
