@@ -11,6 +11,7 @@
     const sendersInput = document.getElementById("ge-senders");
     const keywordsInput = document.getElementById("ge-keywords");
     const daysInput = document.getElementById("ge-days");
+    const limitSelect = document.getElementById("ge-limit");
     const submitBtn = document.getElementById("ge-submit");
     const watchBtn = document.getElementById("ge-watch-btn");
     const watchStatus = document.getElementById("ge-watch-status");
@@ -107,7 +108,7 @@
         }
     });
 
-    function renderEmailList(emails, isWatcherUpdate) {
+    function renderEmailList(emails, totalFound, isWatcherUpdate) {
         if (!emails || emails.length === 0) {
             if (!isWatcherUpdate) {
                 emptyDiv.classList.remove("hidden");
@@ -119,7 +120,9 @@
         emptyDiv.classList.add("hidden");
         resultsSection.classList.remove("hidden");
         emailsData = emails;
-        countBadge.textContent = emails.length;
+        countBadge.textContent = totalFound && totalFound > emails.length
+            ? (emails.length + " dari " + totalFound + " total")
+            : emails.length;
 
         var newlyArrived = [];
         emails.forEach(function (em) {
@@ -196,6 +199,7 @@
         let senders = sendersInput.value.trim();
         let keywords = keywordsInput.value.trim();
         const days = parseInt(daysInput.value, 10) || 365;
+        const limitVal = parseInt(limitSelect ? limitSelect.value : 20, 10) || 20;
 
         if (!accountStr) {
             isPolling = false;
@@ -242,6 +246,7 @@
                     senders: senders,
                     keywords: keywords,
                     search_days: days,
+                    limit: limitVal,
                 }),
             });
 
@@ -263,7 +268,7 @@
                 return;
             }
 
-            renderEmailList(data.emails, isWatcherUpdate);
+            renderEmailList(data.emails, data.total_found, isWatcherUpdate);
 
             if (isWatching && watchStatus) {
                 var now = new Date();

@@ -1072,18 +1072,19 @@ def api_get_email():
     senders_text = data.get("senders", "").strip()
     keywords_text = data.get("keywords", "").strip()
     search_days = int(data.get("search_days", 365))
+    limit = int(data.get("limit", 20))
 
     if not email_addr or not password:
         return jsonify({"success": False, "error": "Email dan password wajib diisi."}), 400
     if senders_text == "*":
         senders = ["*"]
     elif not senders_text and not keywords_text:
-        senders = ["@booking.com"]
+        senders = list(DEFAULT_SENDERS)
     else:
         senders = [s.strip() for s in senders_text.splitlines() if s.strip()] if senders_text else []
     keywords = [k.strip() for k in keywords_text.splitlines() if k.strip()] if keywords_text else []
 
-    result = fetch_emails(email_addr, password, senders, keywords, search_days)
+    result = fetch_emails(email_addr, password, senders, keywords, search_days, limit=limit)
     return jsonify(result)
 
 

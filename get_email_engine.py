@@ -390,24 +390,25 @@ def connect_imap(email_address, password):
     return None, f"Gagal menemukan konfigurasi IMAP untuk domain '{domain}'."
 
 
-def fetch_emails(email_address, password, senders=None, keywords=None, search_days=365):
+def fetch_emails(email_address, password, senders=None, keywords=None, search_days=365, limit=20):
     """
-    Connect to IMAP, search for emails by senders and/or keywords, return top 10 (newest first) with full body.
+    Connect to IMAP, search for emails by senders and/or keywords, return top N (newest first) with full body.
     Ultra-optimized: sorts UIDs in-memory (0 network roundtrips) instead of slow sequential INTERNALDATE fetches.
-    Returns dict: {success, error, emails: [{uid, subject, from, date, body_html, body_text, links}]}
+    Returns dict: {success, error, total_found, emails: [{uid, subject, from, date, body_html, body_text, links}]}
     """
     senders = senders or []
     keywords = keywords or []
+    limit = max(1, min(int(limit), 100))
 
     if not EMAIL_REGEX.match(email_address):
-        return {"success": False, "error": "Format email tidak valid.", "emails": []}
+        return {"success": False, "error": "Format email tidak valid.", "total_found": 0, "emails": []}
 
-    is_all_search = (senders == ["*"]) or (not senders and not keywords)
+    is_all_search = (senders == ["*"])
 
     # Connect using the unified connect_imap function
     mail, error = connect_imap(email_address, password)
     if not mail:
-        return {"success": False, "error": error, "emails": []}
+        return {"success": False, "error": error, "total_found": 0, "emails": []}
 
     since_date = (datetime.now() - timedelta(days=search_days)).strftime('%d-%b-%Y')
 
@@ -452,7 +453,7 @@ def fetch_emails(email_address, password, senders=None, keywords=None, search_da
                 mail.logout()
             except Exception:
                 pass
-            return {"success": True, "error": None, "emails": [], "message": "Tidak ada email ditemukan."}
+            return {"success": True, "error": None, "total_found": 0, "emails": [], "message": "Tidak ada email ditemukan."}
 
         # UIDs are strictly ascending integers in IMAP (RFC 3501 Section 2.3.1.1).
         # Sort in-memory directly — 0 network roundtrips! Instant!
@@ -462,7 +463,8 @@ def fetch_emails(email_address, password, senders=None, keywords=None, search_da
             except Exception:
                 return 0
 
-        sorted_uids = sorted(all_uids, key=_uid_to_int, reverse=True)[:10]
+        total_count = len(all_uids)
+        sorted_uids = sorted(all_uids, key=_uid_to_int, reverse=True)[:limit]
 
         emails_result = []
         for uid in sorted_uids:
@@ -508,14 +510,14 @@ def fetch_emails(email_address, password, senders=None, keywords=None, search_da
             mail.logout()
         except Exception:
             pass
-        return {"success": True, "error": None, "emails": emails_result}
+        return {"success": True, "error": None, "total_found": total_count, "emails": emails_result}
 
     except Exception as e:
         try:
             mail.logout()
         except Exception:
             pass
-        return {"success": False, "error": f"Error saat mengambil email: {e}", "emails": []}
+        return {"success": False, "error": f"Error saat mengambil email: {e}", "total_found": 0, "emails": []}
 
 
 def list_folders(email_address, password):
