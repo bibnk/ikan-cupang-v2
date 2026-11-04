@@ -148,8 +148,7 @@ os.makedirs(JOBS_DIR, exist_ok=True)
 DEFAULT_EXPIRY_DAYS = 3
 EXTEND_DAYS = 7
 
-DEFAULT_SENDERS_TEXT = """@booking.com
-noreply@booking.com
+DEFAULT_SENDERS_TEXT = """noreply@booking.com
 rewards@booking.com
 email.campaign@sg.booking.com
 @account.agoda.com

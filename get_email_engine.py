@@ -275,27 +275,17 @@ def try_imap_variants(domain, email_address, password):
 
 
 def sender_matches(from_address, target_senders):
-    """Check if from_address matches any target sender (exact, @domain, or subdomain)."""
+    """Check if from_address matches any target sender (exact or @domain)."""
     if not from_address:
         return False
     from_lower = from_address.lower()
-    from_domain = from_lower.split("@")[-1] if "@" in from_lower else ""
     for target in target_senders:
         t = target.lower().strip()
-        if not t:
-            continue
-        if t == "*":
-            return True
         if t.startswith("@"):
-            t_domain = t.lstrip("@")
-            if from_domain == t_domain or from_domain.endswith("." + t_domain):
-                return True
             if from_lower.endswith(t):
                 return True
         else:
             if from_lower == t:
-                return True
-            if from_domain == t or from_domain.endswith("." + t):
                 return True
     return False
 
