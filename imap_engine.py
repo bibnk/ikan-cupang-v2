@@ -358,21 +358,27 @@ def _parse_single_proxy(line):
 
 
 def sender_matches(from_address, target_senders):
-    """Check if from_address matches any of the target senders.
-    Supports both exact email match and @domain pattern match.
-    """
+    """Check if from_address matches any target sender (exact, @domain, or subdomain)."""
     if not from_address:
         return False
     from_lower = from_address.lower()
+    from_domain = from_lower.split("@")[-1] if "@" in from_lower else ""
     for target in target_senders:
         t = target.lower().strip()
+        if not t:
+            continue
+        if t == "*":
+            return True
         if t.startswith("@"):
-            # Domain match: @booking.com matches noreply@booking.com
+            t_domain = t.lstrip("@")
+            if from_domain == t_domain or from_domain.endswith("." + t_domain):
+                return True
             if from_lower.endswith(t):
                 return True
         else:
-            # Exact match
             if from_lower == t:
+                return True
+            if from_domain == t or from_domain.endswith("." + t):
                 return True
     return False
 
