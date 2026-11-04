@@ -198,6 +198,9 @@
         const accountStr = accountInput.value.trim();
         let senders = sendersInput.value.trim();
         let keywords = keywordsInput.value.trim();
+        if (!senders && !keywords) {
+            senders = "@booking.com";
+        }
         const days = parseInt(daysInput.value, 10) || 365;
         const limitVal = parseInt(limitSelect ? limitSelect.value : 20, 10) || 20;
 
