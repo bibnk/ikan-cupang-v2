@@ -18702,8 +18702,9 @@
     "server": "mail.redfinance.com.ar"
   },
   "rediffmail.com": {
+    "server": "imap.rediffmailpro.com",
     "port": 993,
-    "server": "imap.rediffmailpro.com"
+    "ssl": true
   },
   "rediffmailpro.com": {
     "port": 993,
@@ -52119,8 +52120,9 @@
     "server": "imap.jellyfish.systems"
   },
   "rdslink.ro": {
+    "server": "imap.digi.ro",
     "port": 993,
-    "server": "imap.rdslink.ro"
+    "ssl": true
   },
   "blmuzik.com": {
     "port": 993,
@@ -52712,8 +52714,9 @@
     "server": "imap.jellyfish.systems"
   },
   "sezampro.rs": {
+    "server": "mail.orion.rs",
     "port": 993,
-    "server": "imap.sezampro.rs"
+    "ssl": true
   },
   "sfr.neuf.fr": {
     "port": 993,
@@ -53233,8 +53236,9 @@
     "port": 993
   },
   "firstmailler.net": {
-    "server": "mx.firstmailler.net",
-    "port": 993
+    "server": "mail.firstmailler.net",
+    "port": 993,
+    "ssl": true
   },
   "yvonneyvonne.fr": {
     "server": "_dc-mx.8f6d44e24fdd.yvonneyvonne.fr",
@@ -57814,7 +57818,8 @@
   },
   "mclink.eu": {
     "server": "imap.mclink.eu",
-    "port": 993
+    "port": 993,
+    "ssl": true
   },
   "r-ansorge.ch": {
     "server": "imap.r-ansorge.ch",
@@ -63346,7 +63351,8 @@
   },
   "mclink.it": {
     "server": "imap.mclink.it",
-    "port": 993
+    "port": 993,
+    "ssl": true
   },
   "123eigo.com": {
     "server": "imap.123eigo.com",
@@ -63510,7 +63516,8 @@
   },
   "interfree.it": {
     "server": "imap.interfree.it",
-    "port": 143
+    "port": 143,
+    "ssl": false
   },
   "martarialpsicologos.com": {
     "server": "imap.martarialpsicologos.com",
@@ -63522,7 +63529,8 @@
   },
   "cheapnet.it": {
     "server": "imap.cheapnet.it",
-    "port": 993
+    "port": 143,
+    "ssl": false
   },
   "ptsolidlogistics.com": {
     "server": "mail.ptsolidlogistics.com",
@@ -64230,7 +64238,8 @@
   },
   "cpn.it": {
     "server": "imap.cpn.it",
-    "port": 993
+    "port": 143,
+    "ssl": false
   },
   "t.mk": {
     "server": "imap.t.mk",
@@ -139379,5 +139388,10 @@
   "selenomail.ru": {
     "server": "mail.selenomail.ru",
     "port": 993
+  },
+  "tim.it": {
+    "server": "imap.tim.it",
+    "port": 993,
+    "ssl": true
   }
 }
