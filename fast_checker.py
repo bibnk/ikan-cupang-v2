@@ -377,7 +377,7 @@ class FastImapEngine:
 
             server = str(cfg.get("server", ""))
             port = int(cfg.get("port", 993))
-            use_ssl = cfg.get("ssl", True)
+            use_ssl = cfg.get("ssl", (port == 993))
             proxy = self._get_proxy()
 
             reader = None
@@ -389,6 +389,17 @@ class FastImapEngine:
                 banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
                 if not banner or not (b"* OK" in banner.upper() or b"IMAP" in banner.upper()):
                     raise ConnectionError("Invalid greeting banner")
+
+                # STARTTLS upgrade if plain connection and required/supported
+                if not use_ssl and b"STARTTLS" in banner.upper() and b"LOGINDISABLED" in banner.upper():
+                    writer.write(b"A0 STARTTLS\r\n")
+                    await writer.drain()
+                    st_resp = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                    if st_resp.upper().startswith(b"A0 OK"):
+                        loop = asyncio.get_running_loop()
+                        protocol = writer.transport.get_protocol()
+                        new_trans = await loop.start_tls(writer.transport, protocol, _GLOBAL_SSL_CTX, server_hostname=server)
+                        setattr(writer, "_transport", new_trans)
 
                 # Send LOGIN
                 cmd = b"A1 LOGIN " + _escape_imap_str(email_addr) + b" " + _escape_imap_str(password) + b"\r\n"

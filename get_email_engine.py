@@ -355,14 +355,16 @@ def connect_imap(email_address, password):
     # Kalau ada config, coba connect dulu
     if cfg:
         try:
-            use_ssl = cfg.get('ssl', True)
-            if cfg['port'] == 993 and use_ssl is not False:
+            use_ssl = cfg.get('ssl', (cfg['port'] == 993))
+            if cfg['port'] == 993:
                 mail = imaplib.IMAP4_SSL(cfg['server'], cfg['port'], timeout=8)
-            elif use_ssl is False:
-                mail = imaplib.IMAP4(cfg['server'], cfg['port'], timeout=8)
             else:
                 mail = imaplib.IMAP4(cfg['server'], cfg['port'], timeout=8)
-                mail.starttls()
+                if 'STARTTLS' in mail.capabilities and ('LOGINDISABLED' in mail.capabilities or use_ssl is True):
+                    try:
+                        mail.starttls()
+                    except Exception:
+                        pass
             mail.login(email_address, password)
             return mail, None
         except Exception:
