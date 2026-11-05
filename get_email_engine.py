@@ -402,9 +402,115 @@ def connect_imap(email_address, password):
     return None, f"Gagal menemukan konfigurasi IMAP untuk domain '{domain}'."
 
 
+def _fetch_emails_pop3(cfg, email_address, password, senders=None, keywords=None, limit=20):
+    """Fetch emails using standard POP3 (for domains without IMAP like rediffmail, i.ua)."""
+    import poplib, ssl
+    senders = senders or []
+    keywords = keywords or []
+    limit = max(1, min(int(limit), 100))
+    is_all_search = (senders == ["*"])
+
+    server = cfg['server']
+    port = int(cfg.get('port', 995))
+    use_ssl = cfg.get('ssl', (port == 995))
+
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+
+    pop = None
+    try:
+        if use_ssl:
+            pop = poplib.POP3_SSL(server, port, context=ctx, timeout=8)
+        else:
+            pop = poplib.POP3(server, port, timeout=8)
+
+        # Login: try full email first, then local part
+        try:
+            pop.user(email_address)
+            pop.pass_(password)
+        except Exception:
+            user_short = email_address.split('@')[0]
+            if use_ssl:
+                pop = poplib.POP3_SSL(server, port, context=ctx, timeout=8)
+            else:
+                pop = poplib.POP3(server, port, timeout=8)
+            pop.user(user_short)
+            pop.pass_(password)
+
+        num_messages, total_size = pop.stat()
+    except Exception as e:
+        if pop:
+            try:
+                pop.quit()
+            except Exception:
+                pass
+        return {"success": False, "error": f"Login gagal: {e}", "total_found": 0, "emails": []}
+
+    results = []
+    matched_count = 0
+    try:
+        check_range = range(num_messages, max(0, num_messages - 100), -1)
+        for msg_num in check_range:
+            resp, lines, octets = pop.retr(msg_num)
+            raw_content = bytes([13, 10]).join(lines)
+            msg = email.message_from_bytes(raw_content)
+
+            subj = decode_mime_words(msg.get("Subject", ""))
+            from_raw = decode_mime_words(msg.get("From", ""))
+            _name, from_addr = email.utils.parseaddr(from_raw)
+            date_raw = decode_mime_words(msg.get("Date", ""))
+            try:
+                dt = email.utils.parsedate_to_datetime(date_raw)
+                fmt_date = dt.strftime('%d-%b-%Y %H:%M')
+            except Exception:
+                fmt_date = date_raw
+
+            matched = False
+            if is_all_search or (not senders and not keywords):
+                matched = True
+            else:
+                if senders and sender_matches(from_addr or from_raw, senders):
+                    matched = True
+                if not matched and keywords:
+                    for kw in keywords:
+                        if kw.lower() in subj.lower():
+                            matched = True
+                            break
+
+            if matched:
+                matched_count += 1
+                if len(results) < limit:
+                    body_html, body_text, links = get_email_body_html(msg)
+                    results.append({
+                        "uid": str(msg_num),
+                        "subject": subj,
+                        "from": from_addr or from_raw,
+                        "date": fmt_date,
+                        "body_html": body_html,
+                        "body_text": body_text,
+                        "links": links
+                    })
+
+        pop.quit()
+        return {
+            "success": True,
+            "error": None,
+            "total_found": matched_count,
+            "emails": results
+        }
+    except Exception as e:
+        if pop:
+            try:
+                pop.quit()
+            except Exception:
+                pass
+        return {"success": True, "error": None, "total_found": len(results), "emails": results}
+
+
 def fetch_emails(email_address, password, senders=None, keywords=None, search_days=365, limit=20):
     """
-    Connect to IMAP, search for emails by senders and/or keywords, return top N (newest first) with full body.
+    Connect to IMAP/POP3, search for emails by senders and/or keywords, return top N (newest first) with full body.
     Ultra-optimized: sorts UIDs in-memory (0 network roundtrips) instead of slow sequential INTERNALDATE fetches.
     Returns dict: {success, error, total_found, emails: [{uid, subject, from, date, body_html, body_text, links}]}
     """
@@ -414,6 +520,11 @@ def fetch_emails(email_address, password, senders=None, keywords=None, search_da
 
     if not EMAIL_REGEX.match(email_address):
         return {"success": False, "error": "Format email tidak valid.", "total_found": 0, "emails": []}
+
+    domain = email_address.split('@')[-1].lower()
+    cfg = get_imap_config(domain)
+    if cfg and (cfg.get("protocol") == "pop3" or cfg.get("port") in (995, 110)):
+        return _fetch_emails_pop3(cfg, email_address, password, senders, keywords, limit)
 
     is_all_search = (senders == ["*"])
 

