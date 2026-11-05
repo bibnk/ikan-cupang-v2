@@ -231,6 +231,22 @@ class FastImapEngine:
             except Exception:
                 pass
 
+            # Try port 143 Plain fallback
+            try:
+                reader, writer = await asyncio.wait_for(
+                    asyncio.open_connection(ip, 143),
+                    timeout=1.5
+                )
+                banner = await asyncio.wait_for(reader.readline(), timeout=1.5)
+                writer.close()
+                await writer.wait_closed()
+                if b"* OK" in banner.upper():
+                    cfg = {"server": host, "port": 143, "ssl": False}
+                    self._runtime_resolved_domains[domain] = cfg
+                    return cfg
+            except Exception:
+                pass
+
         self._unreg_domains_set.add(domain)
         return None
 
@@ -382,14 +398,38 @@ class FastImapEngine:
 
             reader = None
             writer = None
+            banner = None
             try:
                 reader, writer = await self._connect_imap(server, port, use_ssl, proxy)
-
-                # Read greeting banner
                 banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
                 if not banner or not (b"* OK" in banner.upper() or b"IMAP" in banner.upper()):
                     raise ConnectionError("Invalid greeting banner")
+            except Exception:
+                if writer:
+                    try:
+                        writer.close()
+                    except Exception:
+                        pass
+                # Dual-port fallback (993 SSL <-> 143 Plain)
+                alt_port = 143 if port == 993 else 993
+                alt_ssl = (alt_port == 993)
+                try:
+                    reader, writer = await self._connect_imap(server, alt_port, alt_ssl, proxy)
+                    banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                    if banner and (b"* OK" in banner.upper() or b"IMAP" in banner.upper()):
+                        port = alt_port
+                        use_ssl = alt_ssl
+                    else:
+                        raise ConnectionError("Invalid fallback greeting")
+                except Exception:
+                    self.die_count += 1
+                    self.checked += 1
+                    await self.write_queue.put(("die", combo))
+                    if self.on_progress:
+                        self.on_progress("die")
+                    return
 
+            try:
                 # STARTTLS upgrade if plain connection and required/supported
                 if not use_ssl and b"STARTTLS" in banner.upper() and b"LOGINDISABLED" in banner.upper():
                     writer.write(b"A0 STARTTLS\r\n")
