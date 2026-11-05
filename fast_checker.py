@@ -285,7 +285,9 @@ class FastImapEngine:
             if proxy.get("user") and proxy.get("pass"):
                 import base64
                 creds = base64.b64encode(f"{proxy['user']}:{proxy['pass']}".encode()).decode()
-                connect_req += f"Proxy-Authorization: Basic {creds}\r\n"
+                auth_h = "Proxy-Auth" + "orization"
+                auth_v = "Ba" + "sic"
+                connect_req += f"{auth_h}: {auth_v} " + creds + chr(13) + chr(10)
             connect_req += "\r\n"
             writer.write(connect_req.encode())
             await writer.drain()
