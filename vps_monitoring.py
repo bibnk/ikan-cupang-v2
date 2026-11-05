@@ -520,7 +520,8 @@ def stream_sync_all():
         [sys.executable, "-u", script],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        text=True,
+        encoding="utf-8",
+        errors="replace",
         bufsize=1
     )
     if proc.stdout:
