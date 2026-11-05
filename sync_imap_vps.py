@@ -9,6 +9,7 @@ Two-way synchronization:
 
 import os
 import sys
+import time
 import json
 import shutil
 from concurrent.futures import ThreadPoolExecutor
@@ -136,6 +137,8 @@ def fetch_node_data(node):
         "host": host,
         "remote_configs": {},
         "remote_unusable": set(),
+        "remote_already": set(),
+        "is_busy": False,
         "error": None
     }
 
@@ -179,6 +182,25 @@ def fetch_node_data(node):
                         break
             except Exception:
                 continue
+
+        # 3. Fetch already_accounts.txt
+        for rp in REMOTE_ALREADY_PATHS:
+            try:
+                with sftp.open(rp, "r") as f:
+                    content = f.read().decode("utf-8", errors="replace")
+                    lines = [l.strip().lower() for l in content.splitlines() if l.strip()]
+                    result["remote_already"] = set(lines)
+                    break
+            except Exception:
+                continue
+
+        # 4. Check if node is busy running a checker job
+        try:
+            stdin, stdout, stderr = ssh.exec_command("curl -s -m 2 http://127.0.0.1:5000/sbb/api/is-busy")
+            b_out = stdout.read().decode("utf-8", errors="ignore").strip()
+            result["is_busy"] = ('"busy":true' in b_out)
+        except Exception:
+            result["is_busy"] = False
 
         sftp.close()
         ssh.close()
@@ -260,6 +282,19 @@ def push_node_data(node, master_configs, master_unusable):
 
         sftp.close()
 
+        # Check if node is actively running a checker job — wait if busy
+        for _wait_step in range(15):
+            try:
+                stdin, stdout, stderr = ssh.exec_command("curl -s -m 2 http://127.0.0.1:5000/sbb/api/is-busy")
+                b_out = stdout.read().decode("utf-8", errors="ignore").strip()
+                if '"busy":true' in b_out:
+                    print(f"  ⏳ [{name}] ({host}): Sedang melakukan pengecekan empass... Menunggu selesai ({_wait_step*2}s)...", flush=True)
+                    time.sleep(2)
+                else:
+                    break
+            except Exception:
+                break
+
         # Permissions, hot-reload, and safe conditional restart
         fix_cmd = """
         if id imapchecker >/dev/null 2>&1; then
@@ -303,25 +338,38 @@ def main():
     local_unusable_raw = load_local_json(LOCAL_MASTER_UNUSABLE, REPO_UNUSABLE, default=[])
     local_unusable = set(local_unusable_raw if isinstance(local_unusable_raw, list) else local_unusable_raw.keys())
 
-    print(f"[*] Local Master: {len(local_configs):,} valid configs | {len(local_unusable):,} unusable/dead domains\n")
+    # Load local master already accounts
+    local_already = set()
+    for ap in [LOCAL_MASTER_ALREADY, os.path.join(REPO_DIR, "already_accounts.txt"), os.path.join(os.path.dirname(__file__), "already_accounts.txt")]:
+        if os.path.exists(ap):
+            try:
+                with open(ap, "r", encoding="utf-8", errors="replace") as af:
+                    local_already.update(l.strip().lower() for l in af if l.strip())
+                break
+            except Exception:
+                pass
+
+    print(f"[*] Local Master: {len(local_configs):,} valid configs | {len(local_unusable):,} unusable/dead domains | {len(local_already):,} already accounts\n", flush=True)
 
     # Step 1: PULL from all nodes
-    print("--- [1/3] PULLING NEW DATA FROM ALL VPS NODES ---")
+    print("--- [1/3] PULLING NEW DATA FROM ALL VPS NODES ---", flush=True)
     with ThreadPoolExecutor(max_workers=len(nodes) or 1) as pool:
         fetched_results = list(pool.map(fetch_node_data, nodes))
 
     pulled_configs = 0
     pulled_unusable = 0
+    pulled_already = 0
 
     for res in fetched_results:
         name = res["name"]
         host = res["host"]
         if res["error"]:
-            print(f"  ❌ [{name}] ({host}): Offline / Error: {res['error']}")
+            print(f"  ❌ [{name}] ({host}): Belum ke-sync / Offline: {res['error']}", flush=True)
             continue
 
         r_cfg = res["remote_configs"]
         r_unusable = res["remote_unusable"]
+        r_already = res.get("remote_already", set())
 
         new_added = 0
         for dom, cfg in r_cfg.items():
@@ -346,49 +394,68 @@ def main():
             local_unusable.update(new_unusable_keys)
             pulled_unusable += len(new_unusable_keys)
 
-        print(f"  📥 [{name}] ({host}): {len(r_cfg):,} pulled (+{new_added} valid, +{len(new_unusable_keys)} unusable)")
+        new_already_keys = r_already - local_already
+        if new_already_keys:
+            local_already.update(new_already_keys)
+            pulled_already += len(new_already_keys)
 
-    print(f"\n[*] Total new valid configs pulled: +{pulled_configs}")
-    print(f"[*] Total new unusable domains pulled: +{pulled_unusable}")
-    print(f"[*] Unified Local Master: {len(local_configs):,} valid | {len(local_unusable):,} unusable\n")
+        busy_tag = " [⚡ Sedang Cek]" if res.get("is_busy") else ""
+        print(f"  📥 [{name}] ({host}){busy_tag}: {len(r_cfg):,} configs, {len(r_already):,} already (+{new_added} cfg, +{len(new_unusable_keys)} unusable, +{len(new_already_keys)} already)", flush=True)
+
+    print(f"\n[*] Total new valid configs pulled: +{pulled_configs}", flush=True)
+    print(f"[*] Total new unusable domains pulled: +{pulled_unusable}", flush=True)
+    print(f"[*] Total new already accounts pulled: +{pulled_already}", flush=True)
+    print(f"[*] Unified Local Master: {len(local_configs):,} valid | {len(local_unusable):,} unusable | {len(local_already):,} already\n", flush=True)
 
     # Step 2: SAVE LOCAL MASTER
     if pulled_configs > 0:
         save_atomic_json(LOCAL_MASTER_CONFIG, local_configs, REPO_CONFIG)
     if pulled_unusable > 0:
         save_atomic_json(LOCAL_MASTER_UNUSABLE, sorted(list(local_unusable)), REPO_UNUSABLE)
-    print("--- [2/3] SAVED LOCAL MASTER DATABASES ---")
+    if pulled_already > 0:
+        already_content = "\n".join(sorted(list(local_already))) + "\n"
+        for ap in [LOCAL_MASTER_ALREADY, os.path.join(REPO_DIR, "already_accounts.txt"), os.path.join(os.path.dirname(__file__), "already_accounts.txt")]:
+            if os.path.exists(os.path.dirname(ap)):
+                try:
+                    tmp = ap + ".tmp"
+                    with open(tmp, "w", encoding="utf-8") as af:
+                        af.write(already_content)
+                    os.replace(tmp, ap)
+                except Exception:
+                    pass
+    print("--- [2/3] SAVED LOCAL MASTER DATABASES ---", flush=True)
 
     # Step 3: PUSH UNIFIED MASTER TO NODES
-    print("\n--- [3/3] PUSHING UNIFIED MASTER TO NODES ---")
+    print("\n--- [3/3] PUSHING UNIFIED MASTER TO NODES ---", flush=True)
     nodes_to_update = []
     for res in fetched_results:
         if res["error"]:
             continue
         cfg_diff = len(local_configs) - len(res["remote_configs"])
         unusable_diff = len(local_unusable) - len(res["remote_unusable"])
-        if cfg_diff > 0 or unusable_diff > 0:
-            nodes_to_update.append((res["node"], cfg_diff, unusable_diff))
+        already_diff = len(local_already) - len(res.get("remote_already", set()))
+        if cfg_diff > 0 or unusable_diff > 0 or already_diff > 0:
+            nodes_to_update.append((res["node"], cfg_diff, unusable_diff, already_diff))
         else:
-            print(f"  ✔️  [{res['name']}] already 100% in sync (Skipping push)")
+            print(f"  ✔️  [{res['name']}] Sudah 100% ke-sync (Tidak perlu update)", flush=True)
 
     if not nodes_to_update:
-        print("  🎉 All reachable VPS nodes are already 100% in sync!")
+        print("  🎉 Semua VPS yang online sudah 100% ke-sync!", flush=True)
     else:
         with ThreadPoolExecutor(max_workers=len(nodes_to_update) or 1) as pool:
             push_results = list(pool.map(lambda item: push_node_data(item[0], local_configs, local_unusable), nodes_to_update))
 
-        for (node, cdiff, udiff), pres in zip(nodes_to_update, push_results):
+        for (node, cdiff, udiff, adiff), pres in zip(nodes_to_update, push_results):
             name = pres["name"]
             host = pres["host"]
             if pres["updated"]:
-                print(f"  📤 [{name}] ({host}): Successfully PUSHED (+{cdiff} configs, +{udiff} unusable, service reloaded)")
+                print(f"  📤 [{name}] ({host}): Berhasil ke-sync (+{cdiff} configs, +{udiff} unusable, +{adiff} already, service direload)", flush=True)
             else:
-                print(f"  ❌ [{name}] ({host}): Push failed: {pres['error']}")
+                print(f"  ❌ [{name}] ({host}): Belum ke-sync (Gagal push: {pres['error']})", flush=True)
 
-    print("\n" + "=" * 70)
-    print(f" ✅ SYNC FINISHED: Unified Master has {len(local_configs):,} valid & {len(local_unusable):,} unusable domains.")
-    print("=" * 70)
+    print("\n" + "=" * 70, flush=True)
+    print(f" ✅ SYNC FINISHED: Master memiliki {len(local_configs):,} configs & {len(local_already):,} already accounts.", flush=True)
+    print("=" * 70, flush=True)
 
 
 if __name__ == "__main__":

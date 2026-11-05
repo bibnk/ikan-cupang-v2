@@ -744,6 +744,18 @@
                         <span class="mon-stat-label">Master IMAP Valid</span>
                     </div>
                 </div>
+
+                <div class="mon-stat-card">
+                    <div class="mon-stat-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <div class="mon-stat-info">
+                        <span class="mon-stat-num" id="stat-master-already" style="color:#34d399;">-</span>
+                        <span class="mon-stat-label">Already Accounts Master</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Toolbar -->
@@ -978,6 +990,10 @@
             
             const masterCount = data.master ? data.master.configs_count : 0;
             document.getElementById("stat-master-db").textContent = masterCount.toLocaleString('id-ID');
+
+            const masterAlready = data.master ? (data.master.already_count || 0) : 0;
+            const alrEl = document.getElementById("stat-master-already");
+            if (alrEl) alrEl.textContent = masterAlready.toLocaleString('id-ID');
         }
 
         function renderNodes(nodes) {
@@ -1014,13 +1030,18 @@
 
                 let syncBadge = "";
                 if (isOnline) {
-                    if (n.in_sync) {
-                        syncBadge = `<span style="color:#34d399; font-weight:600; font-size:11.5px;">✓ In Sync</span>`;
-                    } else if (n.diff_configs > 0) {
-                        syncBadge = `<span style="color:#38bdf8; font-weight:600; font-size:11.5px;">+${n.diff_configs} configs</span>`;
-                    } else if (n.diff_configs < 0) {
-                        syncBadge = `<span style="color:#fbbf24; font-weight:600; font-size:11.5px;">${n.diff_configs} behind</span>`;
+                    if (n.is_busy) {
+                        syncBadge = `<span style="color:#38bdf8; font-weight:700; font-size:11px; background:rgba(56,189,248,0.15); padding:2px 8px; border-radius:4px; border:1px solid rgba(56,189,248,0.3);">⚡ Sedang Cek</span>`;
+                    } else if (n.in_sync) {
+                        syncBadge = `<span style="color:#34d399; font-weight:700; font-size:11px; background:rgba(52,211,153,0.15); padding:2px 8px; border-radius:4px; border:1px solid rgba(52,211,153,0.3);">✓ Berhasil Ke-sync</span>`;
+                    } else {
+                        const parts = [];
+                        if (n.diff_configs) parts.push(`${n.diff_configs > 0 ? '+' : ''}${n.diff_configs} cfg`);
+                        if (n.diff_already) parts.push(`${n.diff_already > 0 ? '+' : ''}${n.diff_already} alr`);
+                        syncBadge = `<span style="color:#fbbf24; font-weight:700; font-size:11px; background:rgba(251,191,36,0.15); padding:2px 8px; border-radius:4px; border:1px solid rgba(251,191,36,0.3);">⚠️ Belum Ke-sync ${parts.length ? '(' + parts.join(', ') + ')' : ''}</span>`;
                     }
+                } else {
+                    syncBadge = `<span style="color:#fb7185; font-weight:700; font-size:11px; background:rgba(244,63,94,0.15); padding:2px 8px; border-radius:4px; border:1px solid rgba(244,63,94,0.3);">❌ Belum Ke-sync</span>`;
                 }
 
                 return `
@@ -1039,11 +1060,16 @@
                                 </div>
                             </div>
                             <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
-                                <div class="status-badge ${badgeClass}">
-                                    <span class="pulse-dot"></span>
-                                    <span>${statusLabel}</span>
+                                <div style="display:flex; gap:6px; align-items:center;">
+                                    <div class="status-badge ${badgeClass}">
+                                        <span class="pulse-dot"></span>
+                                        <span>${statusLabel}</span>
+                                    </div>
+                                    ${latencyBadge}
                                 </div>
-                                ${latencyBadge}
+                                <div>
+                                    ${syncBadge}
+                                </div>
                             </div>
                         </div>
 
@@ -1075,7 +1101,6 @@
                                 <div class="metric-box">
                                     <div class="metric-box-header">
                                         <span>IMAP Database</span>
-                                        ${syncBadge}
                                     </div>
                                     <div class="metric-box-val">
                                         ${(n.configs_count || 0).toLocaleString('id-ID')}
@@ -1084,21 +1109,20 @@
 
                                 <div class="metric-box">
                                     <div class="metric-box-header">
-                                        <span>CPU Load</span>
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                                        <span>Already Live</span>
+                                        <span style="color:#34d399; font-size:10px; font-weight:600;">auto-sync</span>
                                     </div>
-                                    <div class="metric-box-val" style="font-size:12.5px;">
-                                        ${escapeHtml(n.loadavg)}
+                                    <div class="metric-box-val" style="color:#34d399;">
+                                        ${(n.already_count || 0).toLocaleString('id-ID')}
                                     </div>
                                 </div>
 
                                 <div class="metric-box">
                                     <div class="metric-box-header">
-                                        <span>RAM</span>
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path></svg>
+                                        <span>RAM / Load</span>
                                     </div>
-                                    <div class="metric-box-val" style="font-size:13px;">
-                                        ${escapeHtml(n.mem)}
+                                    <div class="metric-box-val" style="font-size:12px; font-family:'Fira Code',monospace;">
+                                        ${escapeHtml(n.mem || '-')}
                                     </div>
                                 </div>
                             </div>
@@ -1373,20 +1397,58 @@
                 <span>Sinkronisasi...</span>
             `;
 
-            document.getElementById("sync-log-content").textContent = "Memulai sinkronisasi dua arah multi-VPS...\nMenarik data baru dari semua node, menggabungkan ke Master, dan menyebarkan ke seluruh runner...\n";
+            const logEl = document.getElementById("sync-log-content");
+            logEl.textContent = "🚀 Menghubungkan ke stream sinkronisasi klaster...\n";
             openModal("modal-sync-log");
 
             try {
-                const res = await fetch(APP_BASE + "/api/monitoring/sync-all", { method: "POST" });
-                const data = await res.json();
-                if (data.success) {
-                    document.getElementById("sync-log-content").textContent = data.output || "Sinkronisasi selesai tanpa log.";
-                    loadNodesStatus(true);
-                } else {
-                    document.getElementById("sync-log-content").textContent = "ERROR SINKRONISASI:\n" + (data.error || 'Unknown error');
+                const response = await fetch(APP_BASE + "/api/monitoring/sync-all-stream");
+                if (!response.ok) {
+                    throw new Error("HTTP error " + response.status);
                 }
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = "";
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split("\n\n");
+                    buffer = lines.pop();
+
+                    for (const block of lines) {
+                        for (const rawLine of block.split("\n")) {
+                            if (rawLine.startsWith("data: ")) {
+                                try {
+                                    const ev = JSON.parse(rawLine.slice(6));
+                                    const msg = ev.message || "";
+                                    logEl.textContent += msg + "\n";
+                                    logEl.scrollTop = logEl.scrollHeight;
+                                } catch (_) {
+                                    logEl.textContent += rawLine.slice(6) + "\n";
+                                    logEl.scrollTop = logEl.scrollHeight;
+                                }
+                            }
+                        }
+                    }
+                }
+                loadNodesStatus(true);
             } catch (e) {
-                document.getElementById("sync-log-content").textContent = "Koneksi terputus: " + e.message;
+                // Fallback to POST /api/monitoring/sync-all
+                try {
+                    logEl.textContent += "\n⚠️ Stream SSE terputus, menjalankan sinkronisasi direct...\n";
+                    const res = await fetch(APP_BASE + "/api/monitoring/sync-all", { method: "POST" });
+                    const data = await res.json();
+                    if (data.success) {
+                        logEl.textContent = data.output || "Sinkronisasi selesai.";
+                        loadNodesStatus(true);
+                    } else {
+                        logEl.textContent += "\n❌ Error: " + (data.error || 'Unknown error');
+                    }
+                } catch (err) {
+                    logEl.textContent += "\n❌ Gagal terhubung: " + err.message;
+                }
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = `

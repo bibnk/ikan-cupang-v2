@@ -389,6 +389,25 @@ def api_monitoring_sync_all():
     return jsonify({"success": ok, "output": output})
 
 
+@app.route("/api/monitoring/sync-all-stream")
+@monitor_required
+def api_monitoring_sync_all_stream():
+    import vps_monitoring
+    return Response(vps_monitoring.stream_sync_all(), mimetype="text/event-stream")
+
+
+@app.route("/api/sync/push-already", methods=["POST"])
+def api_sync_push_already():
+    """Receive live verified already accounts in realtime from cluster runners."""
+    data = request.get_json(silent=True) or {}
+    combos = data.get("combos", [])
+    if not combos:
+        return jsonify({"ok": True, "added": 0})
+    import vps_monitoring
+    added = vps_monitoring.record_already_combos_master(combos)
+    return jsonify({"ok": True, "added": added})
+
+
 @app.route("/api/monitoring/sync-single", methods=["POST"])
 @monitor_required
 def api_monitoring_sync_single():

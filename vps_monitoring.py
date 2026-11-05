@@ -91,10 +91,17 @@ def get_master_stats():
         os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "subject_exclusion_list.json"),
         os.path.join(os.path.dirname(__file__), "subject_exclusion_list.json"),
     ]
+    already_paths = [
+        "/opt/pmj/imap/already_accounts.txt",
+        "/opt/imap-checker/already_accounts.txt",
+        os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "already_accounts.txt"),
+        os.path.join(os.path.dirname(__file__), "already_accounts.txt"),
+    ]
 
     cfg_count = 0
     unusable_count = 0
     exclusion_count = 0
+    already_count = 0
 
     for p in config_paths:
         if os.path.exists(p):
@@ -123,10 +130,20 @@ def get_master_stats():
             except Exception:
                 pass
 
+    for p in already_paths:
+        if os.path.exists(p):
+            try:
+                with open(p, "r", encoding="utf-8", errors="replace") as f:
+                    already_count = sum(1 for l in f if l.strip())
+                break
+            except Exception:
+                pass
+
     return {
         "configs_count": cfg_count,
         "unusable_count": unusable_count,
         "exclusion_count": exclusion_count,
+        "already_count": already_count,
     }
 
 
@@ -198,6 +215,10 @@ def probe_single_node(node, timeout=3.5):
         python3 -c "import json, os; print(len(json.load(open('/opt/pmj/imap/imap_config.json'))) if os.path.exists('/opt/pmj/imap/imap_config.json') else (len(json.load(open('/opt/imap-checker/imap_config.json'))) if os.path.exists('/opt/imap-checker/imap_config.json') else 0))" 2>/dev/null || echo 0;
         echo "---SEP---"
         python3 -c "import json, os; print(len(json.load(open('/opt/pmj/imap/imap_unusable.json'))) if os.path.exists('/opt/pmj/imap/imap_unusable.json') else (len(json.load(open('/opt/imap-checker/imap_unusable.json'))) if os.path.exists('/opt/imap-checker/imap_unusable.json') else 0))" 2>/dev/null || echo 0;
+        echo "---SEP---"
+        python3 -c "import os; p='/opt/imap-checker/already_accounts.txt'; p2='/opt/pmj/imap/already_accounts.txt'; target = p if os.path.exists(p) else (p2 if os.path.exists(p2) else None); print(sum(1 for _ in open(target, 'r', errors='ignore')) if target else 0)" 2>/dev/null || echo 0;
+        echo "---SEP---"
+        curl -s -m 2 http://127.0.0.1:5000/sbb/api/is-busy 2>/dev/null | grep -o '"busy":true' && echo "busy" || echo "idle";
         """
         stdin, stdout, stderr = ssh.exec_command(cmd, timeout=timeout)
         out = stdout.read().decode("utf-8", errors="replace").strip()
@@ -217,6 +238,13 @@ def probe_single_node(node, timeout=3.5):
             res["unusable_count"] = int(parts[5]) if len(parts) > 5 else 0
         except Exception:
             res["unusable_count"] = 0
+        try:
+            res["already_count"] = int(parts[6]) if len(parts) > 6 else 0
+        except Exception:
+            res["already_count"] = 0
+
+        is_busy_str = parts[7] if len(parts) > 7 else "idle"
+        res["is_busy"] = ("busy" in is_busy_str)
 
         res["status"] = "online"
         return res
@@ -243,14 +271,34 @@ def probe_all_nodes():
         results = list(pool.map(probe_single_node, nodes))
 
     # Add sync status comparison
+    master_already_count = master.get("already_count", 0)
     for r in results:
         if r["status"] == "online":
             diff = r["configs_count"] - master_cfg_count
+            diff_alr = r.get("already_count", 0) - master_already_count
             r["diff_configs"] = diff
-            r["in_sync"] = (diff == 0)
+            r["diff_already"] = diff_alr
+            r["in_sync"] = (diff == 0 and diff_alr == 0)
+            if r.get("is_busy"):
+                r["sync_status_label"] = "Sedang Cek (Busy)"
+                r["sync_status_code"] = "busy"
+            elif r["in_sync"]:
+                r["sync_status_label"] = "Sudah Ke-sync"
+                r["sync_status_code"] = "synced"
+            else:
+                detail = []
+                if diff != 0:
+                    detail.append(f"{diff:+d} cfg")
+                if diff_alr != 0:
+                    detail.append(f"{diff_alr:+d} already")
+                r["sync_status_label"] = f"Belum Ke-sync ({', '.join(detail)})"
+                r["sync_status_code"] = "pending"
         else:
             r["diff_configs"] = None
+            r["diff_already"] = None
             r["in_sync"] = False
+            r["sync_status_label"] = "Belum Ke-sync (Offline/Timeout)"
+            r["sync_status_code"] = "error"
 
     return {
         "success": True,
@@ -311,6 +359,17 @@ def deploy_and_sync_node(node):
             exclusion_src = p
             break
 
+    already_src = None
+    for p in [
+        "/opt/pmj/imap/already_accounts.txt",
+        "/opt/imap-checker/already_accounts.txt",
+        os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "already_accounts.txt"),
+        os.path.join(os.path.dirname(__file__), "already_accounts.txt"),
+    ]:
+        if os.path.exists(p):
+            already_src = p
+            break
+
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
@@ -336,6 +395,11 @@ def deploy_and_sync_node(node):
                 (exclusion_src, "/opt/pmj/imap/subject_exclusion_list.json"),
                 (exclusion_src, "/opt/imap-checker/subject_exclusion_list.json"),
             ])
+        if already_src:
+            uploads.extend([
+                (already_src, "/opt/pmj/imap/already_accounts.txt"),
+                (already_src, "/opt/imap-checker/already_accounts.txt"),
+            ])
         if nodes_src and os.path.exists(nodes_src):
             uploads.extend([
                 (nodes_src, "/opt/pmj/imap/vps_nodes.json"),
@@ -350,20 +414,137 @@ def deploy_and_sync_node(node):
 
         sftp.close()
 
+        # Check if node is busy checking — wait if busy
+        for _wait_step in range(10):
+            try:
+                stdin, stdout, stderr = ssh.exec_command("curl -s -m 2 http://127.0.0.1:5000/sbb/api/is-busy")
+                b_out = stdout.read().decode("utf-8", errors="ignore").strip()
+                if '"busy":true' in b_out:
+                    time.sleep(2)
+                else:
+                    break
+            except Exception:
+                break
+
         # Fix ownership and restart service if installed
         cmd = """
         if id imapchecker >/dev/null 2>&1; then
             chown -R imapchecker:imapchecker /opt/pmj/imap /opt/imap-checker 2>/dev/null || true
+            chmod 664 /opt/pmj/imap/*.json /opt/pmj/imap/*.txt /opt/imap-checker/*.json /opt/imap-checker/*.txt 2>/dev/null || true
         fi
-        if systemctl is-active --quiet imap-checker 2>/dev/null; then
-            systemctl restart imap-checker
+        curl -s -X POST http://127.0.0.1:5000/sbb/api/reload-configs >/dev/null 2>&1 || true
+        IS_BUSY=$(curl -s http://127.0.0.1:5000/sbb/api/is-busy 2>/dev/null | grep -o '"busy":true' || true)
+        if [ -z "$IS_BUSY" ]; then
+            if systemctl is-active --quiet imap-checker 2>/dev/null; then
+                systemctl restart imap-checker
+            fi
+            echo "RESTARTED"
+        else
+            echo "HOT_RELOAD_ONLY"
         fi
         """
-        ssh.exec_command(cmd)
+        stdin, stdout, stderr = ssh.exec_command(cmd)
+        cmd_out = stdout.read().decode("utf-8", errors="ignore").strip()
         ssh.close()
+        if "HOT_RELOAD_ONLY" in cmd_out:
+            return True, "Node disinkronkan & di-hot reload aman (job checking tetap berjalan tanpa restart)"
         return True, "Node berhasil disinkronkan & service direfresh"
     except Exception as e:
         return False, str(e)
+
+
+def record_already_combos_master(combos):
+    """
+    Append unique combos to Master already_accounts.txt across known locations.
+    Thread-safe and deduplicated.
+    """
+    if not combos:
+        return 0
+    clean = set()
+    for c in combos:
+        if isinstance(c, str):
+            s = c.strip().lower()
+            if s and ":" in s:
+                clean.add(s)
+    if not clean:
+        return 0
+
+    targets = [
+        "/opt/pmj/imap/already_accounts.txt",
+        "/opt/imap-checker/already_accounts.txt",
+        os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "already_accounts.txt"),
+        os.path.join(os.path.dirname(__file__), "already_accounts.txt"),
+    ]
+    added = 0
+    for t in targets:
+        existing = set()
+        if os.path.exists(t):
+            try:
+                with open(t, "r", encoding="utf-8", errors="replace") as f:
+                    existing = set(l.strip().lower() for l in f if l.strip())
+            except Exception:
+                existing = set()
+        new_items = clean - existing
+        if new_items:
+            try:
+                os.makedirs(os.path.dirname(t), exist_ok=True)
+                with open(t, "a", encoding="utf-8") as f:
+                    for item in new_items:
+                        f.write(item + "\n")
+                added = max(added, len(new_items))
+            except Exception:
+                pass
+    return added
+
+
+def stream_sync_all():
+    """
+    Generator yielding real-time step-by-step progress lines for SSE web streaming.
+    """
+    import subprocess
+    candidates = [
+        os.path.join(os.path.dirname(__file__), "sync_imap_vps.py"),
+        os.path.join(os.path.expanduser("~"), "Desktop", "sync_imap_vps.py"),
+        "/opt/imap-checker/sync_imap_vps.py",
+    ]
+    script = None
+    for p in candidates:
+        if os.path.exists(p):
+            script = p
+            break
+    if not script:
+        yield "data: " + json.dumps({"type": "error", "message": "sync_imap_vps.py tidak ditemukan"}) + "\n\n"
+        return
+
+    proc = subprocess.Popen(
+        [sys.executable, "-u", script],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1
+    )
+    if proc.stdout:
+        for line in iter(proc.stdout.readline, ""):
+            line_str = line.strip()
+            if not line_str:
+                continue
+
+            ev_type = "log"
+            if "Berhasil ke-sync" in line_str or "Sudah 100% ke-sync" in line_str or "already 100% in sync" in line_str:
+                ev_type = "synced"
+            elif "Belum ke-sync" in line_str or "Offline" in line_str or "Gagal" in line_str or "❌" in line_str:
+                ev_type = "pending"
+            elif "Sedang melakukan pengecekan" in line_str or "Sedang Cek" in line_str or "⏳" in line_str:
+                ev_type = "busy"
+            elif "PULLING" in line_str or "PUSHING" in line_str or "SAVED" in line_str:
+                ev_type = "step"
+            elif "SYNC FINISHED" in line_str:
+                ev_type = "done"
+
+            yield "data: " + json.dumps({"type": ev_type, "message": line_str}) + "\n\n"
+        proc.stdout.close()
+    proc.wait()
+    yield "data: " + json.dumps({"type": "complete", "message": "Proses sinkronisasi klaster selesai!"}) + "\n\n"
 
 
 def restart_node_service(node):
