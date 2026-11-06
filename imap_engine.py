@@ -1420,7 +1420,7 @@ class ImapChecker:
                 imap_configs=configs,
                 output_dir=self.results_dir,
                 concurrency=self.max_threads,
-                timeout=4.0,
+                timeout=max(7.0, float(getattr(self, "timeout", 7.0))),
                 target_senders=self.target_senders,
                 keywords=self.keywords,
                 search_days=self.search_days,

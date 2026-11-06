@@ -15541,8 +15541,9 @@
     "server": "imap.myquix.de"
   },
   "myrambler.ru": {
+    "server": "imap.rambler.ru",
     "port": 993,
-    "server": "imap.rambler.ru"
+    "ssl": true
   },
   "myringdesign.com": {
     "port": 993,
@@ -18506,8 +18507,9 @@
     "server": "mail.rajwaniapparel.com"
   },
   "rambler.ru": {
+    "server": "imap.rambler.ru",
     "port": 993,
-    "server": "imap.rambler.ru"
+    "ssl": true
   },
   "ramsabpo.com": {
     "server": "imap.hostinger.com",
@@ -19065,8 +19067,9 @@
     "server": "imap.hostinger.com"
   },
   "ro.ru": {
+    "server": "imap.rambler.ru",
     "port": 993,
-    "server": "imap.rambler.ru"
+    "ssl": true
   },
   "ro7agency.com.br": {
     "server": "imap.hostinger.com.br",
@@ -22232,8 +22235,9 @@
     "port": 993
   },
   "telefonica.net": {
-    "port": 143,
-    "server": "imap.telefonica.net"
+    "server": "imap.movistar.es",
+    "port": 993,
+    "ssl": true
   },
   "telekom.de": {
     "port": 993,
@@ -51661,7 +51665,8 @@
   },
   "nifty.ne.jp": {
     "server": "imap.nifty.com",
-    "port": 993
+    "port": 993,
+    "ssl": true
   },
   "jcom.home.ne.jp": {
     "server": "imap.jcom.zaq.ne.jp",
@@ -51837,7 +51842,8 @@
   },
   "nifty.com": {
     "server": "imap.nifty.com",
-    "port": 993
+    "port": 993,
+    "ssl": true
   },
   "mybizemailpro.com": {
     "server": "imap.stackmail.com",
@@ -59094,7 +59100,8 @@
   },
   "ufamts.ru": {
     "server": "mail.ufamts.ru",
-    "port": 993
+    "port": 993,
+    "ssl": true
   },
   "quantum.ru": {
     "server": "mail.quantum.ru",
@@ -63350,7 +63357,8 @@
   },
   "movistar.es": {
     "server": "imap.movistar.es",
-    "port": 993
+    "port": 993,
+    "ssl": true
   },
   "mclink.it": {
     "server": "imap.mclink.it",
@@ -63494,8 +63502,9 @@
     "port": 993
   },
   "alumnos.uvigo.es": {
-    "server": "imap.alumnos.uvigo.es",
-    "port": 993
+    "server": "correo.uvigo.es",
+    "port": 993,
+    "ssl": true
   },
   "limas.in": {
     "server": "imap.limas.in",
@@ -69718,10 +69727,6 @@
   },
   "elabi.com.pl": {
     "server": "imap.elabi.com.pl",
-    "port": 993
-  },
-  "zen43.com.pl": {
-    "server": "imap.com.pl",
     "port": 993
   },
   "bentek.pl": {
