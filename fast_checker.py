@@ -159,7 +159,12 @@ class FastImapEngine:
 
         # Per-domain concurrency limiters (guards against per-IP throttling)
         self._domain_limiters: Dict[str, Any] = {}
-        self.domain_max_concurrency = int(getattr(self, "domain_max_concurrency", 60) or 60)
+        # 20 is the measured ceiling for throttling providers: Rambler family
+        # (rambler.ru, myrambler.ru, ro.ru, lenta.ru, autorambler.ru) returned
+        # 2.5% die at cap 10-20 but jumped to 20% die at cap 30, because they
+        # throttle parallel SSL handshakes per source IP and answer slow rather
+        # than refusing. Keep this at or below 20 unless re-measured.
+        self.domain_max_concurrency = int(getattr(self, "domain_max_concurrency", 20) or 20)
 
         # Write queue for zero-contention asynchronous flushing
         self.write_queue = asyncio.Queue()
