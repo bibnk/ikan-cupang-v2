@@ -168,6 +168,24 @@ class FastImapEngine:
         self._proxy_idx += 1
         return p
 
+    def _effective_concurrency(self) -> int:
+        """Clamp concurrency to what the process fd budget can actually serve.
+
+        Each in-flight check holds 1-2 sockets. Requesting 2500 workers on a
+        host whose RLIMIT_NOFILE is 1024 (or 16384 with other fds in play)
+        exhausts the fd table; every later socket() then raises EMFILE and the
+        account lands in die.txt despite being valid. Leave ~15% headroom.
+        """
+        try:
+            import resource
+            soft, _hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+        except Exception:
+            return max(1, int(self.concurrency))
+        if not soft or soft == resource.RLIM_INFINITY:
+            return max(1, int(self.concurrency))
+        budget = int(soft * 0.85) - 16
+        return max(1, min(int(self.concurrency), budget))
+
     async def _resolve_ip(self, host: str) -> Optional[str]:
         """Resolve host to IP with in-memory caching."""
         if host in _DNS_CACHE:
@@ -383,6 +401,23 @@ class FastImapEngine:
                         connected = True
                         break
                     raise ConnectionError("Invalid POP3 greeting banner")
+                except OSError as exc:
+                    if getattr(exc, "errno", None) in (24, 23):
+                        self.skipped_count += 1
+                        self.checked += 1
+                        await self.write_queue.put(("skip", combo))
+                        if self.on_progress:
+                            self.on_progress("skip")
+                        return
+                    if writer:
+                        try:
+                            writer.close()
+                            await writer.wait_closed()
+                        except Exception:
+                            pass
+                        writer = None
+                    if attempt == 0:
+                        await asyncio.sleep(0.4)
                 except Exception:
                     if writer:
                         try:
@@ -560,6 +595,25 @@ class FastImapEngine:
             except Exception:
                 pass
 
+        except OSError as exc:
+            if getattr(exc, "errno", None) in (24, 23):
+                self.skipped_count += 1
+                self.checked += 1
+                await self.write_queue.put(("skip", combo))
+                if self.on_progress:
+                    self.on_progress("skip")
+            elif is_live:
+                self.noemail_count += 1
+                self.checked += 1
+                await self.write_queue.put(("noemail", combo))
+                if self.on_progress:
+                    self.on_progress("noemail")
+            else:
+                self.die_count += 1
+                self.checked += 1
+                await self.write_queue.put(("die", combo))
+                if self.on_progress:
+                    self.on_progress("die")
         except Exception:
             if is_live:
                 self.noemail_count += 1
@@ -664,6 +718,26 @@ class FastImapEngine:
                         raise ConnectionError("Invalid greeting banner")
                     connected = True
                     break
+                except OSError as exc:
+                    if getattr(exc, "errno", None) in (24, 23):
+                        # EMFILE/ENFILE — our own fd exhaustion, not the server.
+                        # Skipping keeps the account out of die.txt so it can be
+                        # picked up by the next run instead of being lost.
+                        self.skipped_count += 1
+                        self.checked += 1
+                        await self.write_queue.put(("skip", combo))
+                        if self.on_progress:
+                            self.on_progress("skip")
+                        return
+                    if writer:
+                        try:
+                            writer.close()
+                            await writer.wait_closed()
+                        except Exception:
+                            pass
+                        writer = None
+                    if attempt == 0:
+                        await asyncio.sleep(0.4)
                 except Exception:
                     if writer:
                         try:
@@ -687,6 +761,22 @@ class FastImapEngine:
                         use_ssl = alt_ssl
                     else:
                         raise ConnectionError("Invalid fallback greeting")
+                except OSError as exc:
+                    # EMFILE/ENFILE: our own fd table, not the account. Never
+                    # classify as die — a live account would be lost forever.
+                    if getattr(exc, "errno", None) not in (24, 23):
+                        self.die_count += 1
+                        self.checked += 1
+                        await self.write_queue.put(("die", combo))
+                        if self.on_progress:
+                            self.on_progress("die")
+                    else:
+                        self.skipped_count += 1
+                        self.checked += 1
+                        await self.write_queue.put(("skip", combo))
+                        if self.on_progress:
+                            self.on_progress("skip")
+                    return
                 except Exception:
                     self.die_count += 1
                     self.checked += 1
@@ -875,7 +965,13 @@ class FastImapEngine:
                         pass
 
     async def _writer_worker(self):
-        """Batch file writer consuming from async queue."""
+        """Batch file writer consuming from async queue.
+
+        Keeps ONE persistent handle per category for the whole run. Reopening the
+        file per flush burned an fd each cycle and blew past ulimit on 60k+ jobs,
+        which made every subsequent socket() fail with EMFILE and dumped live
+        accounts into die.txt.
+        """
         buffers: Dict[str, List[str]] = {
             "live": [],
             "noemail": [],
@@ -892,41 +988,60 @@ class FastImapEngine:
             "skip": self.skip_file,
             "already": self.already_file,
         }
+        handles: Dict[str, Any] = {}
+        try:
+            for cat, path in file_map.items():
+                try:
+                    handles[cat] = open(path, "a", encoding="utf-8", errors="replace")
+                except OSError:
+                    handles[cat] = None
 
-        last_flush = time.monotonic()
+            last_flush = time.monotonic()
 
-        while not self.stop_event.is_set() or not self.write_queue.empty():
-            try:
-                cat, data = await asyncio.wait_for(self.write_queue.get(), timeout=0.2)
-                if cat in buffers:
-                    buffers[cat].append(data)
-                self.write_queue.task_done()
-            except asyncio.TimeoutError:
-                pass
-
-            now = time.monotonic()
-            if now - last_flush > 0.5 or any(len(buf) >= 100 for buf in buffers.values()):
+            def flush_all():
                 for cat, items in buffers.items():
-                    if items:
-                        target = file_map[cat]
-                        text = "\n".join(items) + "\n"
-                        with open(target, "a", encoding="utf-8", errors="replace") as f:
-                            f.write(text)
-                        items.clear()
-                last_flush = now
+                    if not items:
+                        continue
+                    fh = handles.get(cat)
+                    if fh is None:
+                        try:
+                            fh = open(file_map[cat], "a", encoding="utf-8", errors="replace")
+                            handles[cat] = fh
+                        except OSError:
+                            continue
+                    try:
+                        fh.write("\n".join(items) + "\n")
+                        fh.flush()
+                    except OSError:
+                        pass
+                    items.clear()
 
-        # Final flush
-        for cat, items in buffers.items():
-            if items:
-                target = file_map[cat]
-                text = "\n".join(items) + "\n"
-                with open(target, "a", encoding="utf-8", errors="replace") as f:
-                    f.write(text)
-                items.clear()
+            while not self.stop_event.is_set() or not self.write_queue.empty():
+                try:
+                    cat, data = await asyncio.wait_for(self.write_queue.get(), timeout=0.2)
+                    if cat in buffers:
+                        buffers[cat].append(data)
+                    self.write_queue.task_done()
+                except asyncio.TimeoutError:
+                    pass
+
+                now = time.monotonic()
+                if now - last_flush > 0.5 or any(len(buf) >= 100 for buf in buffers.values()):
+                    flush_all()
+                    last_flush = now
+
+            flush_all()
+        finally:
+            for fh in handles.values():
+                if fh is not None:
+                    try:
+                        fh.close()
+                    except Exception:
+                        pass
 
     async def run(self, silent: bool = False):
         """Execute all checks with live terminal reporting."""
-        sem = asyncio.Semaphore(self.concurrency)
+        sem = asyncio.Semaphore(self._effective_concurrency())
         writer_task = asyncio.create_task(self._writer_worker())
 
         t_start = time.monotonic()
