@@ -723,43 +723,28 @@ class FastImapEngine:
 
             # Per-domain cap: throttling providers answer slow (not refused) when
             # hit with too many parallel handshakes from one IP, which otherwise
-            # turns into TimeoutError -> false die.
+            # turns into TimeoutError -> false die. Held by this frame for the
+            # whole check (including POP3 fallback) and always released in the
+            # finally, so no path can leak or double-release the permit.
             limiter = self._get_domain_limiter(domain)
-
-            # Protocol POP3 direct route
-            if protocol == "pop3" or port in (995, 110):
-                if limiter is not None:
-                    async with limiter:
-                        await self._check_single_account_pop3(
-                            server, port, use_ssl, proxy, email_addr, password, combo)
-                else:
-                    await self._check_single_account_pop3(
-                        server, port, use_ssl, proxy, email_addr, password, combo)
-                return
-
-            # Hand the limiter to the IMAP body as an explicit parameter. The
-            # body may discover the endpoint is POP3 and delegate back through
-            # _check_single_account_pop3, which would try to acquire the same
-            # non-reentrant Semaphore and deadlock. It returns True in that
-            # case after releasing, so this frame must not release again.
             if limiter is not None:
                 await limiter.acquire()
-            released = False
             try:
-                released = await self._check_imap_locked(
-                    server, port, use_ssl, proxy, email_addr, password, combo,
-                    domain, limiter)
+                # Protocol POP3 direct route
+                if protocol == "pop3" or port in (995, 110):
+                    await self._check_single_account_pop3(
+                        server, port, use_ssl, proxy, email_addr, password, combo)
+                    return
+
+                await self._check_imap_body(
+                    server, port, use_ssl, proxy, email_addr, password, combo, domain)
             finally:
-                if limiter is not None and not released:
+                if limiter is not None:
                     limiter.release()
 
-    async def _check_imap_locked(self, server, port, use_ssl, proxy,
-                                 email_addr, password, combo, domain,
-                                 limiter=None):
-        """IMAP check body; runs while holding the per-domain limiter.
-
-        Returns True if this body released the limiter itself (POP3 delegation).
-        """
+    async def _check_imap_body(self, server, port, use_ssl, proxy,
+                               email_addr, password, combo, domain):
+        """IMAP check body. Caller holds the per-domain limiter."""
         reader = None
         writer = None
         banner = None
@@ -770,10 +755,9 @@ class FastImapEngine:
                 reader, writer = await self._connect_imap(server, port, use_ssl, proxy)
                 banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
                 if banner and banner.strip().startswith(b"+OK"):
-                    # Server is actually POP3. Release the domain permit before
-                    # delegating: the POP3 path acquires the same semaphore.
-                    if limiter is not None:
-                        limiter.release()
+                    # Server is actually POP3. The caller already holds the
+                    # per-domain permit for this whole block, and the POP3
+                    # helper does not acquire it itself, so just delegate.
                     try:
                         writer.close()
                         await writer.wait_closed()
@@ -781,7 +765,7 @@ class FastImapEngine:
                         pass
                     await self._check_single_account_pop3(
                         server, port, use_ssl, proxy, email_addr, password, combo)
-                    return limiter is not None
+                    return
                 if not banner or not (b"* OK" in banner.upper() or b"IMAP" in banner.upper()):
                     raise ConnectionError("Invalid greeting banner")
                 connected = True
