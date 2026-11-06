@@ -15,9 +15,13 @@ jobs/
 
 # Customizable runtime lists (instance-specific)
 skip_domains.json
-subject_exclusion_list.json
 already_accounts.txt
 already*.txt
+
+# NOTE: subject_exclusion_list.json IS tracked on purpose. It ships the default
+# seed list of subject patterns that mark an email as non-target (OTP codes,
+# booking confirmations, checker artefacts). Instances still override it at
+# runtime; the repo copy is the shared baseline.
 
 # =====================================================
 # Python
