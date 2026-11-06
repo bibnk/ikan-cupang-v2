@@ -737,18 +737,29 @@ class FastImapEngine:
                         server, port, use_ssl, proxy, email_addr, password, combo)
                 return
 
+            # Hand the limiter to the IMAP body as an explicit parameter. The
+            # body may discover the endpoint is POP3 and delegate back through
+            # _check_single_account_pop3, which would try to acquire the same
+            # non-reentrant Semaphore and deadlock. It returns True in that
+            # case after releasing, so this frame must not release again.
             if limiter is not None:
                 await limiter.acquire()
+            released = False
             try:
-                await self._check_imap_locked(
-                    server, port, use_ssl, proxy, email_addr, password, combo, domain)
+                released = await self._check_imap_locked(
+                    server, port, use_ssl, proxy, email_addr, password, combo,
+                    domain, limiter)
             finally:
-                if limiter is not None:
+                if limiter is not None and not released:
                     limiter.release()
 
     async def _check_imap_locked(self, server, port, use_ssl, proxy,
-                                 email_addr, password, combo, domain):
-        """IMAP check body; runs while holding the per-domain limiter."""
+                                 email_addr, password, combo, domain,
+                                 limiter=None):
+        """IMAP check body; runs while holding the per-domain limiter.
+
+        Returns True if this body released the limiter itself (POP3 delegation).
+        """
         reader = None
         writer = None
         banner = None
@@ -759,14 +770,18 @@ class FastImapEngine:
                 reader, writer = await self._connect_imap(server, port, use_ssl, proxy)
                 banner = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
                 if banner and banner.strip().startswith(b"+OK"):
-                    # Server is actually POP3
+                    # Server is actually POP3. Release the domain permit before
+                    # delegating: the POP3 path acquires the same semaphore.
+                    if limiter is not None:
+                        limiter.release()
                     try:
                         writer.close()
                         await writer.wait_closed()
                     except Exception:
                         pass
-                    await self._check_single_account_pop3(server, port, use_ssl, proxy, email_addr, password, combo)
-                    return
+                    await self._check_single_account_pop3(
+                        server, port, use_ssl, proxy, email_addr, password, combo)
+                    return limiter is not None
                 if not banner or not (b"* OK" in banner.upper() or b"IMAP" in banner.upper()):
                     raise ConnectionError("Invalid greeting banner")
                 connected = True
