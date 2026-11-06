@@ -341,7 +341,7 @@ class FastImapEngine:
                 connect_req += f"{auth_h}: {auth_v} " + creds + chr(13) + chr(10)
             connect_req += "\r\n"
             writer.write(connect_req.encode())
-            await writer.drain()
+            await self._drain(writer)
 
             resp = await asyncio.wait_for(reader.readuntil(b"\r\n\r\n"), timeout=self.timeout)
             if b" 200 " not in resp.split(b"\r\n")[0]:
@@ -363,6 +363,22 @@ class FastImapEngine:
             )
             return reader, writer
 
+    async def _drain(self, writer, timeout: Optional[float] = None):
+        """Write-buffer flush with a hard timeout.
+
+        A bare `await writer.drain()` blocks until the peer's TCP receive
+        window reopens. Throttling servers stop reading instead of closing, so
+        an un-timed drain hangs the task forever — and with it the per-domain
+        permit, which strands every other account on that domain.
+        """
+        try:
+            await asyncio.wait_for(
+                writer.drain(),
+                timeout=self.timeout if timeout is None else timeout,
+            )
+        except asyncio.TimeoutError:
+            raise ConnectionError("drain timed out")
+
     async def _fetch_headers_for_ids(self, reader, writer, ids: List[str]) -> List[Dict[str, str]]:
         """Fetch Subject, From, Date headers for matched message IDs."""
         results = []
@@ -375,7 +391,7 @@ class FastImapEngine:
             cmd = f"{tag.decode()} FETCH {eid} (BODY.PEEK[HEADER.FIELDS (SUBJECT FROM DATE)])\r\n".encode()
             try:
                 writer.write(cmd)
-                await writer.drain()
+                await self._drain(writer)
                 header_bytes = b""
                 while True:
                     line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
@@ -468,14 +484,14 @@ class FastImapEngine:
 
             # Try USER with full email address
             writer.write(f"USER {email_addr}\r\n".encode())
-            await writer.drain()
+            await self._drain(writer)
             resp = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
 
             # If rejected, try username without domain
             if not resp.strip().startswith(b"+OK"):
                 user_short = email_addr.split("@")[0]
                 writer.write(f"USER {user_short}\r\n".encode())
-                await writer.drain()
+                await self._drain(writer)
                 resp = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
 
             if not resp.strip().startswith(b"+OK"):
@@ -486,14 +502,14 @@ class FastImapEngine:
                     self.on_progress("die")
                 try:
                     writer.write(b"QUIT\r\n")
-                    await writer.drain()
+                    await self._drain(writer)
                 except Exception:
                     pass
                 return
 
             # Send PASS
             writer.write(f"PASS {password}\r\n".encode())
-            await writer.drain()
+            await self._drain(writer)
             pass_resp = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
 
             if not pass_resp.strip().startswith(b"+OK"):
@@ -504,7 +520,7 @@ class FastImapEngine:
                     self.on_progress("die")
                 try:
                     writer.write(b"QUIT\r\n")
-                    await writer.drain()
+                    await self._drain(writer)
                 except Exception:
                     pass
                 return
@@ -527,14 +543,14 @@ class FastImapEngine:
                     self.on_progress("live")
                 try:
                     writer.write(b"QUIT\r\n")
-                    await writer.drain()
+                    await self._drain(writer)
                 except Exception:
                     pass
                 return
 
             # Search POP3 mailbox: send STAT to get total messages
             writer.write(b"STAT\r\n")
-            await writer.drain()
+            await self._drain(writer)
             stat_resp = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
             msg_count = 0
             try:
@@ -551,7 +567,7 @@ class FastImapEngine:
                 check_limit = min(30, msg_count)
                 for msg_idx in range(msg_count, msg_count - check_limit, -1):
                     writer.write(f"TOP {msg_idx} 0\r\n".encode())
-                    await writer.drain()
+                    await self._drain(writer)
                     top_data = b""
                     while True:
                         line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
@@ -625,7 +641,7 @@ class FastImapEngine:
 
             try:
                 writer.write(b"QUIT\r\n")
-                await writer.drain()
+                await self._drain(writer)
             except Exception:
                 pass
 
@@ -732,8 +748,22 @@ class FastImapEngine:
             # whole check (including POP3 fallback) and always released in the
             # finally, so no path can leak or double-release the permit.
             limiter = self._get_domain_limiter(domain)
+            acquired = False
             if limiter is not None:
-                await limiter.acquire()
+                # Bounded wait: if a permit never frees because some holder is
+                # stuck on a half-dead socket, waiting forever would stall the
+                # whole run at its all-tasks-done check. Bounce the account to
+                # skip instead so it can be retried on the next pass.
+                try:
+                    await asyncio.wait_for(limiter.acquire(), timeout=120)
+                    acquired = True
+                except asyncio.TimeoutError:
+                    self.skipped_count += 1
+                    self.checked += 1
+                    await self.write_queue.put(("skip", combo))
+                    if self.on_progress:
+                        self.on_progress("skip")
+                    return
             try:
                 # Protocol POP3 direct route
                 if protocol == "pop3" or port in (995, 110):
@@ -744,7 +774,7 @@ class FastImapEngine:
                 await self._check_imap_body(
                     server, port, use_ssl, proxy, email_addr, password, combo, domain)
             finally:
-                if limiter is not None:
+                if limiter is not None and acquired:
                     limiter.release()
 
     async def _check_imap_body(self, server, port, use_ssl, proxy,
@@ -846,7 +876,7 @@ class FastImapEngine:
             # STARTTLS upgrade if plain connection and required/supported
             if not use_ssl and b"STARTTLS" in banner.upper() and b"LOGINDISABLED" in banner.upper():
                 writer.write(b"A0 STARTTLS\r\n")
-                await writer.drain()
+                await self._drain(writer)
                 st_resp = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
                 if st_resp.upper().startswith(b"A0 OK"):
                     loop = asyncio.get_running_loop()
@@ -857,7 +887,7 @@ class FastImapEngine:
             # Send LOGIN
             cmd = b"A1 LOGIN " + _escape_imap_str(email_addr) + b" " + _escape_imap_str(password) + b"\r\n"
             writer.write(cmd)
-            await writer.drain()
+            await self._drain(writer)
 
             # Read response until tagged line
             is_live = False
@@ -880,7 +910,7 @@ class FastImapEngine:
                 if self.on_progress:
                     self.on_progress("die")
                 writer.write(b"A9 LOGOUT\r\n")
-                await writer.drain()
+                await self._drain(writer)
                 return
 
             # LIVE account!
@@ -895,12 +925,12 @@ class FastImapEngine:
                 if self.on_progress:
                     self.on_progress("live")
                 writer.write(b"A9 LOGOUT\r\n")
-                await writer.drain()
+                await self._drain(writer)
                 return
 
             # Search requested: SELECT INBOX
             writer.write(b"A2 SELECT INBOX\r\n")
-            await writer.drain()
+            await self._drain(writer)
             inbox_ok = False
             while True:
                 line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
@@ -919,7 +949,7 @@ class FastImapEngine:
                 if self.on_progress:
                     self.on_progress("noemail")
                 writer.write(b"A9 LOGOUT\r\n")
-                await writer.drain()
+                await self._drain(writer)
                 return
 
             # Search by sender / keyword
@@ -935,7 +965,7 @@ class FastImapEngine:
                 clean_s = sender.lstrip("@") if sender.startswith("@") else sender
                 crit = f'{tag.decode()} SEARCH SINCE {self.search_since} FROM "{clean_s}"\r\n'
                 writer.write(crit.encode())
-                await writer.drain()
+                await self._drain(writer)
                 while True:
                     line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
                     if not line:
@@ -952,7 +982,7 @@ class FastImapEngine:
                 tag_idx += 1
                 crit = f'{tag.decode()} SEARCH SINCE {self.search_since} SUBJECT "{kw}"\r\n'
                 writer.write(crit.encode())
-                await writer.drain()
+                await self._drain(writer)
                 while True:
                     line = await asyncio.wait_for(reader.readline(), timeout=self.timeout)
                     if not line:
@@ -998,7 +1028,7 @@ class FastImapEngine:
                     self.on_progress("noemail")
 
             writer.write(b"A9 LOGOUT\r\n")
-            await writer.drain()
+            await self._drain(writer)
 
         except Exception:
             if is_live:
@@ -1104,9 +1134,29 @@ class FastImapEngine:
         t_start = time.monotonic()
         tasks = [asyncio.create_task(self._check_single_account(sem, acc)) for acc in self.accounts]
 
-        # Live terminal progress updater
+        # Live terminal progress updater. Also watches for a stalled run: if no
+        # task completes for a long stretch the remaining ones are wedged on a
+        # half-dead socket, and waiting forever would leave the job "running"
+        # with its output frozen. Cancel them so the files close cleanly.
+        last_progress = time.monotonic()
+        last_checked = self.checked
+        stall_limit = max(180.0, self.timeout * 20)
         while not all(t.done() for t in tasks):
             await asyncio.sleep(0.1)
+            if self.checked != last_checked:
+                last_checked = self.checked
+                last_progress = time.monotonic()
+            elif time.monotonic() - last_progress > stall_limit:
+                stuck = sum(1 for t in tasks if not t.done())
+                for t in tasks:
+                    if not t.done():
+                        t.cancel()
+                if not silent:
+                    sys.stdout.write(
+                        f"\r\033[K\033[93m[STALL]\033[0m no progress for "
+                        f"{stall_limit:.0f}s — cancelled {stuck} wedged task(s)\n")
+                    sys.stdout.flush()
+                break
             if not silent:
                 elapsed = time.monotonic() - t_start
                 speed = self.checked / elapsed if elapsed > 0 else 0
