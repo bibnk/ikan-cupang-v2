@@ -11,6 +11,7 @@ import os
 import sys
 import time
 import json
+import gzip
 import shutil
 from concurrent.futures import ThreadPoolExecutor
 
@@ -55,6 +56,10 @@ LOCAL_MASTER_ALREADY = os.path.join(LOCAL_MASTER_DIR, "already_accounts.txt")
 REMOTE_ALREADY_PATHS = [
     "/opt/pmj/imap/already_accounts.txt",
     "/opt/imap-checker/already_accounts.txt",
+]
+REMOTE_NODES_PATHS = [
+    "/opt/pmj/imap/vps_nodes.json",
+    "/opt/imap-checker/vps_nodes.json",
 ]
 
 DISALLOWED_KEYWORDS = [
@@ -124,6 +129,32 @@ def save_atomic_json(path, data, fallback_path=None):
             pass
 
 
+def remote_read_compressed(ssh, path):
+    try:
+        stdin, stdout, stderr = ssh.exec_command(f"test -f {path} && gzip -c {path} || true")
+        raw = stdout.read()
+        if raw:
+            try:
+                return gzip.decompress(raw)
+            except Exception:
+                return raw
+    except Exception:
+        pass
+    return None
+
+
+def remote_write_compressed(ssh, path, content_bytes):
+    try:
+        compressed = gzip.compress(content_bytes)
+        cmd = f"mkdir -p $(dirname {path}) && gzip -d > {path}.tmp && mv {path}.tmp {path}"
+        stdin, stdout, stderr = ssh.exec_command(cmd)
+        stdin.write(compressed)
+        stdin.close()
+        return stdout.channel.recv_exit_status() == 0
+    except Exception:
+        return False
+
+
 def fetch_node_data(node):
     host = node["host"]
     user = node.get("user", "root")
@@ -146,53 +177,55 @@ def fetch_node_data(node):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(host, port=port, username=user, password=password, timeout=12)
-        sftp = ssh.open_sftp()
 
         # 1. Fetch imap_config.json
         for rp in REMOTE_CONFIG_PATHS:
-            try:
-                with sftp.open(rp, "r") as f:
-                    data = json.load(f)
+            data_bytes = remote_read_compressed(ssh, rp)
+            if data_bytes:
+                try:
+                    data = json.loads(data_bytes.decode("utf-8", errors="replace"))
                     if data and isinstance(data, dict):
                         result["remote_configs"].update(data)
                         break
-            except Exception:
-                continue
+                except Exception:
+                    pass
 
         # 1b. Fetch imap_success.json (if present, merge verified domains)
         for rp in REMOTE_SUCCESS_PATHS:
-            try:
-                with sftp.open(rp, "r") as f:
-                    data = json.load(f)
+            data_bytes = remote_read_compressed(ssh, rp)
+            if data_bytes:
+                try:
+                    data = json.loads(data_bytes.decode("utf-8", errors="replace"))
                     if data and isinstance(data, dict):
                         for dom, cfg in data.items():
                             if dom not in result["remote_configs"] and isinstance(cfg, dict):
                                 result["remote_configs"][dom] = cfg
                         break
-            except Exception:
-                continue
+                except Exception:
+                    pass
 
         # 2. Fetch imap_unusable.json
         for rp in REMOTE_UNUSABLE_PATHS:
-            try:
-                with sftp.open(rp, "r") as f:
-                    data = json.load(f)
+            data_bytes = remote_read_compressed(ssh, rp)
+            if data_bytes:
+                try:
+                    data = json.loads(data_bytes.decode("utf-8", errors="replace"))
                     if data:
                         result["remote_unusable"] = set(data if isinstance(data, list) else data.keys())
                         break
-            except Exception:
-                continue
+                except Exception:
+                    pass
 
         # 3. Fetch already_accounts.txt
         for rp in REMOTE_ALREADY_PATHS:
-            try:
-                with sftp.open(rp, "r") as f:
-                    content = f.read().decode("utf-8", errors="replace")
-                    lines = [l.strip().lower() for l in content.splitlines() if l.strip()]
+            data_bytes = remote_read_compressed(ssh, rp)
+            if data_bytes:
+                try:
+                    lines = [l.strip().lower() for l in data_bytes.decode("utf-8", errors="replace").splitlines() if l.strip()]
                     result["remote_already"] = set(lines)
                     break
-            except Exception:
-                continue
+                except Exception:
+                    pass
 
         # 4. Check if node is busy running a checker job
         try:
@@ -202,7 +235,6 @@ def fetch_node_data(node):
         except Exception:
             result["is_busy"] = False
 
-        sftp.close()
         ssh.close()
     except Exception as e:
         result["error"] = str(e)
@@ -223,44 +255,22 @@ def push_node_data(node, master_configs, master_unusable):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(host, port=port, username=user, password=password, timeout=12)
-        sftp = ssh.open_sftp()
 
         cfg_bytes = json.dumps(master_configs, indent=2, ensure_ascii=False).encode("utf-8")
         unusable_bytes = json.dumps(sorted(list(master_unusable)), indent=2, ensure_ascii=False).encode("utf-8")
 
         for rp in REMOTE_CONFIG_PATHS:
-            try:
-                pdir = os.path.dirname(rp)
-                ssh.exec_command(f"mkdir -p {pdir}")
-                with sftp.open(rp + ".tmp", "w") as f:
-                    f.write(cfg_bytes)
-                ssh.exec_command(f"mv {rp}.tmp {rp}")
-            except Exception:
-                continue
+            remote_write_compressed(ssh, rp, cfg_bytes)
 
         for rp in REMOTE_UNUSABLE_PATHS:
-            try:
-                pdir = os.path.dirname(rp)
-                ssh.exec_command(f"mkdir -p {pdir}")
-                with sftp.open(rp + ".tmp", "w") as f:
-                    f.write(unusable_bytes)
-                ssh.exec_command(f"mv {rp}.tmp {rp}")
-            except Exception:
-                continue
+            remote_write_compressed(ssh, rp, unusable_bytes)
 
         if os.path.exists(LOCAL_MASTER_EXCLUSION):
             try:
                 with open(LOCAL_MASTER_EXCLUSION, "rb") as ef:
                     excl_bytes = ef.read()
                 for rp in REMOTE_EXCLUSION_PATHS:
-                    try:
-                        pdir = os.path.dirname(rp)
-                        ssh.exec_command(f"mkdir -p {pdir}")
-                        with sftp.open(rp + ".tmp", "w") as f:
-                            f.write(excl_bytes)
-                        ssh.exec_command(f"mv {rp}.tmp {rp}")
-                    except Exception:
-                        continue
+                    remote_write_compressed(ssh, rp, excl_bytes)
             except Exception:
                 pass
 
@@ -269,18 +279,18 @@ def push_node_data(node, master_configs, master_unusable):
                 with open(LOCAL_MASTER_ALREADY, "rb") as af:
                     already_bytes = af.read()
                 for rp in REMOTE_ALREADY_PATHS:
-                    try:
-                        pdir = os.path.dirname(rp)
-                        ssh.exec_command(f"mkdir -p {pdir}")
-                        with sftp.open(rp + ".tmp", "w") as f:
-                            f.write(already_bytes)
-                        ssh.exec_command(f"mv {rp}.tmp {rp}")
-                    except Exception:
-                        continue
+                    remote_write_compressed(ssh, rp, already_bytes)
             except Exception:
                 pass
 
-        sftp.close()
+        if os.path.exists(NODES_CONFIG_PATH):
+            try:
+                with open(NODES_CONFIG_PATH, "rb") as nf:
+                    nodes_bytes = nf.read()
+                for rp in REMOTE_NODES_PATHS:
+                    remote_write_compressed(ssh, rp, nodes_bytes)
+            except Exception:
+                pass
 
         # Check if node is actively running a checker job — wait if busy
         for _wait_step in range(15):

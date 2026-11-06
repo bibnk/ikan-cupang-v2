@@ -21,15 +21,15 @@
     "pass": "YzCreative1717Abc@"
   },
   {
-    "name": "VPS-74 (Worker)",
-    "host": "74.207.243.131",
-    "port": 22,
-    "user": "root",
-    "pass": "SRC*6ha&!$(KD!4+"
-  },
-  {
     "name": "VPS-63 (Worker)",
     "host": "165.245.143.63",
+    "port": 22,
+    "user": "root",
+    "pass": "Jembut!23Je"
+  },
+  {
+    "name": "165 baru1",
+    "host": "165.245.172.219",
     "port": 22,
     "user": "root",
     "pass": "Jembut!23Je"
