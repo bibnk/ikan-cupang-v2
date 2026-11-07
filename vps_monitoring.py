@@ -453,6 +453,21 @@ def deploy_and_sync_node(node):
         return False, str(e)
 
 
+def normalize_ingest_key(line):
+    """Canonical already key for the master ingest path: lowercase email, verbatim password.
+
+    The password must survive untouched — it is what LOGIN sends, and folding it
+    here silently rewrote every mixed-case record arriving from a worker.
+    """
+    s = (line or "").strip()
+    if not s or s.startswith("#"):
+        return ""
+    if ":" in s:
+        em, pw = s.split(":", 1)
+        return f"{em.strip().lower()}:{pw.strip()}"
+    return s.lower()
+
+
 def record_already_combos_master(combos):
     """
     Append unique combos to Master already_accounts.txt across known locations.
@@ -463,9 +478,9 @@ def record_already_combos_master(combos):
     clean = set()
     for c in combos:
         if isinstance(c, str):
-            s = c.strip().lower()
-            if s and ":" in s:
-                clean.add(s)
+            key = normalize_ingest_key(c)
+            if key and ":" in key:
+                clean.add(key)
     if not clean:
         return 0
 
