@@ -22,7 +22,10 @@ import imap_engine  # noqa: E402
 from imap_engine import _DEFAULT_SKIP_SET, _load_skip_domains  # noqa: E402
 
 
-EXPECTED_DEFAULT = ["hotmail", "live", "msn", "outlook", "yahoo", "interia", "poczta.fm"]
+# skip_domains.json is now an operator-override list that starts EMPTY.
+# Public mail providers are blocked via imap_unusable.json instead, so the seed
+# no longer ships a copy of that list.
+EXPECTED_DEFAULT = []
 
 
 def _redirect_skip_paths(tmp_path, monkeypatch):

@@ -1,0 +1,26 @@
+# Normalise line endings in the repository.
+#
+# The working tree mixes CRLF (files touched on Windows) with LF (files touched
+# on Linux), which produced spurious "in sync" results for the cluster sync and
+# noisy diffs on every commit. Force LF in the repository for text files; git
+# still presents CRLF in a Windows checkout if core.autocrlf wants it.
+* text=auto eol=lf
+
+# Binary assets must never be rewritten.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.so binary
+*.pyc binary
+
+# Shell scripts must keep LF to stay executable on Linux.
+*.sh text eol=lf
+
+# Windows launchers keep CRLF so cmd.exe is happy.
+*.bat text eol=crlf
+*.cmd text eol=crlf

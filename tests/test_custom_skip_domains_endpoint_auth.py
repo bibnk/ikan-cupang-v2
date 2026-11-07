@@ -141,16 +141,10 @@ def test_admin_get_returns_200_with_domains(client):
     assert isinstance(body, dict) and "domains" in body, (
         f"GET (admin) body must be a dict with 'domains' key; got {body!r}"
     )
-    assert body["domains"] == [
-        "hotmail",
-        "live",
-        "msn",
-        "outlook",
-        "yahoo",
-        "interia",
-        "poczta.fm",
-    ], (
-        f"GET (admin) on a fresh path must return seeded default; "
+    # Fresh path seeds an empty override list; public providers are blocked by
+    # imap_unusable.json, not by this file.
+    assert body["domains"] == [], (
+        f"GET (admin) on a fresh path must return the empty seed; "
         f"got {body['domains']!r}"
     )
 

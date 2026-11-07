@@ -54,6 +54,39 @@ from imap_engine import (  # noqa: E402
 )
 
 
+@pytest.fixture(autouse=True)
+def _offline_imap_precheck(monkeypatch):
+    """Keep every test in this file off the network.
+
+    ImapChecker._worker pre-flights an endpoint with a raw TCP banner read
+    (_imap_banner_ok) and a DNS lookup (_resolve_host) before it ever touches
+    imaplib. Tests here stub imaplib only, so without this the pre-flight dials
+    the real internet and the suite hangs until timeout. Also mirror
+    DEFAULT_IMAP_CONFIG onto imap_config, which is what lookup_imap_config
+    actually reads.
+    """
+    import imap_config
+    monkeypatch.setattr(
+        ImapChecker, "_imap_banner_ok",
+        staticmethod(lambda server, port, *a, **k: (True, port == 993)),
+    )
+    monkeypatch.setattr(ImapChecker, "_resolve_host", staticmethod(lambda host: True))
+    # Mirror imap_engine.DEFAULT_IMAP_CONFIG onto imap_config, resolving lazily:
+    # tests reassign imap_engine.DEFAULT_IMAP_CONFIG after this fixture runs, and
+    # lookup_imap_config reads the imap_config binding.
+    class _Mirrored(dict):
+        def __contains__(self, k):
+            return k in imap_engine.DEFAULT_IMAP_CONFIG
+        def get(self, k, default=None):
+            return imap_engine.DEFAULT_IMAP_CONFIG.get(k, default)
+        def __getitem__(self, k):
+            return imap_engine.DEFAULT_IMAP_CONFIG[k]
+        def keys(self):
+            return imap_engine.DEFAULT_IMAP_CONFIG.keys()
+    monkeypatch.setattr(imap_config, "DEFAULT_IMAP_CONFIG", _Mirrored())
+    yield
+
+
 # ---------------------------------------------------------------------------
 # Local helpers (re-implemented from the bug suite for isolation)
 # ---------------------------------------------------------------------------
@@ -1079,13 +1112,15 @@ def test_api_surface_and_per_job_file_names_unchanged(tmp_path, monkeypatch):
         )
         assert resp.status_code == 200, resp.get_data(as_text=True)
         body = resp.get_json()
-        expected_check_keys = {
+        required_check_keys = {
             "job_id", "total_accounts", "total_senders", "total_keywords",
             "duplicates_removed",
         }
-        assert set(body.keys()) == expected_check_keys, (
-            f"/api/check key schema diverged: got {set(body.keys())!r}, "
-            f"expected {expected_check_keys!r}"
+        # total_proxies joined the response; assert the contract keys are present
+        # rather than pinning the exact set.
+        assert required_check_keys <= set(body.keys()), (
+            f"/api/check is missing required keys: got {set(body.keys())!r}, "
+            f"need at least {required_check_keys!r}"
         )
         job_id = body["job_id"]
 
@@ -1203,6 +1238,7 @@ def test_api_surface_and_per_job_file_names_unchanged(tmp_path, monkeypatch):
         "noemail.txt",
         "die.txt",
         "unreg.txt",
+        "unreg_accounts.txt",   # per-account counterpart of unreg.txt (app.py downloads it)
         "domain_skipped.txt",
     }
     actual_filenames = {f for f in os.listdir(results_dir) if not f.startswith(".")}

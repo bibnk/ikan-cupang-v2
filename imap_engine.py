@@ -179,20 +179,12 @@ SKIP_DOMAINS_PATH = os.path.join(
 )
 SKIP_DOMAINS_LOCK_PATH = SKIP_DOMAINS_PATH + ".lock"
 
-# First-run seed only. NOT referenced from _worker (Requirement 5.2).
-_DEFAULT_SKIP_SET = [
-    "hotmail",
-    "live",
-    "msn",
-    "outlook",
-    "yahoo",
-    "gmail",
-    "googlemail",
-    "zoho",
-    "icloud",
-    "interia",
-    "poczta.fm",
-]
+# skip_domains.json starts EMPTY. It is the operator's per-instance override
+# list, not a copy of the public-provider blocklist: imap_unusable.json already
+# covers hotmail/gmail/outlook/yahoo/icloud/live/msn/zoho, and having two lists
+# mean the same thing caused accounts to be classified by whichever ran first.
+# Keep this empty and let imap_unusable.json stay the single source of truth.
+_DEFAULT_SKIP_SET = []
 
 # Whitespace detector for skip-entry validation (Requirement 9.3).
 _WHITESPACE_RE = re.compile(r"\s")
@@ -575,16 +567,19 @@ def _save_skip_domains(value):
 
 
 def _load_skip_domains():
-    """Load the skip-domains list, seeding ``_DEFAULT_SKIP_SET`` on first run.
+    """Load the skip-domains list (operator overrides), seeding an empty list.
 
     Acquires ``FileLock(SKIP_DOMAINS_LOCK_PATH, timeout=MASTER_LOCK_TIMEOUT_SECONDS)``.
 
-    - Missing file → write ``_DEFAULT_SKIP_SET`` via the same atomic
+    - Missing file → write ``_DEFAULT_SKIP_SET`` (empty) via the same atomic
       tmp + fsync + ``os.replace`` sequence as ``_save_skip_domains``
       and return ``list(_DEFAULT_SKIP_SET)``.
     - Corrupt file (JSON error or not ``list[str]``) → return ``[]``
       WITHOUT rewriting (Requirement 2.3).
     - ``filelock.Timeout`` propagates to the caller.
+
+    Blocking public mail providers belongs in imap_unusable.json, which is
+    already consulted separately by the worker.
     """
     lock = FileLock(SKIP_DOMAINS_LOCK_PATH, timeout=MASTER_LOCK_TIMEOUT_SECONDS)
     with lock:
@@ -993,7 +988,7 @@ class ImapChecker:
             try:
                 record_live_to_already(email_addr, password)
                 if self.use_already:
-                    self.already_set.add(f"{email_addr.strip().lower()}:{password.strip()}")
+                    self.already_set.add(_normalize_already_key(f"{email_addr}:{password}"))
             except Exception:
                 pass
 
@@ -1247,7 +1242,7 @@ class ImapChecker:
 
             # Filter Already: skip account if already verified live previously
             if self.use_already:
-                combo_key = f"{email_addr.strip().lower()}:{password.strip()}"
+                combo_key = _normalize_already_key(f"{email_addr}:{password}")
                 if combo_key in self.already_set:
                     self._write_already(email_addr, password)
                     self._update_progress("already")

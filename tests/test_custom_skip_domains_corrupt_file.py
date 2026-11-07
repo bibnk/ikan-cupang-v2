@@ -140,9 +140,9 @@ def test_corrupt_invalid_json_returns_empty_no_rewrite(tmp_path, monkeypatch):
         tmp_path,
         monkeypatch,
         corrupt_bytes=b"{not json}",
-        account_domain="hotmail.com",
+        account_domain="corrupt-probe.test",
     )
-    _assert_account_not_skipped(checker, results_dir, "alice@hotmail.com:hunter2")
+    _assert_account_not_skipped(checker, results_dir, "alice@corrupt-probe.test:hunter2")
 
 
 # ---------------------------------------------------------------------------
@@ -154,9 +154,9 @@ def test_corrupt_non_list_root_returns_empty_no_rewrite(tmp_path, monkeypatch):
         tmp_path,
         monkeypatch,
         corrupt_bytes=b'{"foo": "bar"}',
-        account_domain="hotmail.com",
+        account_domain="corrupt-probe.test",
     )
-    _assert_account_not_skipped(checker, results_dir, "alice@hotmail.com:hunter2")
+    _assert_account_not_skipped(checker, results_dir, "alice@corrupt-probe.test:hunter2")
 
 
 # ---------------------------------------------------------------------------
@@ -170,6 +170,6 @@ def test_corrupt_list_non_string_element_returns_empty_no_rewrite(
         tmp_path,
         monkeypatch,
         corrupt_bytes=b'["hotmail", 42, "outlook"]',
-        account_domain="hotmail.com",
+        account_domain="corrupt-probe.test",
     )
-    _assert_account_not_skipped(checker, results_dir, "alice@hotmail.com:hunter2")
+    _assert_account_not_skipped(checker, results_dir, "alice@corrupt-probe.test:hunter2")
