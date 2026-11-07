@@ -80,6 +80,26 @@ def normalize_already_key(line: str) -> str:
     return s.lower()
 
 
+def _local_already_needs_rewrite(keys) -> bool:
+    """True when the on-disk local master is not already in canonical form.
+
+    Catches both a stray CRLF and any content drift, so a bad local file is
+    repaired on every sync instead of only when a node happens to send new
+    records.
+    """
+    if not os.path.exists(LOCAL_MASTER_ALREADY):
+        return False
+    try:
+        with open(LOCAL_MASTER_ALREADY, "rb") as f:
+            raw = f.read()
+    except Exception:
+        return False
+    if b"\r" in raw:
+        return True
+    canonical = ("\n".join(sorted(k for k in keys if k)) + "\n").encode("utf-8")
+    return raw != canonical
+
+
 DISALLOWED_KEYWORDS = [
     "google", "gmail", "googlemail", "aspmx",
     "outlook", "office365", "microsoft", "hotmail", "live.com", "msn.com",
@@ -294,8 +314,14 @@ def push_node_data(node, master_configs, master_unusable):
 
         if os.path.exists(LOCAL_MASTER_ALREADY):
             try:
-                with open(LOCAL_MASTER_ALREADY, "rb") as af:
-                    already_bytes = af.read()
+                # Canonicalise before pushing instead of shipping the file's raw
+                # bytes. A CRLF or stale local master was being copied verbatim
+                # onto every node, so its line ending and content drift spread
+                # cluster-wide and the per-file hash check could never converge.
+                with open(LOCAL_MASTER_ALREADY, "r", encoding="utf-8", errors="replace") as af:
+                    keys = {normalize_already_key(l) for l in af if l.strip()}
+                keys.discard("")
+                already_bytes = ("\n".join(sorted(keys)) + "\n").encode("utf-8")
                 for rp in REMOTE_ALREADY_PATHS:
                     remote_write_compressed(ssh, rp, already_bytes)
             except Exception:
@@ -443,11 +469,12 @@ def main():
         save_atomic_json(LOCAL_MASTER_CONFIG, local_configs, REPO_CONFIG)
     if pulled_unusable > 0:
         save_atomic_json(LOCAL_MASTER_UNUSABLE, sorted(list(local_unusable)), REPO_UNUSABLE)
-    if pulled_already > 0:
-        # newline="\n" keeps every node byte-identical. Without it the writer
-        # inherits the platform line ending, so a node writing CRLF and one
-        # writing LF produce different files that still compare "in sync".
-        already_content = "\n".join(sorted(list(local_already))) + "\n"
+    # Rewrite the local already master whenever its on-disk form differs from
+    # the canonical set — not only when something was pulled. A CRLF or stale
+    # local file otherwise survives forever and gets copied onto every node.
+    canonical_content = "\n".join(sorted(k for k in local_already if k)) + "\n"
+    if pulled_already > 0 or _local_already_needs_rewrite(list(local_already)):
+        already_content = canonical_content
         for ap in [LOCAL_MASTER_ALREADY, os.path.join(REPO_DIR, "already_accounts.txt"), os.path.join(os.path.dirname(__file__), "already_accounts.txt")]:
             if os.path.exists(os.path.dirname(ap)):
                 try:

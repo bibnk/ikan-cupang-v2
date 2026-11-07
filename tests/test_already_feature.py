@@ -83,6 +83,25 @@ try:
     check("round trip preserves the password exactly",
           "user@x.com:PassWord123" in back, str(back))
 
+    # ---- 6. the local-master rewrite guard trips on CRLF and on drift -----
+    p4 = os.path.join(tmp, "local_master.txt")
+    keys = {"user@x.com:PassWord123", "plain@x.com:lower"}
+    canonical = ("\n".join(sorted(keys)) + "\n").encode("utf-8")
+
+    sv.LOCAL_MASTER_ALREADY = p4
+    with open(p4, "wb") as f:
+        f.write(canonical)
+    check("guard: canonical file needs no rewrite",
+          sv._local_already_needs_rewrite(keys) is False)
+    with open(p4, "wb") as f:
+        f.write(canonical.replace(b"\n", b"\r\n"))
+    check("guard: CRLF file needs rewrite",
+          sv._local_already_needs_rewrite(keys) is True)
+    with open(p4, "wb") as f:
+        f.write(canonical + b"extra@x.com:Pw\n")
+    check("guard: content drift needs rewrite",
+          sv._local_already_needs_rewrite(keys) is True)
+
 finally:
     shutil.rmtree(tmp, ignore_errors=True)
 
