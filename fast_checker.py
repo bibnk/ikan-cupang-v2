@@ -697,8 +697,10 @@ class FastImapEngine:
             lower_email = email_addr.lower()
             domain = lower_email.split("@")[-1]
 
-            # 1. Check already verified
-            if self.already_accounts and f"{lower_email}:{password.strip()}" in self.already_accounts:
+            # 1. Check already verified. Both sides go through the same
+            # canonical form so a capital letter in the password cannot make a
+            # known-good record miss this gate and get re-checked every run.
+            if self.already_accounts and normalize_already_key(combo) in self.already_accounts:
                 self.already_count += 1
                 self.checked += 1
                 await self.write_queue.put(("already", combo))
@@ -1193,6 +1195,26 @@ class FastImapEngine:
             sys.stdout.flush()
 
 
+def normalize_already_key(line: str) -> str:
+    """Canonical already-accounts key: lowercase email, verbatim password.
+
+    The password is case-sensitive for LOGIN, so only the email half may be
+    folded. The previous loader lowercased the whole line while the gate looked
+    up 'email:password' with its original case, so any record with a capital
+    letter in the password never matched and got re-checked on every run.
+    """
+    s = line.strip()
+    if not s or s.startswith("#"):
+        return ""
+    if ":" in s:
+        em, pw = s.split(":", 1)
+        return f"{em.strip().lower()}:{pw.strip()}"
+    return s.lower()
+
+
+_normalize_already_key = normalize_already_key
+
+
 def load_json_file(path: str) -> Any:
     if os.path.exists(path):
         try:
@@ -1255,9 +1277,9 @@ def main():
     if os.path.exists(already_path):
         with open(already_path, "r", encoding="utf-8", errors="replace") as f:
             for l in f:
-                l = l.strip()
-                if l and not l.startswith("#"):
-                    already_accounts.add(l.lower())
+                key = _normalize_already_key(l)
+                if key:
+                    already_accounts.add(key)
 
     accounts = parse_accounts_file(args.input)
     if not accounts:

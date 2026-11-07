@@ -56,7 +56,28 @@ def get_already_path():
             return p
     return candidates[-1]
 
+def _normalize_already_key(line: str) -> str:
+    """Canonical already-accounts key: lowercase email, verbatim password.
+
+    Skipping the '#' comment lines keeps a hand-edited file from poisoning the
+    set; folding only the email half keeps the password usable for LOGIN.
+    """
+    s = line.strip()
+    if not s or s.startswith("#"):
+        return ""
+    if ":" in s:
+        em, pw = s.split(":", 1)
+        return f"{em.strip().lower()}:{pw.strip()}"
+    return s.lower()
+
+
 def load_already_accounts() -> set:
+    """Load verified combos as canonical keys (lowercase email, verbatim password).
+
+    The password half must stay as written: it is passed to LOGIN, which is
+    case-sensitive, and folding it here makes every mixed-case record miss the
+    already-checked gate and get re-verified on each run.
+    """
     candidates = [
         "/opt/pmj/imap/already_accounts.txt",
         "/opt/imap-checker/already_accounts.txt",
@@ -69,13 +90,9 @@ def load_already_accounts() -> set:
             try:
                 with open(path, "r", encoding="utf-8", errors="replace") as f:
                     for line in f:
-                        line = line.strip()
-                        if line and not line.startswith("#"):
-                            if ":" in line:
-                                em, pw = line.split(":", 1)
-                                res.add(f"{em.strip().lower()}:{pw.strip()}")
-                            else:
-                                res.add(line.lower())
+                        key = _normalize_already_key(line)
+                        if key:
+                            res.add(key)
                 if res:
                     break
             except Exception:
@@ -141,10 +158,13 @@ def record_live_to_already(email_addr: str, password: str):
         for t in targets:
             try:
                 if os.path.exists(t):
-                    with open(t, "a", encoding="utf-8") as f:
+                    # newline="\n" keeps every copy byte-identical across nodes;
+                    # a platform-default CRLF makes identical content hash
+                    # differently and hides real drift during sync.
+                    with open(t, "a", encoding="utf-8", newline="\n") as f:
                         f.write(line)
                 elif os.path.exists(os.path.dirname(t)):
-                    with open(t, "a", encoding="utf-8") as f:
+                    with open(t, "a", encoding="utf-8", newline="\n") as f:
                         f.write(line)
             except Exception:
                 pass

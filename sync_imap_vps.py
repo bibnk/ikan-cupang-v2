@@ -62,6 +62,24 @@ REMOTE_NODES_PATHS = [
     "/opt/imap-checker/vps_nodes.json",
 ]
 
+
+def normalize_already_key(line: str) -> str:
+    """Canonical key for already_accounts entries: lowercase email, verbatim password.
+
+    Passwords are case-sensitive, so only the email half may be folded. Folding
+    the whole line (the previous behaviour) rewrote every mixed-case password in
+    lowercase as soon as a sync cycle wrote its in-memory set back to disk, and
+    the corrupted record then failed login on every later run.
+    """
+    s = line.strip()
+    if not s:
+        return ""
+    if ":" in s:
+        em, pw = s.split(":", 1)
+        return f"{em.strip().lower()}:{pw.strip()}"
+    return s.lower()
+
+
 DISALLOWED_KEYWORDS = [
     "google", "gmail", "googlemail", "aspmx",
     "outlook", "office365", "microsoft", "hotmail", "live.com", "msn.com",
@@ -221,7 +239,7 @@ def fetch_node_data(node):
             data_bytes = remote_read_compressed(ssh, rp)
             if data_bytes:
                 try:
-                    lines = [l.strip().lower() for l in data_bytes.decode("utf-8", errors="replace").splitlines() if l.strip()]
+                    lines = [normalize_already_key(l) for l in data_bytes.decode("utf-8", errors="replace").splitlines() if l.strip()]
                     result["remote_already"] = set(lines)
                     break
                 except Exception:
@@ -348,13 +366,16 @@ def main():
     local_unusable_raw = load_local_json(LOCAL_MASTER_UNUSABLE, REPO_UNUSABLE, default=[])
     local_unusable = set(local_unusable_raw if isinstance(local_unusable_raw, list) else local_unusable_raw.keys())
 
-    # Load local master already accounts
+    # Load local master already accounts.
+    # KEY FORMAT: email is lowercased, password is kept verbatim — passwords are
+    # case-sensitive for login, so folding them here silently corrupts the record
+    # once this set is written back to disk further down.
     local_already = set()
     for ap in [LOCAL_MASTER_ALREADY, os.path.join(REPO_DIR, "already_accounts.txt"), os.path.join(os.path.dirname(__file__), "already_accounts.txt")]:
         if os.path.exists(ap):
             try:
                 with open(ap, "r", encoding="utf-8", errors="replace") as af:
-                    local_already.update(l.strip().lower() for l in af if l.strip())
+                    local_already.update(normalize_already_key(l) for l in af if l.strip())
                 break
             except Exception:
                 pass
@@ -423,12 +444,15 @@ def main():
     if pulled_unusable > 0:
         save_atomic_json(LOCAL_MASTER_UNUSABLE, sorted(list(local_unusable)), REPO_UNUSABLE)
     if pulled_already > 0:
+        # newline="\n" keeps every node byte-identical. Without it the writer
+        # inherits the platform line ending, so a node writing CRLF and one
+        # writing LF produce different files that still compare "in sync".
         already_content = "\n".join(sorted(list(local_already))) + "\n"
         for ap in [LOCAL_MASTER_ALREADY, os.path.join(REPO_DIR, "already_accounts.txt"), os.path.join(os.path.dirname(__file__), "already_accounts.txt")]:
             if os.path.exists(os.path.dirname(ap)):
                 try:
                     tmp = ap + ".tmp"
-                    with open(tmp, "w", encoding="utf-8") as af:
+                    with open(tmp, "w", encoding="utf-8", newline="\n") as af:
                         af.write(already_content)
                     os.replace(tmp, ap)
                 except Exception:
@@ -443,8 +467,15 @@ def main():
             continue
         cfg_diff = len(local_configs) - len(res["remote_configs"])
         unusable_diff = len(local_unusable) - len(res["remote_unusable"])
-        already_diff = len(local_already) - len(res.get("remote_already", set()))
-        if cfg_diff > 0 or unusable_diff > 0 or already_diff > 0:
+        # Compare the sets both ways. A length difference misses the case where
+        # the node holds records the master lacks (normal: a worker verifies a
+        # new combo mid-run) — the count then goes negative, the node is judged
+        # in-sync, and the master's own repairs never reach it.
+        remote_already = res.get("remote_already", set())
+        already_missing = len(local_already - remote_already)
+        already_extra = len(remote_already - local_already)
+        already_diff = already_missing
+        if cfg_diff > 0 or unusable_diff > 0 or already_missing > 0 or already_extra > 0:
             nodes_to_update.append((res["node"], cfg_diff, unusable_diff, already_diff))
         else:
             print(f"  ✔️  [{res['name']}] Sudah 100% ke-sync (Tidak perlu update)", flush=True)

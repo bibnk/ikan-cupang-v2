@@ -488,7 +488,9 @@ def record_already_combos_master(combos):
         if new_items:
             try:
                 os.makedirs(os.path.dirname(t), exist_ok=True)
-                with open(t, "a", encoding="utf-8") as f:
+                # newline="\n": identical content must hash identically on every
+                # node, otherwise sync's in-sync check compares unequal files.
+                with open(t, "a", encoding="utf-8", newline="\n") as f:
                     for item in new_items:
                         f.write(item + "\n")
                 added = max(added, len(new_items))
