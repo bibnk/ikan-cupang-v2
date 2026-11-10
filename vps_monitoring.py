@@ -71,79 +71,55 @@ def save_nodes(nodes_list):
     return saved_any
 
 
+def _master_paths(filename):
+    """Candidate master paths, most authoritative first for THIS platform.
+
+    On the Linux nodes the service master is /opt/...; on the dashboard host it
+    is the operator's Desktop copy. Ordering /opt first on Windows is actively
+    harmful: os.path.exists() resolves it to C:\\opt\\..., so a stray stub tree
+    there wins and every node reads as out of sync.
+    """
+    desktop = os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", filename)
+    local = os.path.join(os.path.dirname(os.path.abspath(__file__)), filename)
+    opt = ["/opt/pmj/imap/" + filename, "/opt/imap-checker/" + filename]
+    if _is_posix_host():
+        return opt + [desktop, local]
+    return [desktop, local]
+
+
 def get_master_stats():
     """Get local/master IMAP configs and unusable count."""
-    config_paths = [
-        "/opt/pmj/imap/imap_config.json",
-        "/opt/imap-checker/imap_config.json",
-        os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "imap_config.json"),
-        os.path.join(os.path.dirname(__file__), "imap_config.json"),
-    ]
-    unusable_paths = [
-        "/opt/pmj/imap/imap_unusable.json",
-        "/opt/imap-checker/imap_unusable.json",
-        os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "imap_unusable.json"),
-        os.path.join(os.path.dirname(__file__), "imap_unusable.json"),
-    ]
-    exclusion_paths = [
-        "/opt/pmj/imap/subject_exclusion_list.json",
-        "/opt/imap-checker/subject_exclusion_list.json",
-        os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "subject_exclusion_list.json"),
-        os.path.join(os.path.dirname(__file__), "subject_exclusion_list.json"),
-    ]
-    already_paths = [
-        "/opt/pmj/imap/already_accounts.txt",
-        "/opt/imap-checker/already_accounts.txt",
-        os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "already_accounts.txt"),
-        os.path.join(os.path.dirname(__file__), "already_accounts.txt"),
-    ]
 
-    cfg_count = 0
-    unusable_count = 0
-    exclusion_count = 0
-    already_count = 0
-
-    for p in config_paths:
-        if os.path.exists(p):
+    def _pick_json(paths):
+        """Largest parsed count wins, so a stub file cannot masquerade as master."""
+        best = 0
+        for p in paths:
+            if not os.path.exists(p):
+                continue
             try:
                 with open(p, "r", encoding="utf-8") as f:
-                    cfg_count = len(json.load(f))
-                break
+                    best = max(best, len(json.load(f)))
             except Exception:
-                pass
+                continue
+        return best
 
-    for p in unusable_paths:
-        if os.path.exists(p):
-            try:
-                with open(p, "r", encoding="utf-8") as f:
-                    unusable_count = len(json.load(f))
-                break
-            except Exception:
-                pass
-
-    for p in exclusion_paths:
-        if os.path.exists(p):
-            try:
-                with open(p, "r", encoding="utf-8") as f:
-                    exclusion_count = len(json.load(f))
-                break
-            except Exception:
-                pass
-
-    for p in already_paths:
-        if os.path.exists(p):
+    def _pick_lines(paths):
+        best = 0
+        for p in paths:
+            if not os.path.exists(p):
+                continue
             try:
                 with open(p, "r", encoding="utf-8", errors="replace") as f:
-                    already_count = sum(1 for l in f if l.strip())
-                break
+                    best = max(best, sum(1 for l in f if l.strip()))
             except Exception:
-                pass
+                continue
+        return best
 
     return {
-        "configs_count": cfg_count,
-        "unusable_count": unusable_count,
-        "exclusion_count": exclusion_count,
-        "already_count": already_count,
+        "configs_count": _pick_json(_master_paths("imap_config.json")),
+        "unusable_count": _pick_json(_master_paths("imap_unusable.json")),
+        "exclusion_count": _pick_json(_master_paths("subject_exclusion_list.json")),
+        "already_count": _pick_lines(_master_paths("already_accounts.txt")),
     }
 
 
@@ -497,12 +473,17 @@ def record_already_combos_master(combos):
     # the imapchecker user, so the same file was opened twice and every append
     # landed double.
     targets, seen = [], set()
-    for p in (
-        "/opt/pmj/imap/already_accounts.txt",
-        "/opt/imap-checker/already_accounts.txt",
+    cand = []
+    if _is_posix_host():
+        cand += [
+            "/opt/pmj/imap/already_accounts.txt",
+            "/opt/imap-checker/already_accounts.txt",
+        ]
+    cand += [
         os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "already_accounts.txt"),
         os.path.join(os.path.dirname(os.path.abspath(__file__)), "already_accounts.txt"),
-    ):
+    ]
+    for p in cand:
         try:
             rp = os.path.realpath(p)
         except Exception:
@@ -537,15 +518,30 @@ def record_already_combos_master(combos):
     return added
 
 
+def _is_posix_host():
+    return os.name != "nt"
+
+
 def _config_targets():
-    """Existing IMAP config files to keep in sync, deduplicated by real path."""
-    out, seen = [], set()
-    for p in (
-        "/opt/pmj/imap/imap_config.json",
-        "/opt/imap-checker/imap_config.json",
+    """Existing IMAP config files to keep in sync, deduplicated by real path.
+
+    The /opt paths only exist on the Linux nodes. On Windows os.path.exists()
+    resolves them to C:\\opt\\..., so a push from the dashboard would silently
+    create a parallel tree there — and the Linux-first read order would then
+    treat that stub as the master, reporting every node as out of sync.
+    """
+    candidates = []
+    if _is_posix_host():
+        candidates += [
+            "/opt/pmj/imap/imap_config.json",
+            "/opt/imap-checker/imap_config.json",
+        ]
+    candidates += [
         os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "imap_config.json"),
         os.path.join(os.path.dirname(os.path.abspath(__file__)), "imap_config.json"),
-    ):
+    ]
+    out, seen = [], set()
+    for p in candidates:
         try:
             rp = os.path.realpath(p)
         except Exception:
