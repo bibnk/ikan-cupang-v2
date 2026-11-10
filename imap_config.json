@@ -31,9 +31,19 @@
     "port": 993,
     "server": "imap.012.net.il"
   },
+  "013.net": {
+    "port": 993,
+    "server": "mail.013.net",
+    "ssl": true
+  },
   "013.net.il": {
     "port": 143,
     "server": "mail.013.net.il"
+  },
+  "013net.net": {
+    "port": 993,
+    "server": "mail.013net.net",
+    "ssl": true
   },
   "015.net.il": {
     "port": 993,
@@ -95,6 +105,14 @@
     "port": 993,
     "server": "imap.aliyun.com"
   },
+  "10004.gotoc.cc": {
+    "port": 993,
+    "server": "imaps.10004.gotoc.cc"
+  },
+  "10007.gotoc.cc": {
+    "port": 993,
+    "server": "imap.gotoc.cc"
+  },
   "1000bravos.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -127,6 +145,10 @@
     "port": 993,
     "server": "hzmx01.mxmail.netease.com"
   },
+  "10193.gotoc.cc": {
+    "port": 993,
+    "server": "imap.10193.gotoc.cc"
+  },
   "10197.gotoc.cc": {
     "port": 993,
     "server": "imap.10197.gotoc.cc"
@@ -146,6 +168,10 @@
   "10205.gotoc.cc": {
     "port": 993,
     "server": "imaps.10205.gotoc.cc"
+  },
+  "10208.gotoc.cc": {
+    "port": 993,
+    "server": "imap.10208.gotoc.cc"
   },
   "10212.gotoc.cc": {
     "port": 993,
@@ -218,6 +244,10 @@
   "11-16.ph": {
     "port": 993,
     "server": "imap.11-16.ph"
+  },
+  "11.pymail.vip": {
+    "port": 993,
+    "server": "imap.11.pymail.vip"
   },
   "1108.gotoc.cc": {
     "port": 993,
@@ -299,6 +329,10 @@
     "port": 993,
     "server": "imap.11443.gotoc.cc"
   },
+  "11457.gotoc.cc": {
+    "port": 993,
+    "server": "imap.11457.gotoc.cc"
+  },
   "1146.gotoc.cc": {
     "port": 993,
     "server": "mail.1146.gotoc.cc"
@@ -323,6 +357,14 @@
     "port": 993,
     "server": "imap.1147.gotoc.cc"
   },
+  "11471.gotoc.cc": {
+    "port": 993,
+    "server": "imap.11471.gotoc.cc"
+  },
+  "11473.gotoc.cc": {
+    "port": 993,
+    "server": "imap.11473.gotoc.cc"
+  },
   "11477.gotoc.cc": {
     "port": 993,
     "server": "imap.11477.gotoc.cc"
@@ -334,6 +376,10 @@
   "11480.gotoc.cc": {
     "port": 993,
     "server": "imap.11480.gotoc.cc"
+  },
+  "11487.gotoc.cc": {
+    "port": 993,
+    "server": "imap.11487.gotoc.cc"
   },
   "11488.gotoc.cc": {
     "port": 993,
@@ -350,6 +396,10 @@
   "115.gotoc.cc": {
     "port": 993,
     "server": "115.gotoc.cc"
+  },
+  "115.pymail.vip": {
+    "port": 993,
+    "server": "imap.115.pymail.vip"
   },
   "11500.gotoc.cc": {
     "port": 993,
@@ -370,6 +420,10 @@
   "11513.gotoc.cc": {
     "port": 993,
     "server": "imap.11513.gotoc.cc"
+  },
+  "11514.gotoc.cc": {
+    "port": 993,
+    "server": "imap.11514.gotoc.cc"
   },
   "11520.gotoc.cc": {
     "port": 993,
@@ -463,6 +517,10 @@
     "port": 993,
     "server": "imap.11593.gotoc.cc"
   },
+  "116.pymail.vip": {
+    "port": 993,
+    "server": "imap.pymail.vip"
+  },
   "11603.gotoc.cc": {
     "port": 993,
     "server": "imaps.11603.gotoc.cc"
@@ -503,9 +561,17 @@
     "port": 993,
     "server": "imap.11703.gotoc.cc"
   },
+  "11704.gotoc.cc": {
+    "port": 993,
+    "server": "imap.11704.gotoc.cc"
+  },
   "11706.gotoc.cc": {
     "port": 993,
     "server": "imaps.11706.gotoc.cc"
+  },
+  "11712.gotoc.cc": {
+    "port": 993,
+    "server": "imap.11712.gotoc.cc"
   },
   "11718.gotoc.cc": {
     "port": 993,
@@ -514,6 +580,22 @@
   "11722.gotoc.cc": {
     "port": 993,
     "server": "imap.11722.gotoc.cc"
+  },
+  "11740.gotoc.cc": {
+    "port": 993,
+    "server": "imap.11740.gotoc.cc"
+  },
+  "11743.gotoc.cc": {
+    "port": 993,
+    "server": "imap.11743.gotoc.cc"
+  },
+  "11751.gotoc.cc": {
+    "port": 993,
+    "server": "11751.gotoc.cc"
+  },
+  "11780.gotoc.cc": {
+    "port": 993,
+    "server": "imap.11780.gotoc.cc"
   },
   "11799.gotoc.cc": {
     "port": 993,
@@ -595,6 +677,14 @@
     "port": 993,
     "server": "mail14.mydevil.net"
   },
+  "125.pymail.vip": {
+    "port": 993,
+    "server": "imap.125.pymail.vip"
+  },
+  "12574.gotos.cc": {
+    "port": 993,
+    "server": "imap.12574.gotos.cc"
+  },
   "126.com": {
     "port": 993,
     "server": "imap.126.com"
@@ -630,6 +720,10 @@
   "12tv.es": {
     "port": 993,
     "server": "mail.12tv.es"
+  },
+  "13.gotoc.cc": {
+    "port": 993,
+    "server": "imap.13.gotoc.cc"
   },
   "130.gotoc.cc": {
     "port": 993,
@@ -686,6 +780,10 @@
   "13099.so8ojd.top": {
     "port": 993,
     "server": "imap.13099.so8ojd.top"
+  },
+  "131.gotoc.cc": {
+    "port": 993,
+    "server": "imap.131.gotoc.cc"
   },
   "13100.so8ojd.top": {
     "port": 993,
@@ -751,6 +849,10 @@
     "port": 993,
     "server": "mail.13299.so8ojd.top"
   },
+  "133.pymail.vip": {
+    "port": 993,
+    "server": "imap.133.pymail.vip"
+  },
   "1337.no": {
     "port": 993,
     "server": "smtp.1337.no"
@@ -783,6 +885,14 @@
     "port": 993,
     "server": "imap.13842.gotos.cc"
   },
+  "13887.gotos.cc": {
+    "port": 993,
+    "server": "imap.13887.gotos.cc"
+  },
+  "13890.gotos.cc": {
+    "port": 993,
+    "server": "imaps.gotos.cc"
+  },
   "138os.lernsax.de": {
     "port": 993,
     "server": "imap.138os.lernsax.de"
@@ -799,6 +909,10 @@
     "port": 993,
     "server": "imap.139.tw"
   },
+  "13909.77mail.cc": {
+    "port": 993,
+    "server": "13909.77mail.cc"
+  },
   "13d01.mspz4.gob.ec": {
     "port": 993,
     "server": "mspz4.gob.ec"
@@ -810,6 +924,11 @@
   "13tabeliao.com.br": {
     "port": 993,
     "server": "mail.13tabeliao.com.br"
+  },
+  "14.pymail.vip": {
+    "port": 993,
+    "server": "14.pymail.vip",
+    "ssl": true
   },
   "14038.yk778.cn": {
     "port": 993,
@@ -823,6 +942,14 @@
     "port": 993,
     "server": "imap.1436.gotoc.cc"
   },
+  "144.gotoc.cc": {
+    "port": 993,
+    "server": "mail.144.gotoc.cc"
+  },
+  "144.pymail.vip": {
+    "port": 993,
+    "server": "imap.144.pymail.vip"
+  },
   "1442.gotoc.cc": {
     "port": 993,
     "server": "mail.1442.gotoc.cc"
@@ -834,6 +961,10 @@
   "1445.gotoc.cc": {
     "port": 993,
     "server": "mail.1445.gotoc.cc"
+  },
+  "1447.gotoc.cc": {
+    "port": 993,
+    "server": "mail.1447.gotoc.cc"
   },
   "1448.gotoc.cc": {
     "port": 993,
@@ -855,9 +986,17 @@
     "port": 993,
     "server": "imap.14758.gotos.cc"
   },
+  "1476.gotoc.cc": {
+    "port": 993,
+    "server": "imap.gotoc.cc"
+  },
   "149.gotoc.cc": {
     "port": 993,
     "server": "imaps.149.gotoc.cc"
+  },
+  "149.pymail.vip": {
+    "port": 993,
+    "server": "imap.149.pymail.vip"
   },
   "1491.gotoc.cc": {
     "port": 993,
@@ -886,6 +1025,10 @@
   "14qrcode.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "15.pymail.vip": {
+    "port": 993,
+    "server": "imap.15.pymail.vip"
   },
   "1506.gotoc.cc": {
     "port": 993,
@@ -971,6 +1114,10 @@
     "port": 993,
     "server": "imap.1577.gotoc.cc"
   },
+  "158.pymail.vip": {
+    "port": 993,
+    "server": "imaps.158.pymail.vip"
+  },
   "158275.xyz": {
     "port": 993,
     "server": "imap.158275.xyz"
@@ -983,6 +1130,10 @@
     "port": 993,
     "server": "imap.gotoc.cc"
   },
+  "1593.gotoc.cc": {
+    "port": 993,
+    "server": "mail.1593.gotoc.cc"
+  },
   "1598.gotoc.cc": {
     "port": 993,
     "server": "mail.1598.gotoc.cc"
@@ -990,6 +1141,14 @@
   "15m.tgstg.com": {
     "port": 993,
     "server": "imap.15m.tgstg.com"
+  },
+  "16.pymail.vip": {
+    "port": 993,
+    "server": "imap.pymail.vip"
+  },
+  "160.pymail.vip": {
+    "port": 993,
+    "server": "imap.160.pymail.vip"
   },
   "1601.gotoc.cc": {
     "port": 993,
@@ -1023,6 +1182,10 @@
     "port": 993,
     "server": "162.gotoc.cc"
   },
+  "16278.gotos.cc": {
+    "port": 993,
+    "server": "imap.16278.gotos.cc"
+  },
   "163.com": {
     "port": 993,
     "server": "imap.163.com"
@@ -1042,6 +1205,10 @@
   "1651.gotos.cc": {
     "port": 993,
     "server": "imap.1651.gotos.cc"
+  },
+  "166.pymail.vip": {
+    "port": 993,
+    "server": "imap.pymail.vip"
   },
   "16687.77mail.cc": {
     "port": 993,
@@ -1103,9 +1270,17 @@
     "port": 993,
     "server": "1743.gotoc.cc"
   },
+  "1744.gotoc.cc": {
+    "port": 993,
+    "server": "imap.1744.gotoc.cc"
+  },
   "1747.gotoc.cc": {
     "port": 993,
     "server": "imap.1747.gotoc.cc"
+  },
+  "177.pymail.vip": {
+    "port": 993,
+    "server": "imap.177.pymail.vip"
   },
   "17821.gotos.cc": {
     "port": 993,
@@ -1135,9 +1310,17 @@
     "port": 993,
     "server": "imaps.1797.gotoc.cc"
   },
+  "180.pymail.vip": {
+    "port": 993,
+    "server": "imap.180.pymail.vip"
+  },
   "1800.gotoc.cc": {
     "port": 993,
     "server": "imap.1800.gotoc.cc"
+  },
+  "1803.gotoc.cc": {
+    "port": 993,
+    "server": "imap.1803.gotoc.cc"
   },
   "18054.gotos.cc": {
     "port": 993,
@@ -1167,9 +1350,22 @@
     "port": 993,
     "server": "1813.gotoc.cc"
   },
+  "182.pymail.vip": {
+    "port": 993,
+    "server": "imap.182.pymail.vip",
+    "ssl": true
+  },
   "182.yk778.cn": {
     "port": 993,
     "server": "mail.182.yk778.cn"
+  },
+  "1820.gotoc.cc": {
+    "port": 993,
+    "server": "imap.1820.gotoc.cc"
+  },
+  "18277.gotos.cc": {
+    "port": 993,
+    "server": "imap.18277.gotos.cc"
   },
   "18280.gotos.cc": {
     "port": 993,
@@ -1207,9 +1403,21 @@
     "port": 993,
     "server": "imap.18354.gotos.cc"
   },
+  "184.pymail.vip": {
+    "port": 993,
+    "server": "imap.pymail.vip"
+  },
   "1840.gotoc.cc": {
     "port": 993,
     "server": "imap.1840.gotoc.cc"
+  },
+  "185.pymail.vip": {
+    "port": 993,
+    "server": "imap.185.pymail.vip"
+  },
+  "1856.gotoc.cc": {
+    "port": 993,
+    "server": "imap.1856.gotoc.cc"
   },
   "1857.gotoc.cc": {
     "port": 993,
@@ -1222,6 +1430,10 @@
   "1863.gotoc.cc": {
     "port": 993,
     "server": "mail.1863.gotoc.cc"
+  },
+  "1864.gotoc.cc": {
+    "port": 993,
+    "server": "imap.1864.gotoc.cc"
   },
   "1865.gotos.cc": {
     "port": 993,
@@ -1279,9 +1491,21 @@
     "port": 993,
     "server": "imap.1905.gotoc.cc"
   },
+  "1908.gotoc.cc": {
+    "port": 993,
+    "server": "1908.gotoc.cc"
+  },
+  "1912.gotoc.cc": {
+    "port": 993,
+    "server": "imaps.1912.gotoc.cc"
+  },
   "1913.gotoc.cc": {
     "port": 993,
     "server": "imap.1913.gotoc.cc"
+  },
+  "1919.gotoc.cc": {
+    "port": 993,
+    "server": "mail.1919.gotoc.cc"
   },
   "191art.com.tw": {
     "port": 993,
@@ -1479,6 +1703,10 @@
     "port": 993,
     "server": "mail.2000sub.org"
   },
+  "2004.gotoc.cc": {
+    "port": 993,
+    "server": "imap.2004.gotoc.cc"
+  },
   "2013.gotoc.cc": {
     "port": 993,
     "server": "mail.2013.gotoc.cc"
@@ -1515,6 +1743,10 @@
     "port": 993,
     "server": "imap.2049.gotoc.cc"
   },
+  "205.pymail.vip": {
+    "port": 993,
+    "server": "imap.pymail.vip"
+  },
   "206.gotoc.cc": {
     "port": 993,
     "server": "imap.206.gotoc.cc"
@@ -1538,6 +1770,11 @@
   "208.yk778.cn": {
     "port": 993,
     "server": "imap.208.yk778.cn"
+  },
+  "209.pymail.vip": {
+    "port": 993,
+    "server": "mail.209.pymail.vip",
+    "ssl": true
   },
   "20928.gotos.cc": {
     "port": 993,
@@ -1571,9 +1808,17 @@
     "port": 993,
     "server": "mail.20oz.ae"
   },
+  "21.pymail.vip": {
+    "port": 993,
+    "server": "imap.21.pymail.vip"
+  },
   "210.yk778.cn": {
     "port": 993,
     "server": "imap.210.yk778.cn"
+  },
+  "21061.gotos.cc": {
+    "port": 993,
+    "server": "imap.21061.gotos.cc"
   },
   "21072.gotos.cc": {
     "port": 993,
@@ -1594,6 +1839,10 @@
   "21118.gotos.cc": {
     "port": 993,
     "server": "21118.gotos.cc"
+  },
+  "21134.gotos.cc": {
+    "port": 993,
+    "server": "imap.21134.gotos.cc"
   },
   "21141.gotos.cc": {
     "port": 993,
@@ -1623,6 +1872,10 @@
     "port": 993,
     "server": "imap.21182.gotos.cc"
   },
+  "21202.gotos.cc": {
+    "port": 993,
+    "server": "mail.21202.gotos.cc"
+  },
   "2125.gotoc.cc": {
     "port": 993,
     "server": "imaps.2125.gotoc.cc"
@@ -1634,6 +1887,14 @@
   "21319.gotos.cc": {
     "port": 993,
     "server": "mail.21319.gotos.cc"
+  },
+  "2137.gotoc.cc": {
+    "port": 993,
+    "server": "imap.2137.gotoc.cc"
+  },
+  "214.pymail.vip": {
+    "port": 993,
+    "server": "imap.214.pymail.vip"
   },
   "2140.gotoc.cc": {
     "port": 993,
@@ -1650,6 +1911,10 @@
   "216-booking.com": {
     "port": 993,
     "server": "imap.216-booking.com"
+  },
+  "216.pymail.vip": {
+    "port": 993,
+    "server": "imap.pymail.vip"
   },
   "21742.yk778.cn": {
     "port": 993,
@@ -1671,6 +1936,10 @@
     "port": 993,
     "server": "mx.21sn.net"
   },
+  "22.pymail.vip": {
+    "port": 993,
+    "server": "22.pymail.vip"
+  },
   "22003.77mail.cc": {
     "port": 993,
     "server": "imap.22003.77mail.cc"
@@ -1686,6 +1955,11 @@
   "22028.77mail.cc": {
     "port": 993,
     "server": "mail.22028.77mail.cc"
+  },
+  "221.pymail.vip": {
+    "port": 993,
+    "server": "imaps.221.pymail.vip",
+    "ssl": true
   },
   "221.yk778.cn": {
     "port": 993,
@@ -1718,6 +1992,10 @@
   "226.gotoc.cc": {
     "port": 993,
     "server": "mail.226.gotoc.cc"
+  },
+  "226.pymail.vip": {
+    "port": 993,
+    "server": "imap.226.pymail.vip"
   },
   "226.yk778.cn": {
     "port": 993,
@@ -1770,6 +2048,10 @@
   "23177.yk778.cn": {
     "port": 993,
     "server": "imap.23177.yk778.cn"
+  },
+  "235.pymail.vip": {
+    "port": 993,
+    "server": "imap.235.pymail.vip"
   },
   "235.yk778.cn": {
     "port": 993,
@@ -1879,9 +2161,17 @@
     "port": 993,
     "server": "mail.253shop.com"
   },
+  "255.pymail.vip": {
+    "port": 993,
+    "server": "imap.255.pymail.vip"
+  },
   "25555.gotos.cc": {
     "port": 993,
     "server": "imap.25555.gotos.cc"
+  },
+  "256.gotoc.cc": {
+    "port": 993,
+    "server": "imap.256.gotoc.cc"
   },
   "25684.gotos.cc": {
     "port": 993,
@@ -1915,6 +2205,10 @@
     "port": 993,
     "server": "imaps.77mail.cc"
   },
+  "26111.gotos.cc": {
+    "port": 993,
+    "server": "imap.26111.gotos.cc"
+  },
   "26119.gotos.cc": {
     "port": 993,
     "server": "imap.26119.gotos.cc"
@@ -1922,6 +2216,10 @@
   "26120.77mail.cc": {
     "port": 993,
     "server": "26120.77mail.cc"
+  },
+  "26141.gotos.cc": {
+    "port": 993,
+    "server": "imap.26141.gotos.cc"
   },
   "26162.yk778.cn": {
     "port": 993,
@@ -2003,6 +2301,10 @@
     "port": 993,
     "server": "26300.gotos.cc"
   },
+  "26379.gotos.cc": {
+    "port": 993,
+    "server": "imap.26379.gotos.cc"
+  },
   "26390.gotos.cc": {
     "port": 993,
     "server": "mail.26390.gotos.cc"
@@ -2010,6 +2312,10 @@
   "26410.gotos.cc": {
     "port": 993,
     "server": "mail.26410.gotos.cc"
+  },
+  "26411.gotos.cc": {
+    "port": 993,
+    "server": "imap.26411.gotos.cc"
   },
   "26430.gotos.cc": {
     "port": 993,
@@ -2090,6 +2396,10 @@
   "282.so8ojd.top": {
     "port": 993,
     "server": "imap.282.so8ojd.top"
+  },
+  "28203.gotos.cc": {
+    "port": 993,
+    "server": "imap.28203.gotos.cc"
   },
   "28221.gotos.cc": {
     "port": 993,
@@ -2218,6 +2528,10 @@
   "2975.gotoc.cc": {
     "port": 993,
     "server": "2975.gotoc.cc"
+  },
+  "2982.gotoc.cc": {
+    "port": 993,
+    "server": "imap.2982.gotoc.cc"
   },
   "2985.gotoc.cc": {
     "port": 993,
@@ -2407,6 +2721,10 @@
     "port": 993,
     "server": "mail.2rmlab.net"
   },
+  "2sautomacao.com.br": {
+    "port": 993,
+    "server": "2sautomacao.com.br"
+  },
   "2strokemonkey.com": {
     "port": 993,
     "server": "imap.2strokemonkey.com"
@@ -2439,13 +2757,25 @@
     "port": 993,
     "server": "imap.3-gs-riesa.lernsax.de"
   },
+  "3.pymail.vip": {
+    "port": 993,
+    "server": "imap.3.pymail.vip"
+  },
   "3.tamail.club": {
     "port": 993,
     "server": "stcail11.cn"
   },
+  "30.pymail.vip": {
+    "port": 993,
+    "server": "imap.30.pymail.vip"
+  },
   "3003.gotoc.cc": {
     "port": 993,
     "server": "imap.3003.gotoc.cc"
+  },
+  "3005.gotoc.cc": {
+    "port": 993,
+    "server": "imap.gotoc.cc"
   },
   "3007.gotoc.cc": {
     "port": 993,
@@ -2523,6 +2853,10 @@
     "port": 993,
     "server": "imaps.3232.gotoc.cc"
   },
+  "3233.gotoc.cc": {
+    "port": 993,
+    "server": "3233.gotoc.cc"
+  },
   "3237.gotoc.cc": {
     "port": 993,
     "server": "imap.3237.gotoc.cc"
@@ -2579,6 +2913,14 @@
     "port": 993,
     "server": "imap.3301216799.mirmplay.link"
   },
+  "3301365199.mirmplay.link": {
+    "port": 993,
+    "server": "imap.3301365199.mirmplay.link"
+  },
+  "3301929035.mirmplay.link": {
+    "port": 993,
+    "server": "mail.mirmplay.link"
+  },
   "3314.gotoc.cc": {
     "port": 993,
     "server": "imap.3314.gotoc.cc"
@@ -2599,13 +2941,25 @@
     "port": 993,
     "server": "imap.34.gotoc.cc"
   },
+  "34.pymail.vip": {
+    "port": 993,
+    "server": "imap.34.pymail.vip"
+  },
   "3400hillerod.dk": {
     "port": 993,
     "server": "imap.3400hillerod.dk"
   },
+  "3406.gotos.cc": {
+    "port": 993,
+    "server": "imap.3406.gotos.cc"
+  },
   "3428.gotoc.cc": {
     "port": 993,
     "server": "imap.3428.gotoc.cc"
+  },
+  "3444.gotoc.cc": {
+    "port": 993,
+    "server": "mail.3444.gotoc.cc"
   },
   "3445.gotoc.cc": {
     "port": 993,
@@ -2618,6 +2972,10 @@
   "3454.gotoc.cc": {
     "port": 993,
     "server": "imap.3454.gotoc.cc"
+  },
+  "3459.gotos.cc": {
+    "port": 993,
+    "server": "imap.3459.gotos.cc"
   },
   "3461.gotoc.cc": {
     "port": 993,
@@ -2751,6 +3109,10 @@
     "port": 993,
     "server": "imap.36osdd.lernsax.de"
   },
+  "37.pymail.vip": {
+    "port": 993,
+    "server": "imap.37.pymail.vip"
+  },
   "374.gotoc.cc": {
     "port": 993,
     "server": "374.gotoc.cc"
@@ -2806,6 +3168,10 @@
   "3915.gotos.cc": {
     "port": 993,
     "server": "imap.3915.gotos.cc"
+  },
+  "395.gotos.cc": {
+    "port": 993,
+    "server": "imap.395.gotos.cc"
   },
   "3980.jp": {
     "port": 993,
@@ -3033,6 +3399,10 @@
     "port": 993,
     "server": "mail.3pass.kr"
   },
+  "3pi.fr": {
+    "port": 993,
+    "server": "mail.3pi.fr"
+  },
   "3pj.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -3133,6 +3503,10 @@
     "port": 993,
     "server": "mail.404mail.pl"
   },
+  "404marketers.com": {
+    "port": 993,
+    "server": "imap.hostinger.com"
+  },
   "411-realestate.com": {
     "port": 993,
     "server": "411-realestate.com"
@@ -3177,6 +3551,10 @@
     "port": 993,
     "server": "imap.4377.gotoc.cc"
   },
+  "4379.gotoc.cc": {
+    "port": 993,
+    "server": "mail.4379.gotoc.cc"
+  },
   "4381.gotoc.cc": {
     "port": 993,
     "server": "imap.4381.gotoc.cc"
@@ -3185,9 +3563,17 @@
     "port": 993,
     "server": "imap.44.gotoc.cc"
   },
+  "44.pymail.vip": {
+    "port": 993,
+    "server": "imap.44.pymail.vip"
+  },
   "4409.yk778.cn": {
     "port": 993,
     "server": "4409.yk778.cn"
+  },
+  "442.gotoc.cc": {
+    "port": 993,
+    "server": "imap.442.gotoc.cc"
   },
   "4467.673u.com": {
     "port": 993,
@@ -3216,6 +3602,14 @@
   "4500.gotoc.cc": {
     "port": 993,
     "server": "imap.4500.gotoc.cc"
+  },
+  "4518.gotoc.cc": {
+    "port": 993,
+    "server": "imap.4518.gotoc.cc"
+  },
+  "4520.gotoc.cc": {
+    "port": 993,
+    "server": "imap.4520.gotoc.cc"
   },
   "4529.gotoc.cc": {
     "port": 993,
@@ -3265,6 +3659,10 @@
     "port": 993,
     "server": "imap.4561.gotoc.cc"
   },
+  "4582.gotoc.cc": {
+    "port": 993,
+    "server": "imap.4582.gotoc.cc"
+  },
   "4590.gotoc.cc": {
     "port": 993,
     "server": "imaps.4590.gotoc.cc"
@@ -3289,6 +3687,10 @@
     "port": 993,
     "server": "imaps.4608.gotoc.cc"
   },
+  "461.gotoc.cc": {
+    "port": 993,
+    "server": "imap.461.gotoc.cc"
+  },
   "4610.gotoc.cc": {
     "port": 993,
     "server": "imap.4610.gotoc.cc"
@@ -3300,6 +3702,10 @@
   "468.gotoc.cc": {
     "port": 993,
     "server": "imap.468.gotoc.cc"
+  },
+  "47.pymail.vip": {
+    "port": 993,
+    "server": "imap.47.pymail.vip"
   },
   "470.gotoc.cc": {
     "port": 993,
@@ -3393,6 +3799,10 @@
     "port": 993,
     "server": "imap.4820.gotos.cc"
   },
+  "4821.gotoc.cc": {
+    "port": 993,
+    "server": "mail.4821.gotoc.cc"
+  },
   "4835.yk778.cn": {
     "port": 993,
     "server": "imap.4835.yk778.cn"
@@ -3441,6 +3851,10 @@
     "port": 993,
     "server": "imap.4898.gotoc.cc"
   },
+  "49.pymail.vip": {
+    "port": 993,
+    "server": "49.pymail.vip"
+  },
   "49.yk778.cn": {
     "port": 993,
     "server": "imap.49.yk778.cn"
@@ -3465,6 +3879,10 @@
     "port": 993,
     "server": "imap.4918.gotoc.cc"
   },
+  "4920.gotoc.cc": {
+    "port": 993,
+    "server": "imap.4920.gotoc.cc"
+  },
   "4921.gotoc.cc": {
     "port": 993,
     "server": "mail.4921.gotoc.cc"
@@ -3476,6 +3894,10 @@
   "4926.gotoc.cc": {
     "port": 993,
     "server": "imap.4926.gotoc.cc"
+  },
+  "4927.gotoc.cc": {
+    "port": 993,
+    "server": "imap.4927.gotoc.cc"
   },
   "4932.gotoc.cc": {
     "port": 993,
@@ -3496,6 +3918,10 @@
   "4943.gotoc.cc": {
     "port": 993,
     "server": "imap.4943.gotoc.cc"
+  },
+  "4946.gotoc.cc": {
+    "port": 993,
+    "server": "imap.4946.gotoc.cc"
   },
   "4947.gotoc.cc": {
     "port": 993,
@@ -3713,6 +4139,11 @@
     "port": 993,
     "server": "imap.5.yk778.cn"
   },
+  "50.pymail.vip": {
+    "port": 993,
+    "server": "mail.50.pymail.vip",
+    "ssl": true
+  },
   "5000.xfxefw85.cc": {
     "port": 993,
     "server": "imap.5000.xfxefw85.cc"
@@ -3897,9 +4328,21 @@
     "port": 993,
     "server": "imap.5129.xfxefw85.cc"
   },
+  "5134.gotoc.cc": {
+    "port": 993,
+    "server": "imap.5134.gotoc.cc"
+  },
+  "5153.gotoc.cc": {
+    "port": 993,
+    "server": "imap.5153.gotoc.cc"
+  },
   "5177.xfxefw85.cc": {
     "port": 993,
     "server": "mail.5177.xfxefw85.cc"
+  },
+  "5187.gotoc.cc": {
+    "port": 993,
+    "server": "imap.5187.gotoc.cc"
   },
   "5189.gotos.cc": {
     "port": 993,
@@ -3984,6 +4427,10 @@
   "5279.gotos.cc": {
     "port": 993,
     "server": "imap.5279.gotos.cc"
+  },
+  "53.gotoc.cc": {
+    "port": 993,
+    "server": "imap.53.gotoc.cc"
   },
   "53.ru": {
     "port": 993,
@@ -4137,6 +4584,10 @@
     "port": 993,
     "server": "imap.54beb.a9ifwa.online"
   },
+  "55.gotoc.cc": {
+    "port": 993,
+    "server": "imap.55.gotoc.cc"
+  },
   "5507.xfxefw85.cc": {
     "port": 993,
     "server": "imap.5507.xfxefw85.cc"
@@ -4193,6 +4644,11 @@
     "port": 993,
     "server": "imaps.56db3.a9ifwa.online"
   },
+  "57.pymail.vip": {
+    "port": 993,
+    "server": "57.pymail.vip",
+    "ssl": true
+  },
   "5725.gotoc.cc": {
     "port": 993,
     "server": "imap.5725.gotoc.cc"
@@ -4209,9 +4665,17 @@
     "port": 993,
     "server": "5745.gotoc.cc"
   },
+  "5747.gotoc.cc": {
+    "port": 993,
+    "server": "imap.gotoc.cc"
+  },
   "5751.gotoc.cc": {
     "port": 993,
     "server": "mail.5751.gotoc.cc"
+  },
+  "5753.gotoc.cc": {
+    "port": 993,
+    "server": "mail.5753.gotoc.cc"
   },
   "5769.gotoc.cc": {
     "port": 993,
@@ -4277,6 +4741,10 @@
     "port": 993,
     "server": "imap.5836.gotoc.cc"
   },
+  "5849.gotoc.cc": {
+    "port": 993,
+    "server": "mail.5849.gotoc.cc"
+  },
   "5854.gotoc.cc": {
     "port": 993,
     "server": "mail.5854.gotoc.cc"
@@ -4293,6 +4761,10 @@
     "port": 993,
     "server": "imap.5868.gotoc.cc"
   },
+  "5871.gotoc.cc": {
+    "port": 993,
+    "server": "imaps.5871.gotoc.cc"
+  },
   "588.gotoc.cc": {
     "port": 993,
     "server": "imap.588.gotoc.cc"
@@ -4300,6 +4772,10 @@
   "58m.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "59.pymail.vip": {
+    "port": 993,
+    "server": "imap.59.pymail.vip"
   },
   "5923.gotoc.cc": {
     "port": 993,
@@ -4329,6 +4805,10 @@
     "port": 993,
     "server": "imap.5940.gotoc.cc"
   },
+  "5945.gotoc.cc": {
+    "port": 993,
+    "server": "imap.5945.gotoc.cc"
+  },
   "5948.gotoc.cc": {
     "port": 993,
     "server": "imap.5948.gotoc.cc"
@@ -4345,9 +4825,17 @@
     "port": 993,
     "server": "imap.5962.gotoc.cc"
   },
+  "5965.gotoc.cc": {
+    "port": 993,
+    "server": "imap.5965.gotoc.cc"
+  },
   "5975.gotoc.cc": {
     "port": 993,
     "server": "imap.5975.gotoc.cc"
+  },
+  "5989.gotoc.cc": {
+    "port": 993,
+    "server": "imap.5989.gotoc.cc"
   },
   "5990.gotoc.cc": {
     "port": 993,
@@ -4461,9 +4949,17 @@
     "port": 993,
     "server": "imap.6.gotoc.cc"
   },
+  "60.pymail.vip": {
+    "port": 993,
+    "server": "mail.60.pymail.vip"
+  },
   "60.ru": {
     "port": 993,
     "server": "imap.60.ru"
+  },
+  "6002.gotoc.cc": {
+    "port": 993,
+    "server": "imap.6002.gotoc.cc"
   },
   "6024.gotoc.cc": {
     "port": 993,
@@ -4529,13 +5025,25 @@
     "port": 993,
     "server": "imap.61.gotoc.cc"
   },
+  "6108.gotoc.cc": {
+    "port": 993,
+    "server": "6108.gotoc.cc"
+  },
   "6115.gotoc.cc": {
     "port": 993,
     "server": "imap.6115.gotoc.cc"
   },
+  "6121.gotoc.cc": {
+    "port": 993,
+    "server": "imap.6121.gotoc.cc"
+  },
   "6122.gotoc.cc": {
     "port": 993,
     "server": "6122.gotoc.cc"
+  },
+  "6128.gotoc.cc": {
+    "port": 993,
+    "server": "imap.6128.gotoc.cc"
   },
   "6133.gotoc.cc": {
     "port": 993,
@@ -4552,6 +5060,10 @@
   "6150.gotoc.cc": {
     "port": 993,
     "server": "mail.6150.gotoc.cc"
+  },
+  "6155.gotoc.cc": {
+    "port": 993,
+    "server": "imap.6155.gotoc.cc"
   },
   "6161.gotoc.cc": {
     "port": 993,
@@ -4589,6 +5101,10 @@
     "port": 993,
     "server": "imaps.6196.gotoc.cc"
   },
+  "6198.gotoc.cc": {
+    "port": 993,
+    "server": "imap.6198.gotoc.cc"
+  },
   "620.gotoc.cc": {
     "port": 993,
     "server": "imap.620.gotoc.cc"
@@ -4617,6 +5133,10 @@
     "port": 993,
     "server": "625.so8ojd.top"
   },
+  "6265.gotoc.cc": {
+    "port": 993,
+    "server": "6265.gotoc.cc"
+  },
   "6266.gotoc.cc": {
     "port": 993,
     "server": "imap.6266.gotoc.cc"
@@ -4633,9 +5153,17 @@
     "port": 993,
     "server": "imap.6291.gotoc.cc"
   },
+  "63.pymail.vip": {
+    "port": 993,
+    "server": "imap.63.pymail.vip"
+  },
   "6303.gotoc.cc": {
     "port": 993,
     "server": "imaps.6303.gotoc.cc"
+  },
+  "6306.gotoc.cc": {
+    "port": 993,
+    "server": "mail.6306.gotoc.cc"
   },
   "6307.gotoc.cc": {
     "port": 993,
@@ -4648,6 +5176,10 @@
   "6310.gotoc.cc": {
     "port": 993,
     "server": "imap.6310.gotoc.cc"
+  },
+  "6310.gotos.cc": {
+    "port": 993,
+    "server": "imap.6310.gotos.cc"
   },
   "6318.gotoc.cc": {
     "port": 993,
@@ -4681,6 +5213,10 @@
     "port": 993,
     "server": "imap.64.yk778.cn"
   },
+  "6426.gotoc.cc": {
+    "port": 993,
+    "server": "mail.6426.gotoc.cc"
+  },
   "6481.gotoc.cc": {
     "port": 993,
     "server": "imap.6481.gotoc.cc"
@@ -4713,6 +5249,10 @@
     "port": 993,
     "server": "imap.6575.gotoc.cc"
   },
+  "6597.gotoc.cc": {
+    "port": 993,
+    "server": "6597.gotoc.cc"
+  },
   "66-67charger.com": {
     "port": 993,
     "server": "mail.66-67charger.com"
@@ -4720,6 +5260,10 @@
   "66.gotoc.cc": {
     "port": 993,
     "server": "imap.66.gotoc.cc"
+  },
+  "66.pymail.vip": {
+    "port": 993,
+    "server": "imap.66.pymail.vip"
   },
   "6608.gotos.cc": {
     "port": 993,
@@ -4732,6 +5276,10 @@
   "666.so8ojd.top": {
     "port": 993,
     "server": "imap.666.so8ojd.top"
+  },
+  "6667.gotoc.cc": {
+    "port": 993,
+    "server": "imap.6667.gotoc.cc"
   },
   "6670.77mail.cc": {
     "port": 993,
@@ -4748,6 +5296,10 @@
   "6675.gotos.cc": {
     "port": 993,
     "server": "imap.6675.gotos.cc"
+  },
+  "668.pymail.vip": {
+    "port": 993,
+    "server": "imap.668.pymail.vip"
   },
   "6692.xfxefw85.cc": {
     "port": 993,
@@ -4792,6 +5344,10 @@
   "6751.12570.pro": {
     "port": 993,
     "server": "imap.6751.12570.pro"
+  },
+  "6775.gotoc.cc": {
+    "port": 993,
+    "server": "imaps.6775.gotoc.cc"
   },
   "6778.gotoc.cc": {
     "port": 993,
@@ -4848,6 +5404,10 @@
   "6886.xfxefw85.cc": {
     "port": 993,
     "server": "imap.6886.xfxefw85.cc"
+  },
+  "689.gotoc.cc": {
+    "port": 993,
+    "server": "imap.689.gotoc.cc"
   },
   "6892.xfxefw85.cc": {
     "port": 993,
@@ -5037,6 +5597,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "70.pymail.vip": {
+    "port": 993,
+    "server": "imap.pymail.vip"
+  },
   "7005.gotos.cc": {
     "port": 993,
     "server": "imaps.7005.gotos.cc"
@@ -5081,9 +5645,17 @@
     "port": 993,
     "server": "7078.xfxefw85.cc"
   },
+  "709.gotoc.cc": {
+    "port": 993,
+    "server": "imap.709.gotoc.cc"
+  },
   "70h.ea34.icu": {
     "port": 993,
     "server": "imap.70h.ea34.icu"
+  },
+  "71.pymail.vip": {
+    "port": 993,
+    "server": "imap.71.pymail.vip"
   },
   "71.ru": {
     "port": 993,
@@ -5129,6 +5701,10 @@
     "port": 993,
     "server": "imap.72financial.com"
   },
+  "73.pymail.vip": {
+    "port": 993,
+    "server": "imap.73.pymail.vip"
+  },
   "732.gotoc.cc": {
     "port": 993,
     "server": "imap.732.gotoc.cc"
@@ -5141,9 +5717,21 @@
     "port": 993,
     "server": "imap.74.gotoc.cc"
   },
+  "749.gotoc.cc": {
+    "port": 993,
+    "server": "imap.749.gotoc.cc"
+  },
   "74mail.ru": {
     "port": 993,
     "server": "imap.mail.ru"
+  },
+  "750ispossible.com": {
+    "port": 993,
+    "server": "mail.750ispossible.com"
+  },
+  "751.gotoc.cc": {
+    "port": 993,
+    "server": "imap.751.gotoc.cc"
   },
   "753.gotoc.cc": {
     "port": 993,
@@ -5152,6 +5740,10 @@
   "7574.gotoc.cc": {
     "port": 993,
     "server": "mail.7574.gotoc.cc"
+  },
+  "7575.gotoc.cc": {
+    "port": 993,
+    "server": "imap.7575.gotoc.cc"
   },
   "7579.gotoc.cc": {
     "port": 993,
@@ -5253,6 +5845,14 @@
     "port": 993,
     "server": "imap.7716nohana.com"
   },
+  "7731.gotoc.cc": {
+    "port": 993,
+    "server": "imap.7731.gotoc.cc"
+  },
+  "7739.gotoc.cc": {
+    "port": 993,
+    "server": "imaps.7739.gotoc.cc"
+  },
   "7744.gotoc.cc": {
     "port": 993,
     "server": "imap.7744.gotoc.cc"
@@ -5260,6 +5860,14 @@
   "7753.gotoc.cc": {
     "port": 993,
     "server": "7753.gotoc.cc"
+  },
+  "7783.gotoc.cc": {
+    "port": 993,
+    "server": "imap.7783.gotoc.cc"
+  },
+  "7787.gotoc.cc": {
+    "port": 993,
+    "server": "imap.7787.gotoc.cc"
   },
   "778988xyscxy.vip": {
     "port": 993,
@@ -5297,13 +5905,33 @@
     "port": 993,
     "server": "imap.77kind.top"
   },
+  "782.gotoc.cc": {
+    "port": 993,
+    "server": "mail.782.gotoc.cc"
+  },
+  "7861.gotos.cc": {
+    "port": 993,
+    "server": "imaps.7861.gotos.cc"
+  },
   "7887.gotos.cc": {
     "port": 993,
     "server": "imap.7887.gotos.cc"
   },
+  "7888.gotoc.cc": {
+    "port": 993,
+    "server": "imap.7888.gotoc.cc"
+  },
   "7895.gotoc.cc": {
     "port": 993,
     "server": "imap.7895.gotoc.cc"
+  },
+  "79.pymail.vip": {
+    "port": 993,
+    "server": "imap.79.pymail.vip"
+  },
+  "7911.gotoc.cc": {
+    "port": 993,
+    "server": "imap.7911.gotoc.cc"
   },
   "7921.gotoc.cc": {
     "port": 993,
@@ -5397,13 +6025,29 @@
     "port": 993,
     "server": "alltheemails.com"
   },
+  "81.pymail.vip": {
+    "port": 993,
+    "server": "imap.81.pymail.vip"
+  },
   "8199sn.com": {
     "port": 143,
     "server": "imap.8199sn.com"
   },
+  "82.pymail.vip": {
+    "port": 993,
+    "server": "imaps.82.pymail.vip"
+  },
+  "83.gotoc.cc": {
+    "port": 993,
+    "server": "imap.83.gotoc.cc"
+  },
   "837y.com": {
     "port": 993,
     "server": "mail.837y.com"
+  },
+  "839.gotoc.cc": {
+    "port": 993,
+    "server": "839.gotoc.cc"
   },
   "841.gotoc.cc": {
     "port": 993,
@@ -5416,6 +6060,18 @@
   "84bit.de": {
     "port": 993,
     "server": "mail.84bit.de"
+  },
+  "85.gotoc.cc": {
+    "port": 993,
+    "server": "imap.85.gotoc.cc"
+  },
+  "85.pymail.vip": {
+    "port": 993,
+    "server": "imap.85.pymail.vip"
+  },
+  "86.pymail.vip": {
+    "port": 993,
+    "server": "imap.86.pymail.vip"
   },
   "862.gotoc.cc": {
     "port": 993,
@@ -5456,6 +6112,10 @@
   "868solutions.tn": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "87.gotoc.cc": {
+    "port": 993,
+    "server": "mail.87.gotoc.cc"
   },
   "8703.gotoc.cc": {
     "port": 993,
@@ -5625,6 +6285,10 @@
     "port": 993,
     "server": "mail.8907.gotoc.cc"
   },
+  "891.gotoc.cc": {
+    "port": 993,
+    "server": "imap.891.gotoc.cc"
+  },
   "8910.gotoc.cc": {
     "port": 993,
     "server": "mail.8910.gotoc.cc"
@@ -5672,6 +6336,10 @@
   "8935.gotoc.cc": {
     "port": 993,
     "server": "imap.8935.gotoc.cc"
+  },
+  "8936.gotoc.cc": {
+    "port": 993,
+    "server": "imap.8936.gotoc.cc"
   },
   "8937.gotoc.cc": {
     "port": 993,
@@ -5721,6 +6389,10 @@
     "port": 993,
     "server": "mail.8952.gotoc.cc"
   },
+  "8954.gotoc.cc": {
+    "port": 993,
+    "server": "imap.8954.gotoc.cc"
+  },
   "8956.gotoc.cc": {
     "port": 993,
     "server": "8956.gotoc.cc"
@@ -5753,6 +6425,10 @@
     "port": 993,
     "server": "imaps.8979.gotoc.cc"
   },
+  "8981.gotoc.cc": {
+    "port": 993,
+    "server": "imap.8981.gotoc.cc"
+  },
   "8982.gotoc.cc": {
     "port": 993,
     "server": "imap.gotoc.cc"
@@ -5769,6 +6445,10 @@
     "port": 993,
     "server": "imaps.8992.gotoc.cc"
   },
+  "8994.gotoc.cc": {
+    "port": 993,
+    "server": "imap.8994.gotoc.cc"
+  },
   "8998.gotoc.cc": {
     "port": 993,
     "server": "imap.8998.gotoc.cc"
@@ -5780,6 +6460,10 @@
   "8raction.pk": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "901.gotoc.cc": {
+    "port": 993,
+    "server": "imaps.901.gotoc.cc"
   },
   "9017.gotoc.cc": {
     "port": 993,
@@ -5821,6 +6505,10 @@
     "port": 993,
     "server": "imap.9041.gotoc.cc"
   },
+  "9042.gotoc.cc": {
+    "port": 993,
+    "server": "imap.9042.gotoc.cc"
+  },
   "9043.673u.com": {
     "port": 993,
     "server": "imap.673u.com"
@@ -5836,6 +6524,10 @@
   "9050.gotoc.cc": {
     "port": 993,
     "server": "imap.9050.gotoc.cc"
+  },
+  "9053.gotoc.cc": {
+    "port": 993,
+    "server": "imap.9053.gotoc.cc"
   },
   "9054.gotoc.cc": {
     "port": 993,
@@ -5893,6 +6585,10 @@
     "port": 993,
     "server": "9100.gotoc.cc"
   },
+  "9110.gotoc.cc": {
+    "port": 993,
+    "server": "imap.9110.gotoc.cc"
+  },
   "9112.gotoc.cc": {
     "port": 993,
     "server": "imap.9112.gotoc.cc"
@@ -5916,6 +6612,10 @@
   "911interpreters.com": {
     "port": 993,
     "server": "mail.911interpreters.com"
+  },
+  "9129.gotoc.cc": {
+    "port": 993,
+    "server": "imap.9129.gotoc.cc"
   },
   "9130.gotoc.cc": {
     "port": 993,
@@ -5961,6 +6661,11 @@
     "port": 993,
     "server": "imaps.9187.gotoc.cc"
   },
+  "919.ne.jp": {
+    "port": 993,
+    "server": "mail.919.ne.jp",
+    "ssl": true
+  },
   "9190.gotoc.cc": {
     "port": 993,
     "server": "imap.9190.gotoc.cc"
@@ -5968,6 +6673,10 @@
   "91travel.in": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "92.pymail.vip": {
+    "port": 993,
+    "server": "imap.pymail.vip"
   },
   "9201.gotoc.cc": {
     "port": 993,
@@ -6025,6 +6734,10 @@
     "port": 993,
     "server": "imaps.9280.gotoc.cc"
   },
+  "9281.gotoc.cc": {
+    "port": 993,
+    "server": "imap.9281.gotoc.cc"
+  },
   "9283.gotoc.cc": {
     "port": 993,
     "server": "imap.9283.gotoc.cc"
@@ -6032,6 +6745,14 @@
   "9288.gotos.cc": {
     "port": 993,
     "server": "imap.9288.gotos.cc"
+  },
+  "930.pymail.vip": {
+    "port": 993,
+    "server": "imap.930.pymail.vip"
+  },
+  "933.pymail.vip": {
+    "port": 993,
+    "server": "imap.pymail.vip"
   },
   "9333.gotos.cc": {
     "port": 993,
@@ -6049,6 +6770,10 @@
     "port": 993,
     "server": "mail.9360.gotoc.cc"
   },
+  "9361.gotoc.cc": {
+    "port": 993,
+    "server": "imap.9361.gotoc.cc"
+  },
   "93645996-12-20170309203634.webstarterz.com": {
     "port": 993,
     "server": "mail.93645996-12-20170309203634.webstarterz.com"
@@ -6056,6 +6781,10 @@
   "93697.a9ifwa.online": {
     "port": 993,
     "server": "imap.93697.a9ifwa.online"
+  },
+  "9382.gotoc.cc": {
+    "port": 993,
+    "server": "imap.9382.gotoc.cc"
   },
   "94.gotoc.cc": {
     "port": 993,
@@ -6089,9 +6818,17 @@
     "port": 993,
     "server": "imap.9477.gotoc.cc"
   },
+  "95.pymail.vip": {
+    "port": 993,
+    "server": "imap.95.pymail.vip"
+  },
   "9568.gotoc.cc": {
     "port": 993,
     "server": "imap.9568.gotoc.cc"
+  },
+  "9580.gotoc.cc": {
+    "port": 993,
+    "server": "imap.9580.gotoc.cc"
   },
   "9581.gotoc.cc": {
     "port": 993,
@@ -6101,9 +6838,17 @@
     "port": 993,
     "server": "imap.9585.gotoc.cc"
   },
+  "9586.gotoc.cc": {
+    "port": 993,
+    "server": "imap.gotoc.cc"
+  },
   "9596.gotoc.cc": {
     "port": 993,
     "server": "imaps.9596.gotoc.cc"
+  },
+  "9598.gotoc.cc": {
+    "port": 993,
+    "server": "mail.9598.gotoc.cc"
   },
   "9619.gotos.cc": {
     "port": 993,
@@ -6197,6 +6942,10 @@
     "port": 993,
     "server": "imap.9lu.tgstg.com"
   },
+  "9mp.com": {
+    "port": 993,
+    "server": "mail.9mp.com"
+  },
   "9online.fr": {
     "port": 143,
     "server": "imap.9online.fr"
@@ -6212,6 +6961,10 @@
   "9tv.tn": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "a-b-c.co.jp": {
+    "port": 993,
+    "server": "a-b-c.co.jp"
   },
   "a-build.hu": {
     "port": 993,
@@ -6284,6 +7037,10 @@
   "a.blidespublicity.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "a.digmail.jp": {
+    "port": 993,
+    "server": "imap.a.digmail.jp"
   },
   "a.hostedecom": {
     "port": 993,
@@ -7959,6 +8716,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "acroamawatertreatment.com": {
+    "port": 993,
+    "server": "mail.acroamawatertreatment.com"
+  },
   "acrodermamail.ru": {
     "port": 993,
     "server": "imap.mail.ru"
@@ -7978,6 +8739,10 @@
   "acroparemail.com": {
     "port": 993,
     "server": "mail.acroparemail.com"
+  },
+  "acropol.com.eg": {
+    "port": 993,
+    "server": "mail.acropol.com.eg"
   },
   "acropolis.pl": {
     "port": 993,
@@ -8275,6 +9040,10 @@
     "port": 993,
     "server": "acuariomichin.com"
   },
+  "acubedit.com": {
+    "port": 993,
+    "server": "mail.acubedit.com"
+  },
   "acubefood.com": {
     "port": 993,
     "server": "mail.acubefood.com"
@@ -8511,6 +9280,10 @@
     "port": 993,
     "server": "imap.stackmail.com"
   },
+  "addvalis.com": {
+    "port": 993,
+    "server": "mail.addvalis.com"
+  },
   "ade34.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -8700,6 +9473,10 @@
     "port": 993,
     "server": "mail.adimsa.com.mx"
   },
+  "adinet.com.uy": {
+    "port": 993,
+    "server": "adinet.com.uy"
+  },
   "adiosvellos.com": {
     "port": 993,
     "server": "imap.adiosvellos.com"
@@ -8707,6 +9484,10 @@
   "adipharm.net": {
     "port": 993,
     "server": "mail.adipharm.net"
+  },
+  "adippsa.com": {
+    "port": 993,
+    "server": "mail.adippsa.com"
   },
   "adirondackacres.com": {
     "port": 993,
@@ -9000,6 +9781,10 @@
     "port": 993,
     "server": "imap.adsoft.com.br"
   },
+  "adsoftware.fr": {
+    "port": 993,
+    "server": "adsoftware.fr"
+  },
   "adsoftwaresolutions.com": {
     "port": 993,
     "server": "mail.adsoftwaresolutions.com"
@@ -9120,6 +9905,10 @@
     "port": 993,
     "server": "mail.advancedspinalcorrection.com"
   },
+  "advanceins.com": {
+    "port": 993,
+    "server": "advanceins.com"
+  },
   "advancestation.pt": {
     "port": 993,
     "server": "advancestation.pt"
@@ -9216,9 +10005,17 @@
     "port": 993,
     "server": "imap.advisera.se"
   },
+  "advisiarh.com": {
+    "port": 993,
+    "server": "mail.advisiarh.com"
+  },
   "advisors.academy": {
     "port": 993,
     "server": "mail.advisors.academy"
+  },
+  "advisors.co.jp": {
+    "port": 993,
+    "server": "imap.advisors.co.jp"
   },
   "advmanishagra.in": {
     "port": 993,
@@ -9633,6 +10430,10 @@
     "port": 993,
     "server": "mail.afi.co.nz"
   },
+  "aficar.com": {
+    "port": 993,
+    "server": "mail.aficar.com"
+  },
   "afj-c.com": {
     "port": 993,
     "server": "mail1062.onamae.ne.jp"
@@ -9961,6 +10762,10 @@
   "agence-bmobile.com": {
     "port": 993,
     "server": "mail.agence-bmobile.com"
+  },
+  "agence-cactus.fr": {
+    "port": 993,
+    "server": "agence-cactus.fr"
   },
   "agence-couasnon.com": {
     "port": 993,
@@ -10538,6 +11343,10 @@
     "port": 993,
     "server": "imap.agrimec.com.br"
   },
+  "agrisoleil.com": {
+    "port": 993,
+    "server": "imap.agrisoleil.com"
+  },
   "agritek.es": {
     "port": 993,
     "server": "mail.agritek.es"
@@ -10930,6 +11739,11 @@
     "port": 993,
     "server": "mail.simply.com"
   },
+  "ai1313.com": {
+    "port": 993,
+    "server": "mail.ai1313.com",
+    "ssl": true
+  },
   "ai6688.cn": {
     "port": 993,
     "server": "mail.ai6688.cn"
@@ -10977,6 +11791,10 @@
   "aicodingx.com": {
     "port": 993,
     "server": "imap.aicodingx.com"
+  },
+  "aid.org.tr": {
+    "port": 993,
+    "server": "mail.aid.org.tr"
   },
   "aid974.re": {
     "port": 993,
@@ -11234,6 +12052,10 @@
     "port": 993,
     "server": "imap.stackmail.com"
   },
+  "airexpo.org": {
+    "port": 993,
+    "server": "mail.airexpo.org"
+  },
   "airextech.in": {
     "port": 993,
     "server": "imap.airextech.in"
@@ -11277,6 +12099,10 @@
   "airlis-industries.com": {
     "port": 993,
     "server": "mail.airlis-industries.com"
+  },
+  "airloisirs.com": {
+    "port": 993,
+    "server": "mail.airloisirs.com"
   },
   "airmaiil.com": {
     "port": 993,
@@ -11517,6 +12343,10 @@
   "ajaxgroup.bg": {
     "port": 993,
     "server": "mail.ajaxgroup.bg"
+  },
+  "ajbonocore.com": {
+    "port": 993,
+    "server": "mail.ajbonocore.com"
   },
   "ajdr-group.com": {
     "port": 993,
@@ -12340,6 +13170,10 @@
     "port": 993,
     "server": "mail.aldelma.com"
   },
+  "aldenteparis.com": {
+    "port": 993,
+    "server": "mail.aldenteparis.com"
+  },
   "aldiwan.com": {
     "port": 993,
     "server": "d14590.usc1.stableserver.net"
@@ -12496,6 +13330,10 @@
     "port": 993,
     "server": "mail.alexwater.com.eg"
   },
+  "aleymail.store": {
+    "port": 993,
+    "server": "imap.aleymail.store"
+  },
   "alfa.mk": {
     "port": 993,
     "server": "mail.alfa.mk"
@@ -12527,6 +13365,10 @@
   "alfajarint.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "alfalab.com.sa": {
+    "port": 993,
+    "server": "mail.alfalab.com.sa"
   },
   "alfallaj.com": {
     "port": 993,
@@ -12945,6 +13787,14 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "alive-solution.com": {
+    "port": 993,
+    "server": "imap.alive-solution.com"
+  },
+  "aliveshows.com.br": {
+    "port": 993,
+    "server": "mx1.task.com.br"
+  },
   "aliyun.com": {
     "port": 993,
     "server": "imap.aliyun.com"
@@ -13050,6 +13900,10 @@
     "port": 993,
     "server": "mail.allagemusic.com.au"
   },
+  "allan.at": {
+    "port": 993,
+    "server": "imap.allan.at"
+  },
   "allantiques.be": {
     "port": 993,
     "server": "mail.plenso.net"
@@ -13073,6 +13927,10 @@
   "allcost.com": {
     "port": 993,
     "server": "mail.allcost.com"
+  },
+  "allcountygutter.com": {
+    "port": 993,
+    "server": "mail.allcountygutter.com"
   },
   "alldaypa.com": {
     "port": 993,
@@ -13205,6 +14063,10 @@
   "allinkasso.de": {
     "port": 993,
     "server": "mail.allinkasso.de"
+  },
+  "allinoneinsuretx.com": {
+    "port": 993,
+    "server": "mail.allinoneinsuretx.com"
   },
   "allionmail.ru": {
     "port": 993,
@@ -14142,6 +15004,10 @@
     "port": 993,
     "server": "mail.altimax.com"
   },
+  "altinbolme.com.tr": {
+    "port": 993,
+    "server": "mail.altinbolme.com.tr"
+  },
   "altinkunefe.com": {
     "port": 993,
     "server": "imap.altinkunefe.com"
@@ -14668,6 +15534,10 @@
     "port": 993,
     "server": "imap.amblesidefarm.co.za"
   },
+  "amboynabdw.live": {
+    "port": 993,
+    "server": "mail.amboynabdw.live"
+  },
   "ambplus.com": {
     "port": 993,
     "server": "imap.ambplus.com"
@@ -14799,6 +15669,10 @@
   "americanabrindes.com.br": {
     "port": 993,
     "server": "mail.americanabrindes.com.br"
+  },
+  "americanflyers.com": {
+    "port": 993,
+    "server": "mail.americanflyers.com"
   },
   "americanlycetuffschool.edu.pk": {
     "port": 993,
@@ -15510,6 +16384,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "andesmar.com.ar": {
+    "port": 993,
+    "server": "mail.andesmar.com.ar"
+  },
   "andessistemas.com.br": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -15859,6 +16737,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "animafac.net": {
+    "port": 993,
+    "server": "mail.animafac.net"
+  },
   "animagrad.com": {
     "port": 993,
     "server": "mail.animagrad.com"
@@ -16060,6 +16942,10 @@
     "port": 993,
     "server": "anonym.hu"
   },
+  "anonymail.hu": {
+    "port": 993,
+    "server": "mail.anonymail.hu"
+  },
   "anor.cm": {
     "port": 993,
     "server": "mail.anor.cm"
@@ -16199,6 +17085,10 @@
   "antenna-tech.com.au": {
     "port": 993,
     "server": "antenna-tech.com.au"
+  },
+  "antenne-3live.de": {
+    "port": 993,
+    "server": "mail04.power-doms.de"
   },
   "antensan.com.tr": {
     "port": 993,
@@ -16427,6 +17317,10 @@
   "aoba-golf.com": {
     "port": 993,
     "server": "pop2.gmoserver.jp"
+  },
+  "aocz.it": {
+    "port": 993,
+    "server": "imap.aocz.it"
   },
   "aodyo.com": {
     "port": 993,
@@ -16696,6 +17590,10 @@
     "port": 143,
     "server": "mail.apintertrade.wien"
   },
+  "apirusso.it": {
+    "port": 993,
+    "server": "mail.register.it"
+  },
   "apitu.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -16852,6 +17750,26 @@
     "port": 993,
     "server": "mx01.dondominio.com"
   },
+  "appledesign.com.my": {
+    "port": 993,
+    "server": "mail.appledesign.com.my"
+  },
+  "applehousestore.com": {
+    "port": 993,
+    "server": "mail.applehousestore.com"
+  },
+  "appleseedproduce.com": {
+    "port": 993,
+    "server": "imap.appleseedproduce.com"
+  },
+  "appleservicecenterhyderabad.in": {
+    "port": 993,
+    "server": "mail.appleservicecenterhyderabad.in"
+  },
+  "appletros.fr": {
+    "port": 993,
+    "server": "imap.appletros.fr"
+  },
   "appliancespy.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -16859,6 +17777,11 @@
   "applicadrone.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "applied-net.co.jp": {
+    "port": 993,
+    "server": "mail.applied-net.co.jp",
+    "ssl": true
   },
   "applied-net.jp": {
     "port": 143,
@@ -17510,6 +18433,10 @@
   "arborcaretreesurgeons.co.uk": {
     "port": 993,
     "server": "mail.arborcaretreesurgeons.co.uk"
+  },
+  "arborolatrymail.ru": {
+    "port": 993,
+    "server": "imap.arborolatrymail.ru"
   },
   "arboservice.cz": {
     "port": 993,
@@ -18283,6 +19210,10 @@
     "port": 993,
     "server": "imap.arobas1.pro"
   },
+  "arobase-formations.fr": {
+    "port": 993,
+    "server": "mail.arobase-formations.fr"
+  },
   "arobase2.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -18350,6 +19281,10 @@
   "arosi.gr": {
     "port": 993,
     "server": "mx2.mailgr.gr"
+  },
+  "aroundaboutcars.com": {
+    "port": 993,
+    "server": "imap.aroundaboutcars.com"
   },
   "aroverseas.net": {
     "port": 993,
@@ -19487,6 +20422,10 @@
     "port": 993,
     "server": "mail.ashhalan.net"
   },
+  "ashirvadtechno.com": {
+    "port": 993,
+    "server": "mail.ashirvadtechno.com"
+  },
   "ashishktiwari.com": {
     "port": 993,
     "server": "imap.ashishktiwari.com"
@@ -19494,6 +20433,10 @@
   "ashleyshuttles.com": {
     "port": 993,
     "server": "mail.ashleyshuttles.com"
+  },
+  "ashlyns.co.uk": {
+    "port": 993,
+    "server": "mail.ashlyns.co.uk"
   },
   "ashmore-associates.com": {
     "port": 993,
@@ -19742,6 +20685,10 @@
   "asn520.club": {
     "port": 143,
     "server": "mail.asn520.club"
+  },
+  "asnazzyproductions.com": {
+    "port": 993,
+    "server": "mail.asnazzyproductions.com"
   },
   "asnmail.kuningankab.go.id": {
     "port": 993,
@@ -20617,6 +21564,10 @@
     "port": 993,
     "server": "mail.atmi.co.id"
   },
+  "atmpl.com": {
+    "port": 993,
+    "server": "mail.atmpl.com"
+  },
   "atms.pl": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -20660,6 +21611,10 @@
   "atopy-fine.jp": {
     "port": 993,
     "server": "mail.heteml.jp"
+  },
+  "atorymail.com": {
+    "port": 993,
+    "server": "mail.atorymail.com"
   },
   "atosmg.com.br": {
     "port": 993,
@@ -21100,6 +22055,10 @@
   "aurand.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "auratlas.com": {
+    "port": 993,
+    "server": "mail.auratlas.com"
   },
   "auratus.pt": {
     "port": 993,
@@ -21655,6 +22614,10 @@
     "port": 993,
     "server": "mail.auvergne-geothermie.fr"
   },
+  "auvergne-seminaire.com": {
+    "port": 993,
+    "server": "mail.auvergne-seminaire.com"
+  },
   "auvidegrenier.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -22014,6 +22977,10 @@
   "avocat-international-thuan.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "avocat-leclercq.fr": {
+    "port": 993,
+    "server": "imap.avocat-leclercq.fr"
   },
   "avocat.be": {
     "port": 993,
@@ -22675,6 +23642,10 @@
     "port": 993,
     "server": "mail.b2m-tech.com"
   },
+  "b2pmaroc.com": {
+    "port": 993,
+    "server": "imap.b2pmaroc.com"
+  },
   "b2we.com.br": {
     "port": 993,
     "server": "mail.b2we.com.br"
@@ -22823,6 +23794,10 @@
     "port": 993,
     "server": "imap.backbeauty.at"
   },
+  "backbenchers.app": {
+    "port": 993,
+    "server": "imap.hostinger.com"
+  },
   "backdoc.org": {
     "port": 993,
     "server": "mail.backdoc.org"
@@ -22890,6 +23865,10 @@
   "badaia.net": {
     "port": 993,
     "server": "mail.badaia.net"
+  },
+  "badapple.es": {
+    "port": 993,
+    "server": "imap.badapple.es"
   },
   "badbyggvvs.no": {
     "port": 993,
@@ -23091,6 +24070,10 @@
   "bakertilly.tn": {
     "port": 993,
     "server": "imap.bakertilly.tn"
+  },
+  "bakesncakes.in": {
+    "port": 993,
+    "server": "imap.bakesncakes.in"
   },
   "bakglatt.no": {
     "port": 993,
@@ -23424,6 +24407,10 @@
   "banquealimentaire.ci": {
     "port": 993,
     "server": "imap.banquealimentaire.ci"
+  },
+  "banqueteszemaria.com": {
+    "port": 993,
+    "server": "mail.banqueteszemaria.com"
   },
   "banssecurity.co.uk": {
     "port": 993,
@@ -23813,6 +24800,10 @@
     "port": 993,
     "server": "mail.basa2er.com"
   },
+  "basaranhali.com.tr": {
+    "port": 993,
+    "server": "basaranhali.com.tr"
+  },
   "basarnas.go.id": {
     "port": 993,
     "server": "imap.basarnas.go.id"
@@ -23896,6 +24887,10 @@
   "basta-it.dk": {
     "port": 993,
     "server": "mail.simply.com"
+  },
+  "bastardymail.com": {
+    "port": 993,
+    "server": "imap.bastardymail.com"
   },
   "bastecky.com": {
     "port": 993,
@@ -24004,6 +24999,10 @@
   "battever.com": {
     "port": 993,
     "server": "mail21.recynet.com"
+  },
+  "batutadiseno.com": {
+    "port": 993,
+    "server": "imap.batutadiseno.com"
   },
   "bauarq.com": {
     "port": 993,
@@ -24733,6 +25732,10 @@
   "becher.fr": {
     "port": 993,
     "server": "imap.becher.fr"
+  },
+  "becycle.com": {
+    "port": 993,
+    "server": "mail.becycle.com"
   },
   "bedabella.com": {
     "port": 993,
@@ -26115,6 +27118,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "bhi-consulting.com": {
+    "port": 993,
+    "server": "mail.bhi-consulting.com"
+  },
   "bhima.eu": {
     "port": 993,
     "server": "imap.bhima.eu"
@@ -26182,6 +27189,10 @@
   "bhudhavhospital.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "bhumipasahijau.com": {
+    "port": 993,
+    "server": "bhumipasahijau.com"
   },
   "bhumiprocon.com": {
     "port": 993,
@@ -26251,6 +27262,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "biblesocieties.org": {
+    "port": 993,
+    "server": "mail.biblesocieties.org"
+  },
   "bibliabaptista.hu": {
     "port": 993,
     "server": "mail.bibliabaptista.hu"
@@ -26290,6 +27305,10 @@
   "bicknell.me.uk": {
     "port": 993,
     "server": "imap.stackmail.com"
+  },
+  "bict.com.my": {
+    "port": 993,
+    "server": "mail.bict.com.my"
   },
   "bicyclepartsdirect.com": {
     "port": 993,
@@ -26636,6 +27655,10 @@
     "port": 993,
     "server": "imap.bikesplast.eu"
   },
+  "biketownmadrid.com": {
+    "port": 993,
+    "server": "imap.biketownmadrid.com"
+  },
   "bikramyoga-japan.com": {
     "port": 993,
     "server": "imap.bikramyoga-japan.com"
@@ -26921,6 +27944,10 @@
     "port": 993,
     "server": "imap.hostinger.com.ar"
   },
+  "biocold.com": {
+    "port": 993,
+    "server": "imap.biocold.com"
+  },
   "bioconsult.uk": {
     "port": 993,
     "server": "mail.bioconsult.uk"
@@ -27012,6 +28039,10 @@
   "biopowersrl.com": {
     "port": 993,
     "server": "imaps.register.it"
+  },
+  "biorecam.es": {
+    "port": 993,
+    "server": "mail.biorecam.es"
   },
   "bios.ge": {
     "port": 993,
@@ -27473,6 +28504,11 @@
     "port": 993,
     "server": "mail.bjerregaarduc.dk"
   },
+  "bjjperth.com": {
+    "port": 993,
+    "server": "imap.bjjperth.com",
+    "ssl": true
+  },
   "bjkgroup.cz": {
     "port": 993,
     "server": "imap.bjkgroup.cz"
@@ -27637,6 +28673,10 @@
     "port": 993,
     "server": "imap.blackvega.es"
   },
+  "blackwellboxerpuppies.com": {
+    "port": 993,
+    "server": "imap.hostinger.com"
+  },
   "blackwellcoffee.com": {
     "port": 993,
     "server": "imap.qiye.aliyun.com"
@@ -27800,6 +28840,10 @@
   "blob-jump.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "blochconseil.com": {
+    "port": 993,
+    "server": "imap.blochconseil.com"
   },
   "blockbox.ro": {
     "port": 993,
@@ -28186,6 +29230,10 @@
     "port": 993,
     "server": "mail.bmintelligence.com"
   },
+  "bmmcpa.com": {
+    "port": 993,
+    "server": "mail.bmmcpa.com"
+  },
   "bmmotorsindia.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -28534,6 +29582,10 @@
   "boissons-meme.com": {
     "port": 993,
     "server": "imap.boissons-meme.com"
+  },
+  "boitaullresort.com": {
+    "port": 993,
+    "server": "imap.boitaullresort.com"
   },
   "boiteamalou.com": {
     "port": 993,
@@ -29376,6 +30428,10 @@
     "port": 993,
     "server": "imap.bpsu.edu.ph"
   },
+  "bpsynergies.com": {
+    "port": 993,
+    "server": "mail.bpsynergies.com"
+  },
   "bptmexico.mx": {
     "port": 993,
     "server": "imap.bptmexico.mx"
@@ -30185,6 +31241,10 @@
     "port": 993,
     "server": "mail.briskcargo.com"
   },
+  "bristol-group.net": {
+    "port": 993,
+    "server": "imap.bristol-group.net"
+  },
   "britam.co.ke": {
     "port": 993,
     "server": "alltheemails.com"
@@ -30625,6 +31685,10 @@
     "port": 993,
     "server": "imap.bsnews.com.br"
   },
+  "bsogabon.com": {
+    "port": 993,
+    "server": "imap.bsogabon.com"
+  },
   "bsolus.pt": {
     "port": 993,
     "server": "mail.bsolus.pt"
@@ -31049,6 +32113,10 @@
   "bullston.com": {
     "port": 993,
     "server": "imap.bullston.com"
+  },
+  "bulltechsystem.com": {
+    "port": 993,
+    "server": "imap.bulltechsystem.com"
   },
   "bullyssurf.com.br": {
     "port": 993,
@@ -31719,6 +32787,10 @@
     "port": 993,
     "server": "pop22.gmoserver.jp"
   },
+  "c-z.co.jp": {
+    "port": 993,
+    "server": "imap.c-z.co.jp"
+  },
   "c081b.a9ifwa.online": {
     "port": 993,
     "server": "imaps.c081b.a9ifwa.online"
@@ -31734,6 +32806,10 @@
   "c2.hu": {
     "port": 993,
     "server": "imap.c2.hu"
+  },
+  "c21ag.com": {
+    "port": 993,
+    "server": "mail.c21ag.com"
   },
   "c21class.com.br": {
     "port": 993,
@@ -31862,6 +32938,10 @@
   "cabinet-imagerie.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "cabinet-suissa.com": {
+    "port": 993,
+    "server": "cabinet-suissa.com"
   },
   "cabinetalliance.fr": {
     "port": 993,
@@ -32411,6 +33491,10 @@
   "callcraft.es": {
     "port": 993,
     "server": "imap.callcraft.es"
+  },
+  "calleo-medical.com": {
+    "port": 993,
+    "server": "imap.calleo-medical.com"
   },
   "caller.pet": {
     "port": 993,
@@ -33137,6 +34221,10 @@
   "cappsa.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "capres.com.ve": {
+    "port": 993,
+    "server": "mail.capres.com.ve"
   },
   "capricci.fr": {
     "port": 993,
@@ -34055,6 +35143,10 @@
     "port": 993,
     "server": "imap.stackmail.com"
   },
+  "castleresidentialproperties.co.uk": {
+    "port": 993,
+    "server": "imap.castleresidentialproperties.co.uk"
+  },
   "castries.org": {
     "port": 993,
     "server": "mail.castries.org"
@@ -34223,6 +35315,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "causewaycoastvineyard.com": {
+    "port": 993,
+    "server": "mail.causewaycoastvineyard.com"
+  },
   "caut.com.br": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -34378,6 +35474,10 @@
   "cc-gevaudan.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "cc-laveyle.fr": {
+    "port": 993,
+    "server": "mail.cc-laveyle.fr"
   },
   "cc-petiteterre.fr": {
     "port": 993,
@@ -34595,6 +35695,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "ccorca.org": {
+    "port": 993,
+    "server": "imap.ccorca.org"
+  },
   "ccotecnologia.com.br": {
     "port": 993,
     "server": "imap.kinghost.net"
@@ -34675,6 +35779,10 @@
   "cdcvalsdesaintonge.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "cdd.com.au": {
+    "port": 993,
+    "server": "cdd.com.au"
   },
   "cdek.ru": {
     "port": 993,
@@ -34767,6 +35875,10 @@
   "cdvhs.org.br": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "cdxtelecom.com": {
+    "port": 993,
+    "server": "imap.cdxtelecom.com"
   },
   "ce.em-net.ne.jp": {
     "port": 993,
@@ -35099,6 +36211,11 @@
   "cempac.com.co": {
     "port": 993,
     "server": "imap.cempac.com.co"
+  },
+  "cemre.net": {
+    "port": 993,
+    "server": "mail.cemre.net",
+    "ssl": true
   },
   "cemsglobal.org": {
     "port": 993,
@@ -35717,6 +36834,10 @@
     "port": 993,
     "server": "imap.cesarenori.fr"
   },
+  "cesdafrica.org": {
+    "port": 993,
+    "server": "mail.cesdafrica.org"
+  },
   "cesi.com.br": {
     "port": 993,
     "server": "imap.cesi.com.br"
@@ -35844,6 +36965,10 @@
   "cfitness.com.br": {
     "port": 993,
     "server": "mail.cfitness.com.br"
+  },
+  "cfl-re.co.jp": {
+    "port": 993,
+    "server": "imap.cfl-re.co.jp"
   },
   "cfl.rr.com": {
     "port": 143,
@@ -36284,6 +37409,10 @@
     "port": 993,
     "server": "mail.charming-planet.com"
   },
+  "charmsindia.com": {
+    "port": 993,
+    "server": "mail.charmsindia.com"
+  },
   "charpente-raguin.fr": {
     "port": 993,
     "server": "mail.charpente-raguin.fr"
@@ -36380,6 +37509,10 @@
   "chateauavalonhotel.com": {
     "port": 993,
     "server": "imap.chateauavalonhotel.com"
+  },
+  "chateaudebagnols.fr": {
+    "port": 993,
+    "server": "mail.chateaudebagnols.fr"
   },
   "chateaudemaubreuil.com": {
     "port": 993,
@@ -36634,6 +37767,10 @@
     "port": 993,
     "server": "imap.cheraghprize.com"
   },
+  "cherman.com.br": {
+    "port": 993,
+    "server": "mail.cherman.com.br"
+  },
   "cherritech.com": {
     "port": 993,
     "server": "cherritech.com"
@@ -36757,6 +37894,10 @@
   "childrenhospitalkarachi.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "childrensdentistry.net": {
+    "port": 993,
+    "server": "mail.hostedemail.com"
   },
   "childsplaycrafts.uk": {
     "port": 993,
@@ -38190,6 +39331,11 @@
     "port": 993,
     "server": "mail.cleanjohn.net"
   },
+  "cleanmail.it": {
+    "port": 993,
+    "server": "mail.cleanmail.it",
+    "ssl": true
+  },
   "cleanupsrl.it": {
     "port": 993,
     "server": "mail.register.it"
@@ -38390,6 +39536,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "clikeco.com": {
+    "port": 993,
+    "server": "clikeco.com"
+  },
   "clikitmedia.com": {
     "port": 993,
     "server": "imap.clikitmedia.com"
@@ -38466,6 +39616,10 @@
     "port": 993,
     "server": "mail.clinicaboghos.com.br"
   },
+  "clinicacdp.it": {
+    "port": 993,
+    "server": "mail.register.it"
+  },
   "clinicaceodent.es": {
     "port": 993,
     "server": "mx01.dondominio.com"
@@ -38523,6 +39677,10 @@
     "server": "mail.clinicaimatek.com"
   },
   "clinicalatrinidad.com.co": {
+    "port": 993,
+    "server": "imap.hostinger.com"
+  },
+  "clinicalomasverdes.com": {
     "port": 993,
     "server": "imap.hostinger.com"
   },
@@ -39094,6 +40252,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "cnc.e-catv.ne.jp": {
+    "port": 993,
+    "server": "cnc.e-catv.ne.jp"
+  },
   "cncbacademy.com": {
     "port": 993,
     "server": "imap.cncbacademy.com"
@@ -39105,6 +40267,10 @@
   "cncvnlogistics.com": {
     "port": 993,
     "server": "imap.cncvnlogistics.com"
+  },
+  "cnddinant.be": {
+    "port": 993,
+    "server": "imap.cnddinant.be"
   },
   "cndg.com.br": {
     "port": 993,
@@ -39158,9 +40324,18 @@
     "port": 993,
     "server": "mail.hostedemail.com"
   },
+  "cnmbpou.vip": {
+    "port": 993,
+    "server": "mail.cnmbpou.vip",
+    "ssl": true
+  },
   "cnmecta.ro": {
     "port": 993,
     "server": "cnmecta.ro"
+  },
+  "cnmp.org.br": {
+    "port": 993,
+    "server": "imap.cnmp.org.br"
   },
   "cnoa.dz": {
     "port": 993,
@@ -39883,6 +41058,10 @@
     "port": 993,
     "server": "imap.cole-consulting-services.com"
   },
+  "colegioanaliafranco.com.br": {
+    "port": 993,
+    "server": "imap.colegioanaliafranco.com.br"
+  },
   "colegioathena.com": {
     "port": 993,
     "server": "imap.colegioathena.com"
@@ -39930,6 +41109,10 @@
   "colegiomarpe.com": {
     "port": 993,
     "server": "imap.colegiomarpe.com"
+  },
+  "colegiomonte-sionense.com.br": {
+    "port": 993,
+    "server": "imap.colegiomonte-sionense.com.br"
   },
   "colegioportal.com.br": {
     "port": 993,
@@ -40188,6 +41371,10 @@
     "port": 993,
     "server": "imap.stackmail.com"
   },
+  "coltonkingmail.com": {
+    "port": 993,
+    "server": "imap.coltonkingmail.com"
+  },
   "columbiadesigngroup.com": {
     "port": 993,
     "server": "mail.columbiadesigngroup.com"
@@ -40411,6 +41598,10 @@
   "cominvestment.ch": {
     "port": 993,
     "server": "imap.cominvestment.ch"
+  },
+  "comiottoauto.com": {
+    "port": 993,
+    "server": "comiottoauto.com"
   },
   "comit.com.tr": {
     "port": 993,
@@ -40988,6 +42179,10 @@
   "conain.com.ec": {
     "port": 993,
     "server": "mail.conain.com.ec"
+  },
+  "conamed.com.br": {
+    "port": 993,
+    "server": "imap.conamed.com.br"
   },
   "conanbet.com": {
     "port": 993,
@@ -41743,6 +42938,10 @@
     "port": 993,
     "server": "imap.contactojf.com"
   },
+  "contactos.com.br": {
+    "port": 993,
+    "server": "imap.contactos.com.br"
+  },
   "contadordesenvolve.com.br": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -41802,6 +43001,10 @@
   "contefisc.com.br": {
     "port": 993,
     "server": "mail.contefisc.com.br"
+  },
+  "contemporaneaprogetti.it": {
+    "port": 993,
+    "server": "contemporaneaprogetti.it"
   },
   "contermail.com": {
     "port": 993,
@@ -41902,6 +43105,10 @@
   "convengineering.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "conventionplanit.com": {
+    "port": 993,
+    "server": "imap.conventionplanit.com"
   },
   "conventooreja.net": {
     "port": 993,
@@ -42138,6 +43345,10 @@
   "copildorit.ro": {
     "port": 993,
     "server": "mail.copildorit.ro"
+  },
+  "copisteriabaluarte.com": {
+    "port": 993,
+    "server": "mail.copisteriabaluarte.com"
   },
   "coplanengenharia.com.br": {
     "port": 993,
@@ -42545,6 +43756,11 @@
   "corridi.it": {
     "port": 993,
     "server": "mail.corridi.it"
+  },
+  "corrtube.com": {
+    "port": 993,
+    "server": "imap.corrtube.com",
+    "ssl": true
   },
   "corrue-deseille.fr": {
     "port": 993,
@@ -43528,6 +44744,10 @@
     "port": 993,
     "server": "mx1.tld-mx.com"
   },
+  "creativesoul.group": {
+    "port": 993,
+    "server": "creativesoul.group"
+  },
   "creativesoulmusic.com": {
     "port": 993,
     "server": "imap.creativesoulmusic.com"
@@ -43620,6 +44840,10 @@
   "credolo.win": {
     "port": 993,
     "server": "mail.credolo.win"
+  },
+  "cree-ton-avenir.fr": {
+    "port": 993,
+    "server": "mail.cree-ton-avenir.fr"
   },
   "creer-geihinkan.com": {
     "port": 993,
@@ -44193,6 +45417,11 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "cs999.site": {
+    "port": 993,
+    "server": "imap.cs999.site",
+    "ssl": true
+  },
   "csa.vn": {
     "port": 993,
     "server": "mail.csa.vn"
@@ -44468,6 +45697,10 @@
   "csvm.com.tn": {
     "port": 993,
     "server": "imap.csvm.com.tn"
+  },
+  "csvpc.com": {
+    "port": 993,
+    "server": "csvpc.com"
   },
   "csvplanet.com": {
     "port": 993,
@@ -44825,6 +46058,10 @@
     "port": 993,
     "server": "imap.culverson.com"
   },
+  "cumaarat.com": {
+    "port": 993,
+    "server": "cumaarat.com"
+  },
   "cumbrerealestate.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -45044,6 +46281,10 @@
   "cwbmetal.com.br": {
     "port": 993,
     "server": "mail.cwbmetal.com.br"
+  },
+  "cwfltd.co.uk": {
+    "port": 993,
+    "server": "imap.cwfltd.co.uk"
   },
   "cwgsy.net": {
     "port": 993,
@@ -46062,6 +47303,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "danieledallavalle.it": {
+    "port": 993,
+    "server": "danieledallavalle.it"
+  },
   "danielemondello.it": {
     "port": 993,
     "server": "imap.danielemondello.it"
@@ -46333,6 +47578,10 @@
   "darmowetv.pl": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "darnit.ca": {
+    "port": 993,
+    "server": "mail.darnit.ca"
   },
   "darnusverslas.lt": {
     "port": 993,
@@ -47063,6 +48312,10 @@
     "port": 993,
     "server": "mail.ddb.md"
   },
+  "ddcontracts.co.uk": {
+    "port": 993,
+    "server": "mail.ddcontracts.co.uk"
+  },
   "ddcshred.com": {
     "port": 993,
     "server": "imap.ddcshred.com"
@@ -47170,6 +48423,10 @@
   "de-vlieger.nl": {
     "port": 993,
     "server": "mail.de-vlieger.nl"
+  },
+  "de-vog.com": {
+    "port": 993,
+    "server": "imap.de-vog.com"
   },
   "deadpanspeakers.com": {
     "port": 143,
@@ -47791,6 +49048,10 @@
     "port": 993,
     "server": "imap.mail.com"
   },
+  "deliverypro.cl": {
+    "port": 993,
+    "server": "deliverypro.cl"
+  },
   "delizia.sk": {
     "port": 993,
     "server": "imap.delizia.sk"
@@ -48019,6 +49280,10 @@
   "demaverick.online": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "demenagerseul.com": {
+    "port": 993,
+    "server": "demenagerseul.com"
   },
   "demeterdogdu.com": {
     "port": 993,
@@ -48425,6 +49690,10 @@
     "port": 993,
     "server": "imap.derosofarms.com"
   },
+  "derpymail.org": {
+    "port": 993,
+    "server": "mail.derpymail.org"
+  },
   "derrenmail.com": {
     "port": 993,
     "server": "imap.mail.com"
@@ -48464,6 +49733,10 @@
   "desarrollodas.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "desarrollosprovida.com": {
+    "port": 993,
+    "server": "mail.desarrollosprovida.com"
   },
   "desarrollosvistamar.com": {
     "port": 993,
@@ -48736,6 +50009,10 @@
   "deteam.io": {
     "port": 993,
     "server": "imap.deteam.io"
+  },
+  "deteccionltda.com": {
+    "port": 993,
+    "server": "mail.deteccionltda.com"
   },
   "detel-group.com": {
     "port": 993,
@@ -49084,6 +50361,10 @@
   "dfnetwork.in": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "dfremails.com": {
+    "port": 993,
+    "server": "dfremails.com"
   },
   "dfsistemes.es": {
     "port": 993,
@@ -49555,6 +50836,10 @@
   "dicroic.com": {
     "port": 143,
     "server": "mail.dicroic.com"
+  },
+  "dictalabs.com": {
+    "port": 993,
+    "server": "imap.dictalabs.com"
   },
   "dictapp.cat": {
     "port": 993,
@@ -50344,6 +51629,10 @@
     "port": 993,
     "server": "mail.digonta.org"
   },
+  "digopizza.hu": {
+    "port": 993,
+    "server": "mail.digopizza.hu"
+  },
   "digycom.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -50712,6 +52001,10 @@
     "port": 993,
     "server": "imap.hostinger.co"
   },
+  "diogodegois.com": {
+    "port": 993,
+    "server": "imap.diogodegois.com"
+  },
   "diomede.net": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -51019,6 +52312,10 @@
   "distefanogioielleria.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "disteo.fr": {
+    "port": 993,
+    "server": "mail.disteo.fr"
   },
   "distinctionsltd.com": {
     "port": 993,
@@ -52037,6 +53334,10 @@
     "port": 993,
     "server": "mail.register.it"
   },
+  "domino-hc.com": {
+    "port": 993,
+    "server": "mail.domino-hc.com"
+  },
   "domiserver.com": {
     "port": 993,
     "server": "domiserver.com"
@@ -52116,6 +53417,10 @@
   "dongfang-china.com": {
     "port": 993,
     "server": "mail.dongfang-china.com"
+  },
+  "dongguk.edu": {
+    "port": 993,
+    "server": "imap.dongguk.edu"
   },
   "dongju-raya.com": {
     "port": 993,
@@ -52536,6 +53841,10 @@
   "dpsolutions.vr.it": {
     "port": 993,
     "server": "imap.dpsolutions.vr.it"
+  },
+  "dpsscabling.co.uk": {
+    "port": 993,
+    "server": "imap.dpsscabling.co.uk"
   },
   "dpw.ro": {
     "port": 993,
@@ -53158,6 +54467,10 @@
     "port": 993,
     "server": "imap.drumbrasil.com.br"
   },
+  "drurymail.co.uk": {
+    "port": 993,
+    "server": "imap.drurymail.co.uk"
+  },
   "druzina.cz": {
     "port": 993,
     "server": "imap.druzina.cz"
@@ -53201,6 +54514,10 @@
   "ds7.co.uk": {
     "port": 993,
     "server": "mail-atlas.websitelive.net"
+  },
+  "dsa-net.dk": {
+    "port": 993,
+    "server": "mail.dsa-net.dk"
   },
   "dsachsconsulting.com": {
     "port": 993,
@@ -53480,6 +54797,10 @@
   "dubmarketing.com.br": {
     "port": 993,
     "server": "premium2.hospedameusite.net"
+  },
+  "dubocqsa.com": {
+    "port": 993,
+    "server": "mail.dubocqsa.com"
   },
   "dubois-millot.com": {
     "port": 993,
@@ -54257,6 +55578,10 @@
     "port": 993,
     "server": "imap.e-strict.de"
   },
+  "e-thos21.co.jp": {
+    "port": 993,
+    "server": "imap.e-thos21.co.jp"
+  },
   "e-tna.it": {
     "port": 993,
     "server": "mail.e-tna.it"
@@ -54392,6 +55717,10 @@
   "eagle-legal.com": {
     "port": 993,
     "server": "imap.eagle-legal.com"
+  },
+  "eagle4saudi.com": {
+    "port": 993,
+    "server": "mail.eagle4saudi.com"
   },
   "eagleenterprises.co.in": {
     "port": 993,
@@ -55149,6 +56478,10 @@
     "port": 993,
     "server": "mail.ecn.net.au"
   },
+  "eco-action-plus.fr": {
+    "port": 993,
+    "server": "ssl0.ovh.net"
+  },
   "eco-expertise.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -55633,6 +56966,10 @@
     "port": 993,
     "server": "mail.edclean.pt"
   },
+  "edco.com.ph": {
+    "port": 993,
+    "server": "mail.edco.com.ph"
+  },
   "edelkenie.com": {
     "port": 993,
     "server": "edelkenie.com"
@@ -55817,6 +57154,11 @@
     "port": 993,
     "server": "imap.edissyum.com"
   },
+  "editabundo.com": {
+    "port": 993,
+    "server": "imap.editabundo.com",
+    "ssl": true
+  },
   "editarqr.icard3d.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -55909,6 +57251,10 @@
     "port": 993,
     "server": "edmco.co"
   },
+  "edmeseikan.live": {
+    "port": 993,
+    "server": "mail.edmeseikan.live"
+  },
   "edmondautobrokers.com": {
     "port": 993,
     "server": "imap.mail.com"
@@ -55968,6 +57314,10 @@
   "edu-tech.com.pl": {
     "port": 993,
     "server": "imap.edu-tech.com.pl"
+  },
+  "edu-toys.in": {
+    "port": 993,
+    "server": "imap.edu-toys.in"
   },
   "edu.br": {
     "port": 993,
@@ -56705,6 +58055,10 @@
   "einsiydia.com": {
     "port": 993,
     "server": "imap.qiye.aliyun.com"
+  },
+  "einstieg.or.at": {
+    "port": 993,
+    "server": "imap.einstieg.or.at"
   },
   "eiprotecnologia.com.br": {
     "port": 993,
@@ -57718,6 +59072,10 @@
     "port": 993,
     "server": "imap.elitehotelsitges.com"
   },
+  "eliteinspection.fr": {
+    "port": 993,
+    "server": "ssl0.ovh.net"
+  },
   "eliteinversiones.com": {
     "port": 993,
     "server": "imap.eliteinversiones.com"
@@ -57867,6 +59225,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "ellgeo.com": {
+    "port": 993,
+    "server": "mail.ellgeo.com"
+  },
   "elliotcontrols.com.au": {
     "port": 993,
     "server": "mail.elliotcontrols.com.au"
@@ -57987,6 +59349,10 @@
     "port": 993,
     "server": "mail.elpasotel.net"
   },
+  "elpernigeria.com": {
+    "port": 993,
+    "server": "mail.elpernigeria.com"
+  },
   "elplus.com.pl": {
     "port": 993,
     "server": "mail.elplus.com.pl"
@@ -57994,6 +59360,10 @@
   "elpremiollc.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "elqindustries.com": {
+    "port": 993,
+    "server": "imap.elqindustries.com"
   },
   "elrabi3.com": {
     "port": 993,
@@ -58269,6 +59639,10 @@
     "port": 993,
     "server": "mail.emailpride.life"
   },
+  "emailsl.com": {
+    "port": 993,
+    "server": "emailsl.com"
+  },
   "emailsrvr.com": {
     "port": 993,
     "server": "secure.emailsrvr.com"
@@ -58297,9 +59671,17 @@
     "port": 993,
     "server": "mail.emall.com"
   },
+  "eman400.com": {
+    "port": 993,
+    "server": "eman400.com"
+  },
   "emancipacioncristianaafro.org": {
     "port": 993,
     "server": "imap.emancipacioncristianaafro.org"
+  },
+  "emanuelbeaumont.org": {
+    "port": 993,
+    "server": "mail.emanuelbeaumont.org"
   },
   "emanuelcenter.com": {
     "port": 993,
@@ -59040,6 +60422,10 @@
     "port": 993,
     "server": "imap.energiapropria.com.br"
   },
+  "energiaputumayo.com": {
+    "port": 993,
+    "server": "mail.energiaputumayo.com"
+  },
   "energiatopsolar.com.br": {
     "port": 993,
     "server": "mail.energiatopsolar.com.br"
@@ -59652,6 +61038,10 @@
     "port": 993,
     "server": "mail.entegrasources.com.np"
   },
+  "entegretmgd.com": {
+    "port": 993,
+    "server": "entegretmgd.com"
+  },
   "entegreturk.com": {
     "port": 993,
     "server": "fusion.mxrouting.net"
@@ -59807,6 +61197,10 @@
   "environmental-concern.co.uk": {
     "port": 993,
     "server": "imap.mailhostbox.com"
+  },
+  "enviroprojects.com.au": {
+    "port": 993,
+    "server": "imap.enviroprojects.com.au"
   },
   "envisagemobile.com": {
     "port": 993,
@@ -60029,6 +61423,10 @@
     "port": 993,
     "server": "imap.episkopiac.gr"
   },
+  "epitaxymail.ru": {
+    "port": 993,
+    "server": "imap.epitaxymail.ru"
+  },
   "epitomi.ru": {
     "port": 993,
     "server": "mail.epitomi.ru"
@@ -60160,6 +61558,10 @@
   "equidyenergiasas.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "equilibre-cbd.com": {
+    "port": 993,
+    "server": "imap.equilibre-cbd.com"
   },
   "equilibre-hairscience.com": {
     "port": 993,
@@ -61750,6 +63152,10 @@
     "port": 993,
     "server": "mail.univ-lyon1.fr"
   },
+  "etu.univ-montp3.fr": {
+    "port": 993,
+    "server": "etu.univ-montp3.fr"
+  },
   "etu.univ-paris1.fr": {
     "port": 993,
     "server": "imap.etu.univ-paris1.fr"
@@ -61874,6 +63280,10 @@
   "eurocamp-poprad.sk": {
     "port": 993,
     "server": "mail.eurocamp-poprad.sk"
+  },
+  "eurocompliance.eu": {
+    "port": 993,
+    "server": "imap.eurocompliance.eu"
   },
   "eurocvh.com": {
     "port": 993,
@@ -62376,6 +63786,11 @@
     "port": 993,
     "server": "mailserver1.vhosting-it.com"
   },
+  "evoconcept.net": {
+    "port": 993,
+    "server": "imap.evoconcept.net",
+    "ssl": true
+  },
   "evoconstruction.com.au": {
     "port": 993,
     "server": "mail.evoconstruction.com.au"
@@ -62419,6 +63834,10 @@
   "evoluciongrafica.mx": {
     "port": 993,
     "server": "imap.evoluciongrafica.mx"
+  },
+  "evoluflor.fr": {
+    "port": 993,
+    "server": "imap.evoluflor.fr"
   },
   "evolusat.com.br": {
     "port": 993,
@@ -62507,6 +63926,10 @@
   "ewhproperties.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "eworks-inc.co.jp": {
+    "port": 993,
+    "server": "imap.eworks-inc.co.jp"
   },
   "eworld-precision.com": {
     "port": 993,
@@ -62623,6 +64046,10 @@
   "excel.net": {
     "port": 993,
     "server": "mail.excel.net"
+  },
+  "excelenciacontabil.net": {
+    "port": 993,
+    "server": "imap.excelenciacontabil.net"
   },
   "excelenciatech.com": {
     "port": 993,
@@ -62947,6 +64374,10 @@
   "expl0it.store": {
     "port": 993,
     "server": "mail.expl0it.store"
+  },
+  "explainercue.com": {
+    "port": 993,
+    "server": "imap.hostinger.com"
   },
   "explicandummail.com": {
     "port": 993,
@@ -63776,6 +65207,10 @@
     "port": 993,
     "server": "imap.fadamar.com.br"
   },
+  "fadap.br": {
+    "port": 993,
+    "server": "mail.fadap.br"
+  },
   "fadelito.com.br": {
     "port": 993,
     "server": "br101.meuemail.seg.br"
@@ -63996,6 +65431,11 @@
   "fam-thyme.dk": {
     "port": 993,
     "server": "imap.one.com"
+  },
+  "fam.org.pt": {
+    "port": 993,
+    "server": "fam.org.pt",
+    "ssl": true
   },
   "fama.gov.my": {
     "port": 993,
@@ -64280,6 +65720,10 @@
   "farazindustries.com": {
     "port": 993,
     "server": "mail.farazindustries.com"
+  },
+  "fardinstore.live": {
+    "port": 993,
+    "server": "_dc-mx.c6df897d2816.fardinstore.live"
   },
   "fareastislamilife.com": {
     "port": 993,
@@ -65017,6 +66461,10 @@
     "port": 993,
     "server": "mail.register.it"
   },
+  "feel-mobile.com": {
+    "port": 993,
+    "server": "imap.feel-mobile.com"
+  },
   "feelings.com": {
     "port": 993,
     "server": "imap.mail.com"
@@ -65169,6 +66617,10 @@
   "fenixcontabilsnp.com.br": {
     "port": 993,
     "server": "imap.fenixcontabilsnp.com.br"
+  },
+  "fenixsoftwarelabs.com": {
+    "port": 993,
+    "server": "imap.fenixsoftwarelabs.com"
   },
   "fenster-konzept.com": {
     "port": 993,
@@ -65906,6 +67358,10 @@
     "port": 993,
     "server": "ficorreo.picanarias.com.es"
   },
+  "fimex-international.com": {
+    "port": 993,
+    "server": "fimex-international.com"
+  },
   "fimondi.de": {
     "port": 993,
     "server": "mail.fimondi.de"
@@ -66475,6 +67931,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "five-group.co.jp": {
+    "port": 993,
+    "server": "imap.five-group.co.jp"
+  },
   "five-photos.com": {
     "port": 993,
     "server": "mail.five-photos.com"
@@ -66594,6 +68054,10 @@
   "flagstaff-fashion.de": {
     "port": 993,
     "server": "imap.flagstaff-fashion.de"
+  },
+  "flagymail.com": {
+    "port": 993,
+    "server": "mail.flagymail.com"
   },
   "flairproduction.com": {
     "port": 993,
@@ -66847,6 +68311,10 @@
   "flippainteriors.co.uk": {
     "port": 993,
     "server": "mail.flippainteriors.co.uk"
+  },
+  "flipside.ai": {
+    "port": 993,
+    "server": "mail.flipside.ai"
   },
   "flirtmetrics.com": {
     "port": 993,
@@ -67486,6 +68954,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "fondation-du-bocage.org": {
+    "port": 993,
+    "server": "mail.fondation-du-bocage.org"
+  },
   "fondation-grancher.org": {
     "port": 993,
     "server": "imap.fondation-grancher.org"
@@ -67554,6 +69026,10 @@
   "fonofox.com": {
     "port": 993,
     "server": "mail.fonofox.com"
+  },
+  "fonplegade.fr": {
+    "port": 993,
+    "server": "mail.fonplegade.fr"
   },
   "fonroche.fr": {
     "port": 993,
@@ -67635,6 +69111,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "footprintslfl.co.uk": {
+    "port": 993,
+    "server": "mail.footprintslfl.co.uk"
+  },
   "fopc.co.th": {
     "port": 993,
     "server": "mail.fopc.co.th"
@@ -67658,6 +69138,10 @@
   "foravie.com": {
     "port": 993,
     "server": "imap.foravie.com"
+  },
+  "forbesroyalschools.com": {
+    "port": 993,
+    "server": "mail.forbesroyalschools.com"
   },
   "forbetterfuture.pl": {
     "port": 993,
@@ -67723,6 +69207,10 @@
   "foresttandooriloughton.co.uk": {
     "port": 993,
     "server": "mail.foresttandooriloughton.co.uk"
+  },
+  "foretadrenaline.com": {
+    "port": 993,
+    "server": "imap.foretadrenaline.com"
   },
   "foretbois.fr": {
     "port": 993,
@@ -68057,6 +69545,10 @@
     "port": 993,
     "server": "mail.fotofacil.net"
   },
+  "fotofafa.com": {
+    "port": 993,
+    "server": "mail.fotofafa.com"
+  },
   "fotografia.it": {
     "port": 143,
     "server": "imap.fotografia.it"
@@ -68333,6 +69825,10 @@
   "fraicheurdespitons.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "framatex.net": {
+    "port": 993,
+    "server": "imap.framatex.net"
   },
   "framecrafft.com": {
     "port": 993,
@@ -68742,6 +70238,10 @@
     "port": 993,
     "server": "mail.freezmail.com"
   },
+  "fregmail.com": {
+    "port": 993,
+    "server": "mail.fregmail.com"
+  },
   "freightedge.in": {
     "port": 993,
     "server": "imap.mailhostbox.com"
@@ -68761,6 +70261,10 @@
   "freitas.nl": {
     "port": 993,
     "server": "freitas.nl"
+  },
+  "freitasecorrea.com.br": {
+    "port": 993,
+    "server": "imap.freitasecorrea.com.br"
   },
   "frekonermail.com": {
     "port": 993,
@@ -68894,6 +70398,10 @@
   "friksta.com": {
     "port": 993,
     "server": "imap.friksta.com"
+  },
+  "fringmail.com": {
+    "port": 993,
+    "server": "mail.fringmail.com"
   },
   "frioar.com.br": {
     "port": 993,
@@ -70233,6 +71741,15 @@
     "server": "imap.cm.dream.jp",
     "ssl": false
   },
+  "galaxyknitwearco.com": {
+    "port": 993,
+    "server": "mail.galaxyknitwearco.com",
+    "ssl": true
+  },
+  "galaxymail.ca": {
+    "port": 993,
+    "server": "mail.galaxymail.ca"
+  },
   "galaxyparkjo.com": {
     "port": 993,
     "server": "imap.galaxyparkjo.com"
@@ -71322,6 +72839,10 @@
     "port": 993,
     "server": "mail.gelautomotive.co.uk"
   },
+  "geleceksoln.com": {
+    "port": 993,
+    "server": "imap.hostinger.com"
+  },
   "gelferts.de": {
     "port": 993,
     "server": "mail.servermailbox.de"
@@ -71353,6 +72874,10 @@
   "gelsimedia.com": {
     "port": 993,
     "server": "gelsimedia.com"
+  },
+  "gem.e-catv.ne.jp": {
+    "port": 993,
+    "server": "gem.e-catv.ne.jp"
   },
   "gem.mn": {
     "port": 993,
@@ -71766,6 +73291,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "geolia-conseil.com": {
+    "port": 993,
+    "server": "mail.geolia-conseil.com"
+  },
   "geologist.com": {
     "port": 993,
     "server": "imap.mail.com"
@@ -72166,6 +73695,11 @@
     "port": 993,
     "server": "mail.gff.hk"
   },
+  "gfg444.com": {
+    "port": 993,
+    "server": "imap.gfg444.com",
+    "ssl": true
+  },
   "gfgd.adv.br": {
     "port": 993,
     "server": "mail.gfgd.adv.br"
@@ -72242,6 +73776,10 @@
     "port": 143,
     "server": "mx1.bway.net",
     "ssl": false
+  },
+  "ggmail.top": {
+    "port": 993,
+    "server": "mail.ggmail.top"
   },
   "ggpartner.com": {
     "port": 993,
@@ -72362,6 +73900,10 @@
   "giac.sn": {
     "port": 993,
     "server": "imap.mailhostbox.com"
+  },
+  "giacchero.com.br": {
+    "port": 993,
+    "server": "imap.giacchero.com.br"
   },
   "giad.com": {
     "port": 993,
@@ -72512,6 +74054,10 @@
   "gigikramer.com": {
     "port": 993,
     "server": "imap.gigikramer.com"
+  },
+  "gigliolicolori.com": {
+    "port": 993,
+    "server": "gigliolicolori.com"
   },
   "gigprints.co.za": {
     "port": 993,
@@ -73497,6 +75043,10 @@
     "port": 993,
     "server": "imap.gm.tp1.jp"
   },
+  "gm2s.fr": {
+    "port": 993,
+    "server": "mail.gm2s.fr"
+  },
   "gma4l.com": {
     "port": 993,
     "server": "mail.hostedemail.com"
@@ -73508,6 +75058,10 @@
   "gmaci.cl": {
     "port": 993,
     "server": "mail.gmaci.cl"
+  },
+  "gmailnew.com": {
+    "port": 993,
+    "server": "mail.gmailnew.com"
   },
   "gmalii.com": {
     "port": 993,
@@ -73781,6 +75335,10 @@
   "gnfc.in": {
     "port": 993,
     "server": "mail.gnfc.in"
+  },
+  "gng.com.au": {
+    "port": 993,
+    "server": "mail.gng.com.au"
   },
   "gnlsystems.com": {
     "port": 993,
@@ -74175,6 +75733,10 @@
     "port": 993,
     "server": "imap.goldentech-me.com"
   },
+  "goldenwalls.com": {
+    "port": 993,
+    "server": "mail.goldenwalls.com"
+  },
   "goldenwish.org": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -74258,6 +75820,10 @@
   "gomezgomezabogados.com": {
     "port": 993,
     "server": "mail.gomezgomezabogados.com"
+  },
+  "gomezinternational.com": {
+    "port": 993,
+    "server": "imap.gomezinternational.com"
   },
   "gomini.sk": {
     "port": 993,
@@ -74605,6 +76171,10 @@
     "port": 993,
     "server": "mail.sicurezzapostale.it"
   },
+  "gpecc.vn": {
+    "port": 993,
+    "server": "pro48.emailserver.vn"
+  },
   "gpfestas.com.br": {
     "port": 993,
     "server": "imap.gpfestas.com.br"
@@ -74860,6 +76430,10 @@
   "graficapontual.com.br": {
     "port": 993,
     "server": "imap.graficapontual.com.br"
+  },
+  "graficaporto.com.br": {
+    "port": 993,
+    "server": "imap.graficaporto.com.br"
   },
   "graficasverano.com": {
     "port": 993,
@@ -75593,6 +77167,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "gricki.com.br": {
+    "port": 993,
+    "server": "imap.gricki.com.br"
+  },
   "grids.id": {
     "port": 993,
     "server": "grids.id"
@@ -75717,6 +77295,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "groova.co.jp": {
+    "port": 993,
+    "server": "imap.groova.co.jp"
+  },
   "groovelsoftware.fr": {
     "port": 993,
     "server": "imap.groovelsoftware.fr"
@@ -75797,6 +77379,10 @@
     "port": 993,
     "server": "mail.groupe-esten.fr"
   },
+  "groupe-gfc.fr": {
+    "port": 993,
+    "server": "mail.groupe-gfc.fr"
+  },
   "groupe-hasnaoui.com": {
     "port": 993,
     "server": "imap.groupe-hasnaoui.com"
@@ -75828,6 +77414,10 @@
   "groupe-sbf.tn": {
     "port": 993,
     "server": "imap.groupe-sbf.tn"
+  },
+  "groupe-siac.fr": {
+    "port": 993,
+    "server": "ssl0.ovh.net"
   },
   "groupe-traces.fr": {
     "port": 993,
@@ -76021,6 +77611,10 @@
     "port": 993,
     "server": "mail.growlimo.com"
   },
+  "growluck.co.jp": {
+    "port": 993,
+    "server": "imap.growluck.co.jp"
+  },
   "growmedia.com.br": {
     "port": 993,
     "server": "mail02.l4email.com"
@@ -76136,6 +77730,10 @@
   "grupadekontaminacyjna.pl": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "grupahale.pl": {
+    "port": 993,
+    "server": "imap.grupahale.pl"
   },
   "gruparge.com": {
     "port": 993,
@@ -77319,6 +78917,10 @@
     "port": 993,
     "server": "mail.guaibasites.com.br"
   },
+  "guamani.com": {
+    "port": 993,
+    "server": "mail.guamani.com"
+  },
   "guamobility.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -77350,6 +78952,10 @@
   "guarderialacasitadepooh.es": {
     "port": 993,
     "server": "imap.guarderialacasitadepooh.es"
+  },
+  "guardia.app": {
+    "port": 993,
+    "server": "imap.guardia.app"
   },
   "guardianowldigital.com": {
     "port": 993,
@@ -78275,6 +79881,10 @@
     "port": 993,
     "server": "mail.haiaumedical.com"
   },
+  "haibun.com": {
+    "port": 993,
+    "server": "haibun.com"
+  },
   "haierhk.com": {
     "port": 993,
     "server": "imap.haierhk.com"
@@ -79071,6 +80681,10 @@
     "port": 993,
     "server": "mail.harvardinternationalvisitors.org"
   },
+  "harvest-soft.com": {
+    "port": 993,
+    "server": "mail.harvest-soft.com"
+  },
   "harvestcollege.co.uk": {
     "port": 993,
     "server": "mail.harvestcollege.co.uk"
@@ -79451,6 +81065,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "hbtrade.lk": {
+    "port": 993,
+    "server": "hbtrade.lk"
+  },
   "hc-motor.com": {
     "port": 993,
     "server": "imap.hc-motor.com"
@@ -79506,6 +81124,10 @@
   "hct.zaq.ne.jp": {
     "port": 993,
     "server": "imap.jcom.zaq.ne.jp"
+  },
+  "hctcc.co.uk": {
+    "port": 993,
+    "server": "mail.hctcc.co.uk"
   },
   "hctel.se": {
     "port": 993,
@@ -80174,6 +81796,11 @@
   "hernandez.net": {
     "port": 993,
     "server": "mail.hernandez.net"
+  },
+  "hero.co.za": {
+    "port": 993,
+    "server": "hero.co.za",
+    "ssl": true
   },
   "herocon.com": {
     "port": 993,
@@ -81064,6 +82691,10 @@
     "port": 993,
     "server": "hiser.com.ar"
   },
+  "hisinc.org": {
+    "port": 993,
+    "server": "imap.hisinc.org"
+  },
   "hisoftio.com": {
     "port": 993,
     "server": "imap.hisoftio.com"
@@ -81155,6 +82786,14 @@
   "hizireli.org.tr": {
     "port": 993,
     "server": "mail.hizireli.org.tr"
+  },
+  "hjarchitect.com.au": {
+    "port": 993,
+    "server": "mail.hjarchitect.com.au"
+  },
+  "hjdejong.nl": {
+    "port": 993,
+    "server": "imap.hjdejong.nl"
   },
   "hjelme.com": {
     "port": 993,
@@ -81543,6 +83182,11 @@
   "hokuden-g.co.jp": {
     "port": 143,
     "server": "mail.hokuden-g.co.jp"
+  },
+  "hokuriku.me": {
+    "port": 993,
+    "server": "imap.hokuriku.me",
+    "ssl": true
   },
   "hol.ch": {
     "port": 993,
@@ -82744,6 +84388,10 @@
     "port": 993,
     "server": "imap.hrfirstconsulting.com"
   },
+  "hrformation.com": {
+    "port": 993,
+    "server": "imap.hrformation.com"
+  },
   "hrh.gob.pe": {
     "port": 993,
     "server": "hrh.gob.pe"
@@ -83193,6 +84841,10 @@
     "port": 993,
     "server": "mail.humoer.dk"
   },
+  "humourme.in": {
+    "port": 993,
+    "server": "imap.humourme.in"
+  },
   "humpty-dumpty.it": {
     "port": 143,
     "server": "imap.humpty-dumpty.it"
@@ -83328,6 +84980,11 @@
   "hvcm.gob.ec": {
     "port": 993,
     "server": "mail.hvcm.gob.ec"
+  },
+  "hvidovrenettet.dk": {
+    "port": 993,
+    "server": "mail.hvidovrenettet.dk",
+    "ssl": true
   },
   "hvnet.vn": {
     "port": 993,
@@ -83549,6 +85206,10 @@
     "port": 993,
     "server": "mail.hypernet.sy"
   },
+  "hyperoxymail.com": {
+    "port": 993,
+    "server": "mail.hyperoxymail.com"
+  },
   "hyperpharm.mu": {
     "port": 993,
     "server": "imap.stackmail.com"
@@ -83660,6 +85321,11 @@
   "i-movix.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "i-next.ne.jp": {
+    "port": 993,
+    "server": "imap.i-next.ne.jp",
+    "ssl": true
   },
   "i-novado.nl": {
     "port": 993,
@@ -83914,6 +85580,10 @@
   "ibatti.com": {
     "port": 993,
     "server": "mail.register.it"
+  },
+  "ibaysoft.com": {
+    "port": 993,
+    "server": "ibaysoft.com"
   },
   "ibbiimoveis.com.br": {
     "port": 993,
@@ -86211,6 +87881,10 @@
     "port": 993,
     "server": "imap.impactinfotechindia.co.in"
   },
+  "impacto33.com": {
+    "port": 993,
+    "server": "mail.impacto33.com"
+  },
   "impactoboxing.com": {
     "port": 993,
     "server": "mail.impactoboxing.com"
@@ -86538,6 +88212,10 @@
   "in-fix.tr": {
     "port": 993,
     "server": "imap.in-fix.tr"
+  },
+  "in-off.fr": {
+    "port": 993,
+    "server": "mail.in-off.fr"
   },
   "in.csiglobal.co.uk": {
     "port": 993,
@@ -86963,6 +88641,10 @@
     "port": 993,
     "server": "mail.indotaichen.com"
   },
+  "indrakshi.co.in": {
+    "port": 993,
+    "server": "mail.indrakshi.co.in"
+  },
   "indramayukab.go.id": {
     "port": 993,
     "server": "mail.indramayukab.go.id"
@@ -86970,6 +88652,10 @@
   "indriherbs.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "indroydlabs.com": {
+    "port": 993,
+    "server": "mail.indroydlabs.com"
   },
   "induquimica.com.ar": {
     "port": 993,
@@ -87151,6 +88837,10 @@
   "infinikids.fr": {
     "port": 143,
     "server": "mail.infinikids.fr"
+  },
+  "infinilegno.com": {
+    "port": 993,
+    "server": "imap.infinilegno.com"
   },
   "infinisport.fr": {
     "port": 143,
@@ -87355,6 +89045,10 @@
   "infomina.es": {
     "port": 993,
     "server": "mail.infomina.es"
+  },
+  "infomixltda.com.br": {
+    "port": 993,
+    "server": "imap.infomixltda.com.br"
   },
   "infomotel.com": {
     "port": 993,
@@ -87603,6 +89297,10 @@
   "ing-play.com": {
     "port": 993,
     "server": "imap.ing-play.com"
+  },
+  "ing.unlp.edu.ar": {
+    "port": 993,
+    "server": "imap.ing.unlp.edu.ar"
   },
   "ingaba.com": {
     "port": 993,
@@ -88569,9 +90267,17 @@
     "port": 993,
     "server": "mail.instaltec.coop"
   },
+  "instalustres.com.br": {
+    "port": 993,
+    "server": "mail.instalustres.com.br"
+  },
   "instamail.co.in": {
     "port": 993,
     "server": "_dc-mx.f7b56eb06c5e.instamail.co.in"
+  },
+  "instant-t-events.fr": {
+    "port": 993,
+    "server": "imap.instant-t-events.fr"
   },
   "instant-technologies.com": {
     "port": 993,
@@ -89292,6 +90998,11 @@
     "port": 993,
     "server": "imap.mail.ru"
   },
+  "internetlibero.it": {
+    "port": 993,
+    "server": "mail.internetlibero.it",
+    "ssl": true
+  },
   "internetnc.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -89456,6 +91167,11 @@
     "port": 993,
     "server": "imap.intmail.pl"
   },
+  "intnet.mu": {
+    "port": 993,
+    "server": "intnet.mu",
+    "ssl": true
+  },
   "intorre.de": {
     "port": 993,
     "server": "imap.ionos.com"
@@ -89607,6 +91323,10 @@
   "investplan.com.br": {
     "port": 993,
     "server": "mail.investplan.com.br"
+  },
+  "invexkft.hu": {
+    "port": 993,
+    "server": "mail.invexkft.hu"
   },
   "invictamix.pt": {
     "port": 993,
@@ -89783,6 +91503,10 @@
   "iosti.mx": {
     "port": 993,
     "server": "imap.iosti.mx"
+  },
+  "iosystems.it": {
+    "port": 993,
+    "server": "mail.iosystems.it"
   },
   "iot6.net": {
     "port": 993,
@@ -89985,6 +91709,10 @@
   "iprimus.com.au": {
     "port": 143,
     "server": "imap.iprimus.com.au"
+  },
+  "iprm.care": {
+    "port": 993,
+    "server": "imap.iprm.care"
   },
   "iprocares.com": {
     "port": 993,
@@ -94416,6 +96144,10 @@
     "port": 993,
     "server": "mail.jrkham.com"
   },
+  "jrlogistic.se": {
+    "port": 993,
+    "server": "jrlogistic.se"
+  },
   "jrpaqueteria.mx": {
     "port": 993,
     "server": "imap.one.com"
@@ -94611,6 +96343,10 @@
   "judd.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "judiciaryzambia.com": {
+    "port": 993,
+    "server": "mail.judiciaryzambia.com"
   },
   "judithdoyle.com": {
     "port": 993,
@@ -94818,6 +96554,10 @@
     "port": 993,
     "server": "imap.jusinbusiness.com"
   },
+  "juslab.com": {
+    "port": 993,
+    "server": "mail.juslab.com"
+  },
   "jusra.at": {
     "port": 993,
     "server": "imap.jusra.at"
@@ -94958,6 +96698,11 @@
     "port": 993,
     "server": "mail.jypsac.com"
   },
+  "jzkinc.com": {
+    "port": 993,
+    "server": "mail.jzkinc.com",
+    "ssl": true
+  },
   "k-1group.com": {
     "port": 993,
     "server": "imap.k-1group.com"
@@ -95029,6 +96774,10 @@
   "k66.ru": {
     "port": 993,
     "server": "imap.yandex.com"
+  },
+  "k9dc.fr": {
+    "port": 993,
+    "server": "mail.k9dc.fr"
   },
   "kaanelektronik.com": {
     "port": 993,
@@ -95310,6 +97059,10 @@
     "port": 993,
     "server": "mail.kaizenltd.sa"
   },
+  "kaizensn.com": {
+    "port": 993,
+    "server": "imap.kaizensn.com"
+  },
   "kajakhotellet.dk": {
     "port": 993,
     "server": "mail.kajakhotellet.dk"
@@ -95429,6 +97182,10 @@
   "kalman.id": {
     "port": 993,
     "server": "mail.kalman.id"
+  },
+  "kalmowr.live": {
+    "port": 993,
+    "server": "mail.kalmowr.live"
   },
   "kalocsakom.hu": {
     "port": 993,
@@ -96156,6 +97913,11 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "kauneta.net": {
+    "port": 993,
+    "server": "mail.kauneta.net",
+    "ssl": true
+  },
   "kausarresidencies.com": {
     "port": 993,
     "server": "imap.stackmail.com"
@@ -96260,6 +98022,10 @@
   "kazmer-repuestos.com.ar": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "kazoart.com": {
+    "port": 993,
+    "server": "imap.kazoart.com"
   },
   "kazunari.info": {
     "port": 993,
@@ -96576,6 +98342,11 @@
   "kejamove.com": {
     "port": 993,
     "server": "kejamove.com"
+  },
+  "kejigou.cc": {
+    "port": 993,
+    "server": "imap.kejigou.cc",
+    "ssl": true
   },
   "kel-annonce.net": {
     "port": 993,
@@ -96994,6 +98765,10 @@
     "port": 993,
     "server": "keyexposure.co.uk"
   },
+  "keymail99.com": {
+    "port": 993,
+    "server": "mail.keymail99.com"
+  },
   "keymia.com": {
     "port": 993,
     "server": "imap.keymia.com"
@@ -97121,6 +98896,10 @@
   "kgsvn.com": {
     "port": 993,
     "server": "pro48.emailserver.vn"
+  },
+  "kgvietnam.com": {
+    "port": 993,
+    "server": "mail.kgvietnam.com"
   },
   "kgvpro.co": {
     "port": 993,
@@ -97735,6 +99514,10 @@
     "port": 993,
     "server": "mail.kirmasti.com"
   },
+  "kirschenhofer.ch": {
+    "port": 993,
+    "server": "imap.kirschenhofer.ch"
+  },
   "kirtitaxiservice.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -97794,6 +99577,14 @@
   "kiterider.hu": {
     "port": 993,
     "server": "mail.kiterider.hu"
+  },
+  "kitetrip-planner.com": {
+    "port": 993,
+    "server": "imap.kitetrip-planner.com"
+  },
+  "kitinfo.co.ma": {
+    "port": 993,
+    "server": "imap.kitinfo.co.ma"
   },
   "kitsmail.com": {
     "port": 993,
@@ -98403,6 +100194,10 @@
     "port": 993,
     "server": "mail.knnidiomas.com.br"
   },
+  "knockoutweddings.in": {
+    "port": 993,
+    "server": "mail.knockoutweddings.in"
+  },
   "knocksa.com.ar": {
     "port": 993,
     "server": "mail.knocksa.com.ar"
@@ -98442,6 +100237,11 @@
   "knr.net": {
     "port": 993,
     "server": "imap.knr.net"
+  },
+  "knthealth.com": {
+    "port": 993,
+    "server": "mail.knthealth.com",
+    "ssl": true
   },
   "kntu.net.ua": {
     "port": 993,
@@ -98498,6 +100298,11 @@
   "kobusmeyermarketing.com": {
     "port": 993,
     "server": "mail.kobusmeyermarketing.com"
+  },
+  "kocaeli.edu.tr": {
+    "port": 993,
+    "server": "imap.kocaeli.edu.tr",
+    "ssl": true
   },
   "kocagrup.com.tr": {
     "port": 993,
@@ -98699,6 +100504,10 @@
     "port": 993,
     "server": "mail.kolmenagroup.com"
   },
+  "kolozsipeter.hu": {
+    "port": 993,
+    "server": "mail.kolozsipeter.hu"
+  },
   "kolpikov.ru": {
     "port": 143,
     "server": "mail.kolpikov.ru"
@@ -98706,6 +100515,11 @@
   "koltexrecykling.pl": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "koltsovo.net": {
+    "port": 993,
+    "server": "mail.koltsovo.net",
+    "ssl": true
   },
   "kolumbus.fi": {
     "port": 993,
@@ -99011,6 +100825,11 @@
     "port": 143,
     "server": "imap.koseisya.co.jp"
   },
+  "koses.co.kr": {
+    "port": 993,
+    "server": "mail.koses.co.kr",
+    "ssl": true
+  },
   "koshambh.com": {
     "port": 993,
     "server": "securemail.mailprotect.in"
@@ -99288,6 +101107,10 @@
     "port": 993,
     "server": "imap.krasnoe-beloe.ru"
   },
+  "kratosinvestments.com": {
+    "port": 993,
+    "server": "imap.kratosinvestments.com"
+  },
   "krausonline.com": {
     "port": 143,
     "server": "imap.krausonline.com"
@@ -99315,6 +101138,10 @@
   "kreagroup.com": {
     "port": 993,
     "server": "mail.kreagroup.com"
+  },
+  "kreasimaya.com": {
+    "port": 993,
+    "server": "mail.kreasimaya.com"
   },
   "kreatic.com": {
     "port": 993,
@@ -99595,6 +101422,11 @@
   "ks-grafikdesign.com": {
     "port": 993,
     "server": "imap.ks-grafikdesign.com"
+  },
+  "ks.ac.kr": {
+    "port": 993,
+    "server": "mail.ks.ac.kr",
+    "ssl": true
   },
   "ksa4cars.com": {
     "port": 993,
@@ -100624,6 +102456,10 @@
     "port": 993,
     "server": "imap.labshe.com.ar"
   },
+  "labsupplies.com.mx": {
+    "port": 993,
+    "server": "mail.labsupplies.com.mx"
+  },
   "labsystems.co.za": {
     "port": 993,
     "server": "mail.labsystems.co.za"
@@ -100721,6 +102557,10 @@
     "port": 993,
     "server": "mail.lacomec.fr"
   },
+  "lacompagniedesanimaux.com": {
+    "port": 993,
+    "server": "mail.lacompagniedesanimaux.com"
+  },
   "laconfiserie.ca": {
     "port": 993,
     "server": "mail.laconfiserie.ca"
@@ -100792,6 +102632,10 @@
   "lactopus.xyz": {
     "port": 993,
     "server": "mail.lactopus.xyz"
+  },
+  "lacty2.com.vn": {
+    "port": 993,
+    "server": "mail.lacty2.com.vn"
   },
   "lacure.ae": {
     "port": 993,
@@ -101048,6 +102892,10 @@
   "lajawihair.com": {
     "port": 993,
     "server": "lajawihair.com"
+  },
+  "lajedo.com.br": {
+    "port": 993,
+    "server": "imap.lajedo.com.br"
   },
   "lajkonikcup.pl": {
     "port": 993,
@@ -101522,6 +103370,10 @@
     "port": 993,
     "server": "mail.lapalouse.fr"
   },
+  "lapalud.net": {
+    "port": 993,
+    "server": "mail.lapalud.net"
+  },
   "lapangee-internationale.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -101633,6 +103485,10 @@
   "lapuna.ch": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "laquantatechnology.com": {
+    "port": 993,
+    "server": "mail.laquantatechnology.com"
   },
   "laquilaadvogados.com.br": {
     "port": 993,
@@ -102963,6 +104819,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "leftbank.fr": {
+    "port": 993,
+    "server": "leftbank.fr"
+  },
   "legacycrop.com": {
     "port": 993,
     "server": "imap.legacycrop.com"
@@ -103222,6 +105082,10 @@
   "lemoinesas.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "lemondechange.fr": {
+    "port": 993,
+    "server": "imap.lemondechange.fr"
   },
   "lemondesign.pl": {
     "port": 993,
@@ -103931,6 +105795,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "lfl-togo.org": {
+    "port": 993,
+    "server": "imap.lfl-togo.org"
+  },
   "lfsetsinvestment.co.za": {
     "port": 993,
     "server": "imap.lfsetsinvestment.co.za"
@@ -104179,6 +106047,10 @@
     "port": 993,
     "server": "imap.libertyint.org"
   },
+  "libertymail.co": {
+    "port": 993,
+    "server": "imap.libertymail.co"
+  },
   "libertymobile.ch": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -104198,6 +106070,10 @@
   "libitechnologies.com": {
     "port": 993,
     "server": "imap.libitechnologies.com"
+  },
+  "libra-food.com": {
+    "port": 993,
+    "server": "libra-food.com"
   },
   "libraconcepts.events": {
     "port": 993,
@@ -104443,6 +106319,10 @@
   "lifetechve.com": {
     "port": 993,
     "server": "lifetechve.com"
+  },
+  "lifetimenewspro.com": {
+    "port": 993,
+    "server": "imap.lifetimenewspro.com"
   },
   "lifeweb.com.ar": {
     "port": 993,
@@ -104700,6 +106580,10 @@
     "port": 993,
     "server": "mail.limpissima.ind.br"
   },
+  "limtree.com": {
+    "port": 993,
+    "server": "mail.limtree.com"
+  },
   "lin.co.jp": {
     "port": 993,
     "server": "pop4.ocnk.net"
@@ -104916,6 +106800,10 @@
     "port": 993,
     "server": "mail.linkmaisms.com.br"
   },
+  "linkpartnersrd.com": {
+    "port": 993,
+    "server": "mail.linkpartnersrd.com"
+  },
   "linkpoint.biz": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -104923,6 +106811,10 @@
   "links.hr": {
     "port": 993,
     "server": "mail.links.hr"
+  },
+  "linksphere.co.jp": {
+    "port": 993,
+    "server": "imap.linksphere.co.jp"
   },
   "linktsp.com": {
     "port": 993,
@@ -105232,6 +107124,14 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "livenet.ch": {
+    "port": 993,
+    "server": "mail.livenet.ch"
+  },
+  "livescene1996.com": {
+    "port": 993,
+    "server": "imap.livescene1996.com"
+  },
   "livetixgroup.com": {
     "port": 993,
     "server": "imap.one.com"
@@ -105404,6 +107304,10 @@
     "port": 993,
     "server": "imap.lmc-avocats.fr"
   },
+  "lmedica.com.br": {
+    "port": 993,
+    "server": "mail.lmedica.com.br"
+  },
   "lmf.net": {
     "port": 993,
     "server": "mail.lmf.net"
@@ -105533,6 +107437,10 @@
     "server": "imap.stackmail.com"
   },
   "localboostersinc.com": {
+    "port": 993,
+    "server": "imap.hostinger.com"
+  },
+  "localcarsbrentford.co.uk": {
     "port": 993,
     "server": "imap.hostinger.com"
   },
@@ -105716,6 +107624,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "logement-seniors.com": {
+    "port": 993,
+    "server": "logement-seniors.com"
+  },
   "logenord.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -105844,6 +107756,10 @@
     "port": 993,
     "server": "mail.logoprinter.ru"
   },
+  "logoprom.fr": {
+    "port": 993,
+    "server": "mail.logoprom.fr"
+  },
   "logosarchitect.com": {
     "port": 993,
     "server": "imap.logosarchitect.com"
@@ -105855,6 +107771,10 @@
   "logostre.com": {
     "port": 993,
     "server": "logostre.com"
+  },
+  "logwire-consulting.com": {
+    "port": 993,
+    "server": "imap.logwire-consulting.com"
   },
   "logystem.com.br": {
     "port": 993,
@@ -106048,6 +107968,10 @@
   "londonbrandsolutions.com": {
     "port": 993,
     "server": "mail.londonbrandsolutions.com"
+  },
+  "londonsnooker.co.uk": {
+    "port": 993,
+    "server": "londonsnooker.co.uk"
   },
   "londonstarlimo.com": {
     "port": 993,
@@ -106681,6 +108605,10 @@
     "port": 993,
     "server": "mbox.mose-mail.jp"
   },
+  "ls-tanktechnik.at": {
+    "port": 993,
+    "server": "mail.ls-tanktechnik.at"
+  },
   "lsacontabil.com.br": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -107154,6 +109082,10 @@
     "port": 993,
     "server": "mail.luna.it"
   },
+  "lunacreations.co.uk": {
+    "port": 993,
+    "server": "lunacreations.co.uk"
+  },
   "lunadoradahotel.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -107398,6 +109330,10 @@
     "port": 993,
     "server": "mail.luxxie.nl"
   },
+  "luynes.fr": {
+    "port": 993,
+    "server": "mail.luynes.fr"
+  },
   "luzadvocacia.com.br": {
     "port": 993,
     "server": "imap.luzadvocacia.com.br"
@@ -107506,6 +109442,16 @@
     "port": 143,
     "server": "imap.lydw.club"
   },
+  "lydw.love": {
+    "port": 993,
+    "server": "imap.lydw.love",
+    "ssl": true
+  },
+  "lydw.online": {
+    "port": 993,
+    "server": "imap.lydw.online",
+    "ssl": true
+  },
   "lyfoung.com": {
     "port": 993,
     "server": "mail.lyfoung.com"
@@ -107589,6 +109535,10 @@
   "lysik.pol.pl": {
     "port": 993,
     "server": "mail.lysik.pol.pl"
+  },
+  "lysys.com": {
+    "port": 993,
+    "server": "lysys.com"
   },
   "lythtia.com": {
     "port": 993,
@@ -107950,6 +109900,10 @@
   "macisis.co.uk": {
     "port": 143,
     "server": "mail.macisis.co.uk"
+  },
+  "macland.eng.br": {
+    "port": 993,
+    "server": "imap.macland.eng.br"
   },
   "macmousepads.com": {
     "port": 993,
@@ -108747,6 +110701,11 @@
     "port": 993,
     "server": "imap.yandex.com"
   },
+  "mail.az": {
+    "port": 993,
+    "server": "imap.mail.az",
+    "ssl": true
+  },
   "mail.bbexcite.jp": {
     "port": 993,
     "server": "imap.mail.bbexcite.jp"
@@ -108955,6 +110914,11 @@
     "port": 993,
     "server": "mail.wind.ne.jp"
   },
+  "mail.zp.ua": {
+    "port": 993,
+    "server": "mail.mail.zp.ua",
+    "ssl": true
+  },
   "mail123.dk": {
     "port": 993,
     "server": "imap.mail123.dk"
@@ -108994,6 +110958,10 @@
   "mailboc.com": {
     "port": 993,
     "server": "imap.mailboc.com"
+  },
+  "mailbox.gr": {
+    "port": 993,
+    "server": "mail.mailbox.gr"
   },
   "mailbox.org": {
     "port": 993,
@@ -109179,6 +111147,10 @@
     "port": 993,
     "server": "mail.mairie-hautmont.fr"
   },
+  "mairie-lure.fr": {
+    "port": 993,
+    "server": "mail.mairie-lure.fr"
+  },
   "mairie-lyslezlannoy.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -109258,6 +111230,10 @@
   "maison-coquard.com": {
     "port": 993,
     "server": "mail.maison-coquard.com"
+  },
+  "maison-n.com": {
+    "port": 993,
+    "server": "mail.maison-n.com"
   },
   "maison-rougier.fr": {
     "port": 993,
@@ -109459,6 +111435,10 @@
     "port": 993,
     "server": "imap.lolipop.jp"
   },
+  "makewell.com.br": {
+    "port": 993,
+    "server": "mail.makewell.com.br"
+  },
   "makgroup.net": {
     "port": 993,
     "server": "mail.makgroup.net"
@@ -109610,6 +111590,10 @@
   "malgard.sk": {
     "port": 993,
     "server": "mail.malgard.sk"
+  },
+  "malgardee.com": {
+    "port": 993,
+    "server": "mail.malgardee.com"
   },
   "malhariatritex.com.br": {
     "port": 993,
@@ -109902,6 +111886,10 @@
   "manillo.dk": {
     "port": 993,
     "server": "mail.manillo.dk"
+  },
+  "manip-info.com": {
+    "port": 993,
+    "server": "mail.manip-info.com"
   },
   "manisameydangazetesi.com.tr": {
     "port": 993,
@@ -110538,6 +112526,10 @@
     "port": 993,
     "server": "mail.maritagroups.com"
   },
+  "maritimusragusa.com": {
+    "port": 993,
+    "server": "mail.maritimusragusa.com"
+  },
   "marius-sardineur.fr": {
     "port": 993,
     "server": "imap.marius-sardineur.fr"
@@ -110882,6 +112874,10 @@
   "marticonet.sk": {
     "port": 993,
     "server": "mail.marticonet.sk"
+  },
+  "martiklonnymail.com": {
+    "port": 993,
+    "server": "imap.martiklonnymail.com"
   },
   "martin-eder.com": {
     "port": 993,
@@ -111957,6 +113953,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "mazhanapplestore.com": {
+    "port": 993,
+    "server": "imap.mazhanapplestore.com"
+  },
   "mazharsolook.com": {
     "port": 993,
     "server": "mail.mazharsolook.com"
@@ -112864,6 +114864,11 @@
     "port": 993,
     "server": "mail.medialrs.com"
   },
+  "mediamanche.com": {
+    "port": 993,
+    "server": "imap.mediamanche.com",
+    "ssl": true
+  },
   "mediamusic.cat": {
     "port": 993,
     "server": "imap.hostinger.es"
@@ -112871,6 +114876,10 @@
   "medianess.co": {
     "port": 993,
     "server": "mail1.onyx-mail.com"
+  },
+  "medianetworks.co.jp": {
+    "port": 993,
+    "server": "imap.medianetworks.co.jp"
   },
   "medianis.net": {
     "port": 993,
@@ -113219,6 +115228,10 @@
   "medstarocupacional.com.br": {
     "port": 993,
     "server": "mail.medstarocupacional.com.br"
+  },
+  "medsyn.sk": {
+    "port": 993,
+    "server": "imap.medsyn.sk"
   },
   "meducol.com": {
     "port": 993,
@@ -114278,6 +116291,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "metalsider.com.br": {
+    "port": 993,
+    "server": "metalsider.com.br"
+  },
   "metalumens.com.br": {
     "port": 993,
     "server": "imap.metalumens.com.br"
@@ -114727,6 +116744,10 @@
     "port": 993,
     "server": "_dc-mx.9c821cb886a5.mglstore.co.in"
   },
+  "mgmailz.com": {
+    "port": 993,
+    "server": "mail.mgmailz.com"
+  },
   "mgmbosco.com": {
     "port": 993,
     "server": "mail.mgmbosco.com"
@@ -114887,6 +116908,11 @@
   "mi-technologies.in": {
     "port": 993,
     "server": "w00ce38e.kasserver.com"
+  },
+  "mi.cl": {
+    "port": 993,
+    "server": "imap.mi.cl",
+    "ssl": true
   },
   "mi.rr.com": {
     "port": 143,
@@ -116018,6 +118044,11 @@
     "port": 993,
     "server": "imap.miningig.com"
   },
+  "miniprinter.com": {
+    "port": 993,
+    "server": "mail.miniprinter.com",
+    "ssl": true
+  },
   "minister.com": {
     "port": 993,
     "server": "imap.mail.com"
@@ -117084,6 +119115,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "mobicloud.com.cn": {
+    "port": 993,
+    "server": "imap.mobicloud.com.cn"
+  },
   "mobicom.co": {
     "port": 993,
     "server": "imap.mobicom.co"
@@ -117893,6 +119928,11 @@
     "port": 993,
     "server": "monteverdivalentini.it"
   },
+  "montevideo.com.uy": {
+    "port": 993,
+    "server": "mail.montevideo.com.uy",
+    "ssl": true
+  },
   "montji.com": {
     "port": 993,
     "server": "imap.montji.com"
@@ -117900,6 +119940,10 @@
   "montre-automatique.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "montrials.com.br": {
+    "port": 993,
+    "server": "mail.montrials.com.br"
   },
   "monts.fr": {
     "port": 993,
@@ -118097,6 +120141,10 @@
   "moreirasilvasabatino.com.br": {
     "port": 993,
     "server": "imap.moreirasilvasabatino.com.br"
+  },
+  "moreishkitchen.co.nz": {
+    "port": 993,
+    "server": "mail.moreishkitchen.co.nz"
   },
   "morelagencements.fr": {
     "port": 993,
@@ -118482,6 +120530,10 @@
     "port": 993,
     "server": "imap.mountfin.co.zw"
   },
+  "mountwork.fr": {
+    "port": 993,
+    "server": "imap.mountwork.fr"
+  },
   "mouraopneus.com.br": {
     "port": 993,
     "server": "imap.kinghost.net"
@@ -118766,6 +120818,10 @@
   "mpu.edu.iq": {
     "port": 993,
     "server": "imap.migadu.com"
+  },
+  "mpull.com": {
+    "port": 993,
+    "server": "mail.mpull.com"
   },
   "mpuza.com": {
     "port": 993,
@@ -119470,6 +121526,10 @@
   "mudandote.com": {
     "port": 993,
     "server": "mudandote.com"
+  },
+  "mudengenharia.com.br": {
+    "port": 993,
+    "server": "imap.mudengenharia.com.br"
   },
   "mudgalcorporate.com": {
     "port": 993,
@@ -120321,6 +122381,10 @@
     "port": 993,
     "server": "mail.mvintertrade.com"
   },
+  "mvitc.net": {
+    "port": 993,
+    "server": "mvitc.net"
+  },
   "mvlife.com.br": {
     "port": 993,
     "server": "imap.kinghost.net"
@@ -120401,6 +122465,11 @@
   "mwtn.net": {
     "port": 993,
     "server": "mail.mwtn.net"
+  },
+  "mwu.edu.np": {
+    "port": 993,
+    "server": "imap.mwu.edu.np",
+    "ssl": true
   },
   "mwzgroup.co.za": {
     "port": 993,
@@ -120859,6 +122928,10 @@
     "port": 993,
     "server": "mail.myluxepoint.com"
   },
+  "mymailboks.dk": {
+    "port": 993,
+    "server": "mail.mymailboks.dk"
+  },
   "mymcom.com.ar": {
     "port": 993,
     "server": "mail.grupoequis.com.ar"
@@ -121068,6 +123141,11 @@
     "port": 993,
     "server": "imap.mytaupe.com"
   },
+  "mytaxassistant.co.uk": {
+    "port": 993,
+    "server": "imap.mytaxassistant.co.uk",
+    "ssl": true
+  },
   "mytec-et.co.jp": {
     "port": 993,
     "server": "mail.mytec-et.co.jp"
@@ -121167,6 +123245,10 @@
   "mywishenterprise.com": {
     "port": 993,
     "server": "mywishenterprise.com"
+  },
+  "myyachtlondon.com": {
+    "port": 993,
+    "server": "imap.myyachtlondon.com"
   },
   "myzelence.com": {
     "port": 993,
@@ -121404,6 +123486,11 @@
     "port": 993,
     "server": "imap.nakairyu.com"
   },
+  "nakamichi.co.in": {
+    "port": 993,
+    "server": "nakamichi.co.in",
+    "ssl": true
+  },
   "nakamurabsc.com": {
     "port": 993,
     "server": "pop6.gmoserver.jp"
@@ -121547,6 +123634,10 @@
   "nangaritza.gob.ec": {
     "port": 993,
     "server": "mail.nangaritza.gob.ec"
+  },
+  "nannachanu.live": {
+    "port": 993,
+    "server": "mail.nannachanu.live"
   },
   "nano4you.com.br": {
     "port": 993,
@@ -122038,6 +124129,10 @@
     "port": 993,
     "server": "nayino.ro"
   },
+  "naytechs.com": {
+    "port": 993,
+    "server": "mail.naytechs.com"
+  },
   "naz-cleaning.com": {
     "port": 993,
     "server": "imap.one.com"
@@ -122289,6 +124384,10 @@
   "nearbuystore.in": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "nearshoresurveys.com": {
+    "port": 993,
+    "server": "mail.nearshoresurveys.com"
   },
   "nearteam.fr": {
     "port": 993,
@@ -123062,6 +125161,10 @@
     "port": 993,
     "server": "mail.netural.hu"
   },
+  "netutah.com": {
+    "port": 993,
+    "server": "mail.netutah.com"
+  },
   "netviewsolutionsarl.com": {
     "port": 993,
     "server": "imap.netviewsolutionsarl.com"
@@ -123254,6 +125357,10 @@
     "port": 993,
     "server": "imap.nevvus.com"
   },
+  "new-art.co.jp": {
+    "port": 993,
+    "server": "imap.new-art.co.jp"
+  },
   "new-gp.com": {
     "port": 993,
     "server": "imap.new-gp.com"
@@ -123370,6 +125477,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "newfrontierstours.co.za": {
+    "port": 993,
+    "server": "newfrontierstours.co.za"
+  },
   "newgestor.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -123441,6 +125552,10 @@
   "newmediastaff.com": {
     "port": 993,
     "server": "mailserver.newmediastaff.com"
+  },
+  "newmediatv.tv": {
+    "port": 993,
+    "server": "imap.newmediatv.tv"
   },
   "newminicornwall.org.uk": {
     "port": 143,
@@ -123770,6 +125885,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "nextage1.co.jp": {
+    "port": 993,
+    "server": "imap.nextage1.co.jp"
+  },
   "nextbr.mx": {
     "port": 993,
     "server": "mail.nextbr.mx"
@@ -123863,6 +125982,10 @@
     "port": 993,
     "server": "imap.nextsegserv.com.br"
   },
+  "nextservices.fr": {
+    "port": 993,
+    "server": "imap.nextservices.fr"
+  },
   "nextsolucoes.com.br": {
     "port": 993,
     "server": "imap.kinghost.net"
@@ -123878,6 +126001,10 @@
   "nextstreamservers.com": {
     "port": 993,
     "server": "imap.nextstreamservers.com"
+  },
+  "nexture.it": {
+    "port": 993,
+    "server": "relay.nexture.it"
   },
   "nexuscolombia.org": {
     "port": 993,
@@ -124434,6 +126561,10 @@
     "port": 993,
     "server": "mail.nina-saether.com"
   },
+  "ninaandwes.com": {
+    "port": 993,
+    "server": "imap.ninaandwes.com"
+  },
   "ninamoonpublishing.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -124529,6 +126660,10 @@
   "nismointernational.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "nismuhendislik.com": {
+    "port": 993,
+    "server": "mail.nismuhendislik.com"
   },
   "nissan-sd.com": {
     "port": 993,
@@ -124986,6 +127121,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "nogar.com.br": {
+    "port": 993,
+    "server": "imap.nogar.com.br"
+  },
   "nogatakenki.co.jp": {
     "port": 993,
     "server": "imap.nogatakenki.co.jp"
@@ -125065,6 +127204,10 @@
   "noleggioclick.it": {
     "port": 993,
     "server": "mail.noleggioclick.it"
+  },
+  "nolettersbox.com": {
+    "port": 993,
+    "server": "imap.nolettersbox.com"
   },
   "nolin.com": {
     "port": 993,
@@ -125279,6 +127422,11 @@
     "port": 993,
     "server": "nordica-electrocasnice.ro"
   },
+  "nordicdreamsspirit.be": {
+    "port": 993,
+    "server": "mail.nordicdreamsspirit.be",
+    "ssl": true
+  },
   "nordictravelweb.com": {
     "port": 993,
     "server": "imap.hostinger.com.ar"
@@ -125338,6 +127486,10 @@
   "norintegrity.com.ar": {
     "port": 993,
     "server": "mail.norintegrity.com.ar"
+  },
+  "normandie-biologik.fr": {
+    "port": 993,
+    "server": "ssl0.ovh.net"
   },
   "normanspaeth.com": {
     "port": 993,
@@ -125484,6 +127636,10 @@
     "port": 993,
     "server": "imap.northwestel.net"
   },
+  "northwesttravel.com.au": {
+    "port": 993,
+    "server": "mail.northwesttravel.com.au"
+  },
   "northwestweb.co.uk": {
     "port": 993,
     "server": "mail.northwestweb.co.uk"
@@ -125576,6 +127732,10 @@
     "port": 993,
     "server": "mail.notariusz.lex.pl"
   },
+  "notboxletters.com": {
+    "port": 993,
+    "server": "imap.notboxletters.com"
+  },
   "notebookrent.com.br": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -125660,6 +127820,10 @@
   "noureclam.com": {
     "port": 993,
     "server": "mail.noureclam.com"
+  },
+  "nourishingherbs.co.uk": {
+    "port": 993,
+    "server": "mail.nourishingherbs.co.uk"
   },
   "nourishwithsim.in": {
     "port": 993,
@@ -126843,6 +129007,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "oboxs.com": {
+    "port": 993,
+    "server": "imap.oboxs.com"
+  },
   "obralivre.com.br": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -126882,6 +129050,10 @@
   "occn.zaq.ne.jp": {
     "port": 993,
     "server": "imap.jcom.zaq.ne.jp"
+  },
+  "occupancymail.com": {
+    "port": 993,
+    "server": "imap.occupancymail.com"
   },
   "ocd.com.br": {
     "port": 993,
@@ -127517,6 +129689,10 @@
     "port": 993,
     "server": "imap.kinghost.net"
   },
+  "ohnk.net": {
+    "port": 993,
+    "server": "mail.ohnk.net"
+  },
   "ohnw.dflushi.com": {
     "port": 993,
     "server": "mail.ohnw.dflushi.com"
@@ -127956,6 +130132,10 @@
   "olp.net": {
     "port": 993,
     "server": "imap.olp.net"
+  },
+  "olptech.hu": {
+    "port": 993,
+    "server": "mail.olptech.hu"
   },
   "olsav.sk": {
     "port": 993,
@@ -128440,6 +130620,10 @@
   "onepaycredit.co.ke": {
     "port": 993,
     "server": "rs8-new.rcnoc.com"
+  },
+  "onepci.net": {
+    "port": 993,
+    "server": "mail.onepci.net"
   },
   "onepsi.com": {
     "port": 993,
@@ -129181,6 +131365,10 @@
     "port": 993,
     "server": "mail.oraadvogados.com"
   },
+  "oradex.my": {
+    "port": 993,
+    "server": "mail.oradex.my"
+  },
   "oragon.com.ar": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -129470,6 +131658,10 @@
   "originsystech.com": {
     "port": 143,
     "server": "originsystech.com"
+  },
+  "orion.rs": {
+    "port": 993,
+    "server": "mail.orion.rs"
   },
   "orionconsultores.com.mx": {
     "port": 993,
@@ -130090,6 +132282,11 @@
   "ottotilla.com": {
     "port": 993,
     "server": "imap.ottotilla.com"
+  },
+  "ou4.site": {
+    "port": 993,
+    "server": "imap.ou4.site",
+    "ssl": true
   },
   "ou5.site": {
     "port": 143,
@@ -131099,6 +133296,10 @@
     "port": 993,
     "server": "mail.palmcityhotel.com"
   },
+  "palmharbordentist.com": {
+    "port": 993,
+    "server": "palmharbordentist.com"
+  },
   "palmiscapital.com": {
     "port": 993,
     "server": "palmiscapital.com"
@@ -131126,6 +133327,11 @@
   "pamami.pl": {
     "port": 993,
     "server": "mail.pamami.pl"
+  },
+  "pamcomachinery.com": {
+    "port": 993,
+    "server": "mail.pamcomachinery.com",
+    "ssl": true
   },
   "pamdal.se": {
     "port": 993,
@@ -131162,6 +133368,10 @@
   "panafricanemarket.com": {
     "port": 993,
     "server": "imap.hostinger.fr"
+  },
+  "panafricanlf.org": {
+    "port": 993,
+    "server": "imap.panafricanlf.org"
   },
   "panamericanadies.com": {
     "port": 993,
@@ -131246,6 +133456,10 @@
   "panemer.com.br": {
     "port": 993,
     "server": "imap.kinghost.net"
+  },
+  "panessgroup.com": {
+    "port": 993,
+    "server": "imap.panessgroup.com"
   },
   "panfletitos.com": {
     "port": 993,
@@ -131456,6 +133670,10 @@
   "paradigmma.com.br": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "paradise-marine.com": {
+    "port": 993,
+    "server": "mail.paradise-marine.com"
   },
   "paradisecabletv.com": {
     "port": 993,
@@ -131881,6 +134099,11 @@
     "port": 993,
     "server": "parua.co.uk"
   },
+  "paruvendu.fr": {
+    "port": 993,
+    "server": "mail.paruvendu.fr",
+    "ssl": true
+  },
   "pasapues.co": {
     "port": 993,
     "server": "imap.pasapues.co"
@@ -131944,6 +134167,10 @@
   "passionslocales.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "passiverecords.com": {
+    "port": 993,
+    "server": "imap.passiverecords.com"
   },
   "passopetapetescapachos.com.br": {
     "port": 993,
@@ -132613,6 +134840,10 @@
     "port": 993,
     "server": "imap.peaceful-seedling.com"
   },
+  "peacekeepingmail.ru": {
+    "port": 993,
+    "server": "imap.peacekeepingmail.ru"
+  },
   "peachmedia.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -132971,6 +135202,11 @@
     "port": 993,
     "server": "mail.pelerinagesdetradition.com"
   },
+  "pelican.state.lib.la.us": {
+    "port": 993,
+    "server": "pelican.state.lib.la.us",
+    "ssl": true
+  },
   "pelikandossier.com": {
     "port": 993,
     "server": "imap.pelikandossier.com"
@@ -133126,6 +135362,10 @@
   "penviewhotel.com": {
     "port": 993,
     "server": "mail.penviewhotel.com"
+  },
+  "penzesmunka.hu": {
+    "port": 993,
+    "server": "mail.penzesmunka.hu"
   },
   "people.com.br": {
     "port": 143,
@@ -134121,6 +136361,10 @@
     "port": 993,
     "server": "mail.apre.me"
   },
+  "pheatus.com": {
+    "port": 993,
+    "server": "pheatus.com"
+  },
   "phenitexthailand.com": {
     "port": 993,
     "server": "imap.phenitexthailand.com"
@@ -134504,6 +136748,10 @@
   "pianetahosting.com": {
     "port": 993,
     "server": "imap.pianetahosting.com"
+  },
+  "pianetasalutebari.it": {
+    "port": 993,
+    "server": "imap.pianetasalutebari.it"
   },
   "piano-q.net": {
     "port": 993,
@@ -135741,6 +137989,11 @@
     "port": 993,
     "server": "mail.platteklooflodge.com"
   },
+  "plattelandstofpadwinkel.co.za": {
+    "port": 993,
+    "server": "imap.plattelandstofpadwinkel.co.za",
+    "ssl": true
+  },
   "play-time.org": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -135816,6 +138069,10 @@
   "playtimearchitecture.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "playtimefilms.com": {
+    "port": 993,
+    "server": "mail.playtimefilms.com"
   },
   "playxyg.com": {
     "port": 993,
@@ -136424,6 +138681,11 @@
     "port": 993,
     "server": "imap.mail.com"
   },
+  "pofa.be": {
+    "port": 993,
+    "server": "mail.pofa.be",
+    "ssl": true
+  },
   "pofunnynmails.ru": {
     "port": 993,
     "server": "mail.pofunnynmails.ru"
@@ -136689,6 +138951,10 @@
   "politizer.fr": {
     "port": 993,
     "server": "imap.politizer.fr"
+  },
+  "poliven.ac.id": {
+    "port": 993,
+    "server": "imap.stackmail.com"
   },
   "polizamexico.com.mx": {
     "port": 993,
@@ -137354,6 +139620,10 @@
     "port": 993,
     "server": "posteo.de"
   },
+  "posteo.com": {
+    "port": 993,
+    "server": "posteo.com"
+  },
   "posteo.de": {
     "port": 993,
     "server": "posteo.de"
@@ -137918,6 +140188,10 @@
     "port": 993,
     "server": "mail.precede.com.my"
   },
+  "precedent-ilf.com": {
+    "port": 993,
+    "server": "mail.precedent-ilf.com"
+  },
   "preciousplastictouraine.fr": {
     "port": 993,
     "server": "imap.preciousplastictouraine.fr"
@@ -137949,6 +140223,10 @@
   "precisoinvestimentos.com.br": {
     "port": 993,
     "server": "mail.precisoinvestimentos.com.br"
+  },
+  "precons.com.tr": {
+    "port": 993,
+    "server": "mail.precons.com.tr"
   },
   "pred.com.br": {
     "port": 993,
@@ -138470,6 +140748,11 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "primegmae.net": {
+    "port": 993,
+    "server": "mail.primegmae.net",
+    "ssl": true
+  },
   "primegrouphotels.com": {
     "port": 993,
     "server": "imap.primegrouphotels.com"
@@ -138722,6 +141005,10 @@
     "port": 993,
     "server": "mail.pristoninternational.com"
   },
+  "privacymail.world": {
+    "port": 993,
+    "server": "mail.privacymail.world"
+  },
   "privadis.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -138909,6 +141196,10 @@
   "procesoresultado.org": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "process-info.fr": {
+    "port": 993,
+    "server": "imap.process-info.fr"
   },
   "process.com.br": {
     "port": 993,
@@ -139250,6 +141541,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "projectsnap.org": {
+    "port": 993,
+    "server": "mail.projectsnap.org"
+  },
   "projectsuk.com": {
     "port": 993,
     "server": "mail.projectsuk.com"
@@ -139449,6 +141744,10 @@
     "port": 993,
     "server": "promomas.cl"
   },
+  "promopole.fr": {
+    "port": 993,
+    "server": "imap.promopole.fr"
+  },
   "promosales.com.mx": {
     "port": 993,
     "server": "imap.promosales.com.mx"
@@ -139496,6 +141795,10 @@
   "pronetisp.net": {
     "port": 993,
     "server": "mail.pronetisp.net"
+  },
+  "pronetsystem.com.br": {
+    "port": 993,
+    "server": "mail.pronetsystem.com.br"
   },
   "pronotion.co.id": {
     "port": 993,
@@ -140199,6 +142502,10 @@
     "port": 993,
     "server": "pstravels.com"
   },
+  "pstservice.sk": {
+    "port": 993,
+    "server": "imap.pstservice.sk"
+  },
   "psvwe.de": {
     "port": 993,
     "server": "mail.psvwe.de"
@@ -140267,6 +142574,10 @@
     "port": 993,
     "server": "mail.ptbernas.co.id"
   },
+  "ptbes.com": {
+    "port": 993,
+    "server": "mail.ptbes.com"
+  },
   "ptbiglo.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -140294,6 +142605,14 @@
   "pte.network": {
     "port": 993,
     "server": "_dc-mx.45613609f962.pte.network"
+  },
+  "ptengineering.co.za": {
+    "port": 993,
+    "server": "imap.ptengineering.co.za"
+  },
+  "ptgmbp.com": {
+    "port": 993,
+    "server": "mail.ptgmbp.com"
   },
   "ptilonorhemail.ru": {
     "port": 993,
@@ -140559,6 +142878,10 @@
     "port": 993,
     "server": "imap.pumkinsystems.com"
   },
+  "pumpart.com": {
+    "port": 993,
+    "server": "imap.pumpart.com"
+  },
   "pumpen-plueckhahn.de": {
     "port": 993,
     "server": "mx04.secure-mailgate.com"
@@ -140678,6 +143001,10 @@
   "purefocusstudio.org": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "purelymail.com": {
+    "port": 993,
+    "server": "imap.purelymail.com"
   },
   "purematch.org": {
     "port": 993,
@@ -140918,6 +143245,10 @@
   "pykara.net": {
     "port": 993,
     "server": "imap.pykara.net"
+  },
+  "pymail.vip": {
+    "port": 993,
+    "server": "imap.pymail.vip"
   },
   "pymp.com.co": {
     "port": 993,
@@ -141381,6 +143712,10 @@
     "port": 993,
     "server": "imap.quadros.com.br"
   },
+  "quadservice.com": {
+    "port": 993,
+    "server": "mail.quadservice.com"
+  },
   "quaidesorfevres.com": {
     "port": 993,
     "server": "mail.quaidesorfevres.com"
@@ -141424,6 +143759,10 @@
   "qualinove.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "qualinvestcapital.com": {
+    "port": 993,
+    "server": "qualinvestcapital.com"
   },
   "qualipaperpapeis.com.br": {
     "port": 993,
@@ -142595,6 +144934,10 @@
     "port": 993,
     "server": "imap.rajcomicsuniverse.com"
   },
+  "rajcomm.com": {
+    "port": 993,
+    "server": "mail.rajcomm.com"
+  },
   "rajdhaninews.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -143609,6 +145952,10 @@
     "port": 993,
     "server": "mail.realpropertyphotography.com.au"
   },
+  "realtime-proof-70fd49a1.example": {
+    "port": 993,
+    "server": "imap.realtime-proof-70fd49a1.example"
+  },
   "realtime.ng": {
     "port": 993,
     "server": "mail.realtime.ng"
@@ -144186,6 +146533,11 @@
   "redxmedia.co.uk": {
     "port": 993,
     "server": "imap.redxmedia.co.uk"
+  },
+  "redy.net.ar": {
+    "port": 993,
+    "server": "mail.redy.net.ar",
+    "ssl": true
   },
   "redycom.mx": {
     "port": 993,
@@ -144814,6 +147166,10 @@
     "port": 993,
     "server": "rencontres-audiovisuelles.org"
   },
+  "rendezvenyszervezo.com": {
+    "port": 993,
+    "server": "imap.rendezvenyszervezo.com"
+  },
   "renegademailer.com": {
     "port": 993,
     "server": "mail.renegademailer.com"
@@ -145376,6 +147732,10 @@
     "port": 143,
     "server": "imap.retcoffers.com"
   },
+  "retecasa.it": {
+    "port": 993,
+    "server": "posta.ssd.it"
+  },
   "retel-distribution.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -145423,6 +147783,10 @@
   "returntravel.net": {
     "port": 993,
     "server": "mail.returntravel.net"
+  },
+  "retyezat.ro": {
+    "port": 993,
+    "server": "mail.retyezat.ro"
   },
   "reuzeau.fr": {
     "port": 993,
@@ -145627,6 +147991,11 @@
   "rfjohnson.net": {
     "port": 993,
     "server": "rfjohnson.net"
+  },
+  "rflbestbuy.com": {
+    "port": 993,
+    "server": "mail.rflbestbuy.com",
+    "ssl": true
   },
   "rfleadgeneration.co.uk": {
     "port": 993,
@@ -146196,6 +148565,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "ripmonky.tech": {
+    "port": 993,
+    "server": "imap.ripmonky.tech"
+  },
   "ripnet.com": {
     "port": 993,
     "server": "imap.ripnet.com"
@@ -146275,6 +148648,10 @@
   "riskbusters.co.in": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "riskga.co.za": {
+    "port": 993,
+    "server": "imap.riskga.co.za"
   },
   "riskmonitor.co": {
     "port": 993,
@@ -146648,6 +149025,10 @@
   "rmpolicarbonatos.com.br": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "rmqkr.com": {
+    "port": 993,
+    "server": "mail.rmqkr.com"
   },
   "rms.krd": {
     "port": 993,
@@ -147163,6 +149544,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "rohanroy.com": {
+    "port": 993,
+    "server": "imap.rohanroy.com"
+  },
   "rohitcomputers.in": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -147595,6 +149980,10 @@
     "port": 993,
     "server": "mail.rotamhaliyikama.com"
   },
+  "rotary.dk": {
+    "port": 993,
+    "server": "mail.rotary.dk"
+  },
   "rotaryana-engineering.com": {
     "port": 993,
     "server": "mail.rotaryana-engineering.com"
@@ -147663,6 +150052,10 @@
     "port": 993,
     "server": "imap.rotulomaniaslu.com"
   },
+  "roubaud.archi": {
+    "port": 993,
+    "server": "imap.roubaud.archi"
+  },
   "rouchere.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -147670,6 +150063,10 @@
   "roueslibres.fr": {
     "port": 993,
     "server": "mail.roueslibres.fr"
+  },
+  "rougeauxlevres.com": {
+    "port": 993,
+    "server": "imap.rougeauxlevres.com"
   },
   "rougecobalt.fr": {
     "port": 993,
@@ -147742,6 +150139,10 @@
   "rovertech.com.hk": {
     "port": 993,
     "server": "mail.rovertech.com.hk"
+  },
+  "rovico.com.mx": {
+    "port": 993,
+    "server": "imap.rovico.com.mx"
   },
   "rovisco.ro": {
     "port": 993,
@@ -147859,6 +150260,10 @@
     "port": 993,
     "server": "imap.royalsolar.pk"
   },
+  "royaltentusa.com": {
+    "port": 993,
+    "server": "mail.royaltentusa.com"
+  },
   "royaltreatments.nl": {
     "port": 993,
     "server": "imap.one.com"
@@ -147878,6 +150283,10 @@
   "royindopratama.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "roykin.fr": {
+    "port": 993,
+    "server": "mail.roykin.fr"
   },
   "roymangroup.com": {
     "port": 993,
@@ -148132,6 +150541,10 @@
     "port": 993,
     "server": "mail.rssantos.com"
   },
+  "rssm.adv.br": {
+    "port": 993,
+    "server": "imap.rssm.adv.br"
+  },
   "rssolar.com": {
     "port": 993,
     "server": "mail.rssolar.com"
@@ -148159,6 +150572,14 @@
   "rszaveri.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "rt-cfg-a5ddc1ff.example": {
+    "port": 993,
+    "server": "imap.rt-cfg-a5ddc1ff.example"
+  },
+  "rt-cfg-c27ff864.example": {
+    "port": 993,
+    "server": "imap.rt-cfg-c27ff864.example"
   },
   "rtasrilanka.lk": {
     "port": 993,
@@ -148328,6 +150749,11 @@
   "ruffecois-tourisme.com": {
     "port": 993,
     "server": "imap.ruffecois-tourisme.com"
+  },
+  "rufinonet.com.ar": {
+    "port": 993,
+    "server": "mail.rufinonet.com.ar",
+    "ssl": true
   },
   "rufox.ru": {
     "port": 143,
@@ -148709,6 +151135,10 @@
     "port": 993,
     "server": "mail.s4m.com.br"
   },
+  "s6jp.com": {
+    "port": 993,
+    "server": "mail.s6jp.com"
+  },
   "sa-caps.com": {
     "port": 993,
     "server": "mail.sa-caps.com"
@@ -148917,6 +151347,10 @@
     "port": 993,
     "server": "mail.sacsmec.in"
   },
+  "sactr.net": {
+    "port": 993,
+    "server": "mail.sactr.net"
+  },
   "sadamatra.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -149000,6 +151434,10 @@
   "safaremakkah.co.uk": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "safariwonders.com": {
+    "port": 993,
+    "server": "mail.safariwonders.com"
   },
   "safco.ps": {
     "port": 993,
@@ -149117,6 +151555,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "saftop.ma": {
+    "port": 993,
+    "server": "mail.saftop.ma"
+  },
   "safubitaco.com": {
     "port": 993,
     "server": "mail.safubitaco.com"
@@ -149152,6 +151594,10 @@
   "sagarakram.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "sagardistilleries.com": {
+    "port": 993,
+    "server": "mail.sagardistilleries.com"
   },
   "sagarnetwork.com": {
     "port": 993,
@@ -149584,6 +152030,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "salesland.net": {
+    "port": 993,
+    "server": "imap.salesland.net"
+  },
   "salesneeds.jp": {
     "port": 993,
     "server": "mail.heteml.jp"
@@ -149655,6 +152105,10 @@
   "salog.com.pe": {
     "port": 993,
     "server": "mail.salog.com.pe"
+  },
+  "saloglu.com": {
+    "port": 993,
+    "server": "mail.saloglu.com"
   },
   "salon-escalade.com": {
     "port": 993,
@@ -149783,6 +152237,10 @@
   "sam-rone.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "sam.com.au": {
+    "port": 993,
+    "server": "mail.sam.com.au"
   },
   "sama-innovation.com": {
     "port": 993,
@@ -150128,6 +152586,10 @@
     "port": 993,
     "server": "imap.sandsdocument.com"
   },
+  "sandshotel.it": {
+    "port": 993,
+    "server": "mail.register.it"
+  },
   "sandstoneassociatesltd.com.ng": {
     "port": 993,
     "server": "imap.sandstoneassociatesltd.com.ng"
@@ -150240,6 +152702,10 @@
     "port": 993,
     "server": "imap.mailhostbox.com"
   },
+  "sankeysolutions.com": {
+    "port": 993,
+    "server": "mail.sankeysolutions.com"
+  },
   "sankon.in": {
     "port": 993,
     "server": "imap.sankon.in"
@@ -150315,6 +152781,10 @@
   "santacasaipua.com.br": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "santaeulalia.com": {
+    "port": 993,
+    "server": "imap.santaeulalia.com"
   },
   "santalmail.com": {
     "port": 993,
@@ -150780,6 +153250,10 @@
     "port": 143,
     "server": "imap.sat2000.cz"
   },
+  "satchtech.co.za": {
+    "port": 993,
+    "server": "imap.satchtech.co.za"
+  },
   "satco.es": {
     "port": 993,
     "server": "mx01.dondominio.com"
@@ -150956,6 +153430,11 @@
   "saumweber.at": {
     "port": 993,
     "server": "mail.saumweber.at"
+  },
+  "saunalahti.fi": {
+    "port": 993,
+    "server": "imap.saunalahti.fi",
+    "ssl": true
   },
   "saunders-appraisal.com": {
     "port": 993,
@@ -151463,6 +153942,10 @@
     "port": 993,
     "server": "mail.scenariolounge.com"
   },
+  "scenicexpress.com": {
+    "port": 993,
+    "server": "imap.scenicexpress.com"
+  },
   "scenterprisesjaipur.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -151927,6 +154410,10 @@
     "port": 993,
     "server": "imap.scotthgallant.com"
   },
+  "scottlewishomes.com": {
+    "port": 993,
+    "server": "mail.scottlewishomes.com"
+  },
   "scottlove.com": {
     "port": 993,
     "server": "imap.scottlove.com"
@@ -152151,6 +154638,10 @@
     "port": 993,
     "server": "mail.sdsc.com.mx"
   },
+  "sdshv.com": {
+    "port": 993,
+    "server": "mail.sdshv.com"
+  },
   "sdu.edu.cn": {
     "port": 993,
     "server": "imap.sdu.edu.cn"
@@ -152318,6 +154809,10 @@
   "seaverhorse.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "seaway.at": {
+    "port": 993,
+    "server": "imap.seaway.at"
   },
   "sebastian-smak.de": {
     "port": 993,
@@ -152664,6 +155159,10 @@
     "port": 993,
     "server": "mail.seguritam.com"
   },
+  "seguroscv.com": {
+    "port": 993,
+    "server": "mail.seguroscv.com"
+  },
   "segurosgenesis.com.co": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -152727,6 +155226,10 @@
   "seifert.cc": {
     "port": 993,
     "server": "imap.seifert.cc"
+  },
+  "seijinsha.co.jp": {
+    "port": 993,
+    "server": "imap.seijinsha.co.jp"
   },
   "seikore.com": {
     "port": 993,
@@ -153141,6 +155644,10 @@
   "sennse-mobilite.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "senocaknut.com": {
+    "port": 993,
+    "server": "senocaknut.com"
   },
   "senoramail.com": {
     "port": 993,
@@ -153663,6 +156170,10 @@
     "port": 993,
     "server": "mail.servicevolontaire.org"
   },
+  "serviciopatrimonial.es": {
+    "port": 993,
+    "server": "imap.serviciopatrimonial.es"
+  },
   "servicios.inoxsupply.com": {
     "port": 993,
     "server": "servicios.inoxsupply.com"
@@ -153710,6 +156221,10 @@
   "servifiltro.com": {
     "port": 993,
     "server": "imap.servifiltro.com"
+  },
+  "servigeco.fr": {
+    "port": 993,
+    "server": "servigeco.fr"
   },
   "servijaen.com": {
     "port": 993,
@@ -154010,6 +156525,10 @@
   "sexologie-couple.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "sextant-consulting.com": {
+    "port": 993,
+    "server": "imap.sextant-consulting.com"
   },
   "sextoyinhyderabad.com": {
     "port": 993,
@@ -155534,6 +158053,10 @@
     "port": 993,
     "server": "sigma-bg.com"
   },
+  "sigma-conseil.com": {
+    "port": 993,
+    "server": "sigma-conseil.com"
+  },
   "sigma-royal.com": {
     "port": 993,
     "server": "mail.sigma-royal.com"
@@ -155633,6 +158156,10 @@
   "signtool.co.uk": {
     "port": 993,
     "server": "mail.signtool.co.uk"
+  },
+  "sigortamistanbul.com": {
+    "port": 993,
+    "server": "sigortamistanbul.com"
   },
   "sigran.com": {
     "port": 993,
@@ -156647,6 +159174,11 @@
     "port": 993,
     "server": "mail.sitesa.com.gt"
   },
+  "sitespros.fr": {
+    "port": 993,
+    "server": "sitespros.fr",
+    "ssl": true
+  },
   "sitevoyanceenligne.fr": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -157252,6 +159784,14 @@
     "port": 993,
     "server": "imap.skylline.com"
   },
+  "skymail.at": {
+    "port": 993,
+    "server": "imap.skymail.at"
+  },
+  "skymail.de": {
+    "port": 993,
+    "server": "imap.skymail.de"
+  },
   "skymesh.com.au": {
     "port": 993,
     "server": "mail.skymesh.com.au"
@@ -157404,6 +159944,10 @@
     "port": 993,
     "server": "imap.slenys.lt"
   },
+  "slidelya.com": {
+    "port": 993,
+    "server": "imap.hostinger.com"
+  },
   "slidey.io": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -157504,6 +160048,10 @@
   "slsqatar.info": {
     "port": 993,
     "server": "mail.slsqatar.info"
+  },
+  "slteck.com": {
+    "port": 993,
+    "server": "imap.slteck.com"
   },
   "sltinformatica.com.br": {
     "port": 993,
@@ -157661,6 +160209,10 @@
     "port": 993,
     "server": "mail.smartbrainsz.com"
   },
+  "smartbytes.pk": {
+    "port": 993,
+    "server": "mail.smartbytes.pk"
+  },
   "smartcctvguard.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -157716,6 +160268,10 @@
   "smartechcia.com": {
     "port": 993,
     "server": "mx1.hostingcorreo.com"
+  },
+  "smartegy.tn": {
+    "port": 993,
+    "server": "mail.smartegy.tn"
   },
   "smartemail.services": {
     "port": 993,
@@ -157913,6 +160469,10 @@
     "port": 993,
     "server": "mail.smarttek.com.mx"
   },
+  "smarttr.com": {
+    "port": 993,
+    "server": "smarttr.com"
+  },
   "smarttunisiacar.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -157924,6 +160484,10 @@
   "smartways.co.ke": {
     "port": 993,
     "server": "mail.smartways.co.ke"
+  },
+  "smartworks.in": {
+    "port": 993,
+    "server": "smartworks.in"
   },
   "smartworks.ma": {
     "port": 993,
@@ -158064,6 +160628,10 @@
   "smith.net": {
     "port": 993,
     "server": "mail.smith.net"
+  },
+  "smithandwestern.com.au": {
+    "port": 993,
+    "server": "mail.smithandwestern.com.au"
   },
   "smithharfordmail.com": {
     "port": 993,
@@ -158437,6 +161005,10 @@
     "port": 993,
     "server": "snocorp.com.br"
   },
+  "snoggingmail.com": {
+    "port": 993,
+    "server": "imap.snoggingmail.com"
+  },
   "snohomishfurnace.com": {
     "port": 993,
     "server": "imap.snohomishfurnace.com"
@@ -158801,6 +161373,10 @@
     "port": 993,
     "server": "mail.sofakoenig.de"
   },
+  "sofarlab.com": {
+    "port": 993,
+    "server": "imap.sofarlab.com"
+  },
   "sofcograha.co.id": {
     "port": 993,
     "server": "mail.sofcograha.co.id"
@@ -159097,6 +161673,10 @@
     "port": 993,
     "server": "imap.sokkenbuurt.nl"
   },
+  "sokolshow.com": {
+    "port": 993,
+    "server": "mail.sokolshow.com"
+  },
   "sol-gar.com.mx": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -159380,6 +161960,10 @@
   "solidyazilim.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "soliloquymail.com": {
+    "port": 993,
+    "server": "imap.soliloquymail.com"
   },
   "solima.com.ar": {
     "port": 993,
@@ -159701,6 +162285,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "solutionsloft.com": {
+    "port": 993,
+    "server": "mail.solutionsloft.com"
+  },
   "solutionspartenaires.com": {
     "port": 993,
     "server": "imap.solutionspartenaires.com"
@@ -159764,6 +162352,10 @@
   "sombex.be": {
     "port": 993,
     "server": "mail.sombex.be"
+  },
+  "somebodymail.com": {
+    "port": 993,
+    "server": "mail.somebodymail.com"
   },
   "somenso.com": {
     "port": 993,
@@ -160385,6 +162977,10 @@
     "port": 993,
     "server": "imap.southslope.net"
   },
+  "southtech.com": {
+    "port": 993,
+    "server": "mail.southtech.com"
+  },
   "southwestunitesacademy.com": {
     "port": 993,
     "server": "southwestunitesacademy.com"
@@ -160727,6 +163323,10 @@
   "sparxplug.com": {
     "port": 993,
     "server": "imap.sparxplug.com"
+  },
+  "spasi.co.id": {
+    "port": 993,
+    "server": "mail.spasi.co.id"
   },
   "spawellplus.es": {
     "port": 993,
@@ -161381,6 +163981,10 @@
     "port": 993,
     "server": "mail.sppc-sd.com"
   },
+  "spprod.com.br": {
+    "port": 993,
+    "server": "imap.kinghost.net"
+  },
   "sppsavocats.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -161772,6 +164376,11 @@
   "sshospitality.com": {
     "port": 993,
     "server": "imap.sshospitality.com"
+  },
+  "ssi-developer.net": {
+    "port": 993,
+    "server": "mail.ssi-developer.net",
+    "ssl": true
   },
   "ssilink.co.id": {
     "port": 993,
@@ -162166,6 +164775,11 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "starjan.hu": {
+    "port": 993,
+    "server": "mail.starjan.hu",
+    "ssl": true
+  },
   "starkmedical.com.br": {
     "port": 993,
     "server": "imap.starkmedical.com.br"
@@ -162213,6 +164827,10 @@
   "starnetpro.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "staroil.live": {
+    "port": 993,
+    "server": "mx.staroil.live"
   },
   "starpoint.com.br": {
     "port": 993,
@@ -162477,6 +165095,11 @@
   "steamnn.com": {
     "port": 993,
     "server": "mail.steamnn.com"
+  },
+  "steamo.net": {
+    "port": 993,
+    "server": "mail.steamo.net",
+    "ssl": true
   },
   "steamos.vip": {
     "port": 993,
@@ -163607,6 +166230,10 @@
     "port": 993,
     "server": "mail.student.put.poznan.pl"
   },
+  "student.uc.pt": {
+    "port": 993,
+    "server": "imap.uc.pt"
+  },
   "student.unitbv.ro": {
     "port": 993,
     "server": "st0.unitbv.ro"
@@ -163928,6 +166555,10 @@
   "studiophoenixmaua.com.br": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "studiopiccolo.mi.it": {
+    "port": 993,
+    "server": "studiopiccolo.mi.it"
   },
   "studiopilot.co.za": {
     "port": 993,
@@ -164717,6 +167348,11 @@
     "port": 993,
     "server": "imap.sunrise.ch"
   },
+  "sunrisedigital.us": {
+    "port": 993,
+    "server": "mail.sunrisedigital.us",
+    "ssl": true
+  },
   "sunshinecapital.co.in": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -164797,6 +167433,11 @@
   "supagro-afrique.com": {
     "port": 993,
     "server": "imap.supagro-afrique.com"
+  },
+  "supanet.com": {
+    "port": 993,
+    "server": "imap.supanet.com",
+    "ssl": true
   },
   "supecolidaire.com": {
     "port": 993,
@@ -165262,6 +167903,10 @@
   "susanodesign.es": {
     "port": 993,
     "server": "mail.susanodesign.es"
+  },
+  "susanorus.com": {
+    "port": 993,
+    "server": "mail.susanorus.com"
   },
   "susatrade.com": {
     "port": 993,
@@ -166105,6 +168750,10 @@
     "port": 993,
     "server": "mail.system-event.com"
   },
+  "system-origin.jp": {
+    "port": 993,
+    "server": "system-origin.jp"
+  },
   "system10.ie": {
     "port": 993,
     "server": "imap.system10.ie"
@@ -166748,6 +169397,10 @@
   "takeuchi-1.com": {
     "port": 993,
     "server": "imap.takeuchi-1.com"
+  },
+  "takevijf.nl": {
+    "port": 993,
+    "server": "mail.takevijf.nl"
   },
   "takiacademy.com": {
     "port": 993,
@@ -167410,6 +170063,11 @@
     "port": 993,
     "server": "imap.transip.email"
   },
+  "tastytreatbd.com": {
+    "port": 993,
+    "server": "mail.tastytreatbd.com",
+    "ssl": true
+  },
   "tatamulia.co.id": {
     "port": 993,
     "server": "mail.tatamulia.co.id"
@@ -167501,6 +170159,10 @@
   "taverneathos.de": {
     "port": 993,
     "server": "imap.taverneathos.de"
+  },
+  "tavil.net": {
+    "port": 993,
+    "server": "imap.tavil.net"
   },
   "tawhid.fr": {
     "port": 993,
@@ -168812,6 +171474,10 @@
     "server": "mail.register.it",
     "ssl": false
   },
+  "tecnovia.com": {
+    "port": 993,
+    "server": "mail.tecnovia.com"
+  },
   "tecnowaresolutions.com": {
     "port": 993,
     "server": "mail.tecnowaresolutions.com"
@@ -169036,6 +171702,10 @@
     "port": 993,
     "server": "mail.teknokem.com"
   },
+  "teknokol.com": {
+    "port": 993,
+    "server": "teknokol.com"
+  },
   "teknologik.cl": {
     "port": 993,
     "server": "teknologik.cl"
@@ -169204,6 +171874,10 @@
   "telemaxdom.ru": {
     "port": 993,
     "server": "imap.yandex.com"
+  },
+  "telemercado.com.ar": {
+    "port": 993,
+    "server": "mail.telemercado.com.ar"
   },
   "telemetmail.ru": {
     "port": 993,
@@ -169377,6 +172051,10 @@
     "port": 993,
     "server": "mail.telran.co.il"
   },
+  "telsanet.com.ar": {
+    "port": 993,
+    "server": "mail.telsanet.com.ar"
+  },
   "telstra.com": {
     "port": 993,
     "server": "imap.telstra.com"
@@ -169412,6 +172090,10 @@
   "temapiwc.org": {
     "port": 993,
     "server": "imap.stackmail.com"
+  },
+  "temassnc.it": {
+    "port": 993,
+    "server": "temassnc.it"
   },
   "temeloy.com": {
     "port": 993,
@@ -169472,6 +172154,10 @@
   "tempseconomiqueafrique.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "tempsreel.info": {
+    "port": 993,
+    "server": "mail.tempsreel.info"
   },
   "temptech.co.th": {
     "port": 993,
@@ -169891,6 +172577,10 @@
     "port": 993,
     "server": "mail.tesssolucoes.com.br"
   },
+  "tessuti.co.nz": {
+    "port": 993,
+    "server": "mail.tessuti.co.nz"
+  },
   "test.fr": {
     "port": 993,
     "server": "mx02-vip.poneyserver.com"
@@ -170152,6 +172842,10 @@
   "tgeprom.sn": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "tggtech.com": {
+    "port": 993,
+    "server": "mail.tggtech.com"
   },
   "tgh.iuc-net.ne.jp": {
     "port": 993,
@@ -170426,6 +173120,10 @@
   "theatredesminuits.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "theatreducristal.com": {
+    "port": 993,
+    "server": "imap.theatreducristal.com"
   },
   "theatredumarais.fr": {
     "port": 993,
@@ -170792,6 +173490,10 @@
     "port": 993,
     "server": "mail.thegctc.com"
   },
+  "thegemhotel.co.ke": {
+    "port": 993,
+    "server": "imap.thegemhotel.co.ke"
+  },
   "thegioimedia.com.vn": {
     "port": 993,
     "server": "mail.thegioimedia.com.vn"
@@ -170879,6 +173581,10 @@
   "thehouseofellen.co.za": {
     "port": 993,
     "server": "imap.thehouseofellen.co.za"
+  },
+  "thehustlehouseofficial.com": {
+    "port": 993,
+    "server": "imap.hostinger.com"
   },
   "theigen.org": {
     "port": 993,
@@ -171156,6 +173862,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "theopenconcept.com": {
+    "port": 993,
+    "server": "theopenconcept.com"
+  },
   "theophilamail.ru": {
     "port": 993,
     "server": "mail.theophilamail.ru"
@@ -171171,6 +173881,10 @@
   "theoutsidercoast.be": {
     "port": 993,
     "server": "mail.theoutsidercoast.be"
+  },
+  "thepact.bg": {
+    "port": 993,
+    "server": "imap.thepact.bg"
   },
   "thepalmco.com": {
     "port": 993,
@@ -171211,6 +173925,10 @@
   "theposse.com.au": {
     "port": 993,
     "server": "imap.theposse.com.au"
+  },
+  "theproductionhub.co.za": {
+    "port": 993,
+    "server": "imap.theproductionhub.co.za"
   },
   "theptacademy.com": {
     "port": 993,
@@ -171527,6 +174245,10 @@
   "thevillages.net": {
     "port": 993,
     "server": "imap.thevillages.net"
+  },
+  "thevisualsafari.com": {
+    "port": 993,
+    "server": "mail.thevisualsafari.com"
   },
   "thewalkingparrot.com": {
     "port": 993,
@@ -172189,6 +174911,10 @@
     "port": 993,
     "server": "mail.tillbaka.com"
   },
+  "tillersystems.com": {
+    "port": 993,
+    "server": "imap.tillersystems.com"
+  },
   "tillmansophomail.com": {
     "port": 993,
     "server": "imap.tillmansophomail.com"
@@ -172590,6 +175316,11 @@
     "port": 993,
     "server": "mail.tkevi.edu.ng"
   },
+  "tkf777.com": {
+    "port": 993,
+    "server": "mail.tkf777.com",
+    "ssl": true
+  },
   "tkf888.com": {
     "port": 143,
     "server": "mail.tkf888.com"
@@ -172682,6 +175413,16 @@
     "port": 143,
     "server": "imap.tlxab.com"
   },
+  "tlxbl.com": {
+    "port": 993,
+    "server": "imap.tlxbl.com",
+    "ssl": true
+  },
+  "tlxcm.com": {
+    "port": 993,
+    "server": "imap.tlxcm.com",
+    "ssl": true
+  },
   "tlxcz.com": {
     "port": 143,
     "server": "imap.tlxcz.com"
@@ -172689,6 +175430,11 @@
   "tlxgk.com": {
     "port": 143,
     "server": "imap.tlxgk.com"
+  },
+  "tlxhs.com": {
+    "port": 993,
+    "server": "imap.tlxhs.com",
+    "ssl": true
   },
   "tlxig.com": {
     "port": 143,
@@ -172709,6 +175455,16 @@
   "tlxmq.com": {
     "port": 143,
     "server": "tlxmq.com"
+  },
+  "tlxnz.com": {
+    "port": 993,
+    "server": "mail.tlxnz.com",
+    "ssl": true
+  },
+  "tlxpg.com": {
+    "port": 993,
+    "server": "imap.tlxpg.com",
+    "ssl": true
   },
   "tlxpt.com": {
     "port": 143,
@@ -172942,6 +175698,10 @@
     "port": 993,
     "server": "imap.tobetree.be"
   },
+  "tobey.net": {
+    "port": 993,
+    "server": "imap.tobey.net"
+  },
   "tobigroup.sk": {
     "port": 993,
     "server": "mail.tobigroup.sk"
@@ -173125,6 +175885,10 @@
   "tolna.net": {
     "port": 993,
     "server": "mail10.tolna.net"
+  },
+  "tolsau.com": {
+    "port": 993,
+    "server": "imap.tolsau.com"
   },
   "tolyatty.ru": {
     "port": 993,
@@ -173443,6 +176207,11 @@
     "port": 993,
     "server": "topdec.vn"
   },
+  "topengnet.com": {
+    "port": 993,
+    "server": "mail.topengnet.com",
+    "ssl": true
+  },
   "topfirmy.eu": {
     "port": 993,
     "server": "mail.topfirmy.eu"
@@ -173546,6 +176315,10 @@
   "toprajacar.com.br": {
     "port": 993,
     "server": "imap.toprajacar.com.br"
+  },
+  "toprak.at": {
+    "port": 993,
+    "server": "imap.toprak.at"
   },
   "toprakajans.com": {
     "port": 993,
@@ -173756,6 +176529,11 @@
     "port": 143,
     "server": "mail.totalise.co.uk"
   },
+  "totalmedia.co.jp": {
+    "port": 993,
+    "server": "mail.totalmedia.co.jp",
+    "ssl": true
+  },
   "totalpackagelandscape.com": {
     "port": 993,
     "server": "mail.totalpackagelandscape.com"
@@ -173779,6 +176557,10 @@
   "totaltattoo.co.uk": {
     "port": 993,
     "server": "mail.totaltattoo.co.uk"
+  },
+  "totalventilation.se": {
+    "port": 993,
+    "server": "mail.totalventilation.se"
   },
   "totalwhse.com": {
     "port": 993,
@@ -174697,6 +177479,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "travelandsport.com": {
+    "port": 993,
+    "server": "travelandsport.com"
+  },
   "traveldil.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -174720,6 +177506,10 @@
   "travelmakers.net.in": {
     "port": 993,
     "server": "imap.travelmakers.net.in"
+  },
+  "travelmat.cl": {
+    "port": 993,
+    "server": "mail.travelmat.cl"
   },
   "travelmaze.co.uk": {
     "port": 993,
@@ -174800,6 +177590,10 @@
   "trebujena.com": {
     "port": 993,
     "server": "imap.trebujena.com"
+  },
+  "trediale.co.jp": {
+    "port": 993,
+    "server": "imap.trediale.co.jp"
   },
   "trediser.es": {
     "port": 993,
@@ -175233,6 +178027,10 @@
     "port": 993,
     "server": "mail.tritoneyewear.com.br"
   },
+  "trium.ch": {
+    "port": 993,
+    "server": "mail.trium.ch"
+  },
   "triumphall.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -175380,6 +178178,10 @@
   "tru-stride.co.uk": {
     "port": 993,
     "server": "imap.stackmail.com"
+  },
+  "truc.fr": {
+    "port": 993,
+    "server": "imap.truc.fr"
   },
   "truckinservice.ru": {
     "port": 993,
@@ -175573,6 +178375,10 @@
     "port": 993,
     "server": "imap.trya.lk"
   },
+  "trydoo.it": {
+    "port": 993,
+    "server": "mail.register.it"
+  },
   "tryslingshot.com": {
     "port": 993,
     "server": "mail.tryslingshot.com"
@@ -175728,6 +178534,10 @@
   "tsubasa.mue2.com": {
     "port": 993,
     "server": "imap.tsubasa.mue2.com"
+  },
+  "tsurumi-fuzoku.ed.jp": {
+    "port": 993,
+    "server": "imap.tsurumi-fuzoku.ed.jp"
   },
   "tt-voskhod.ru": {
     "port": 993,
@@ -176661,6 +179471,10 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "tygoulou.com": {
+    "port": 993,
+    "server": "mail.tygoulou.com"
+  },
   "tygzy.net": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -176668,6 +179482,10 @@
   "tyjaune.bzh": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "tylden.no": {
+    "port": 993,
+    "server": "imap.tylden.no"
   },
   "tyloc.fr": {
     "port": 993,
@@ -176883,6 +179701,10 @@
     "port": 993,
     "server": "mail.uc.pt"
   },
+  "uca-villeneuve.fr": {
+    "port": 993,
+    "server": "mail.uca-villeneuve.fr"
+  },
   "ucac-icy.net": {
     "port": 993,
     "server": "mail.ucac-icy.net"
@@ -177092,6 +179914,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "ufba.br": {
+    "port": 993,
+    "server": "imap.ufba.br"
+  },
   "ufficioenergia.it": {
     "port": 993,
     "server": "imap.ufficioenergia.it"
@@ -177259,6 +180085,10 @@
   "uiwp.net": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "ujamaaconseil.com": {
+    "port": 993,
+    "server": "imap.ujamaaconseil.com"
   },
   "ujat.mx": {
     "port": 993,
@@ -178345,6 +181175,10 @@
     "port": 993,
     "server": "imap.univ-lille.fr"
   },
+  "univ-lr.fr": {
+    "port": 993,
+    "server": "mail.univ-lr.fr"
+  },
   "univ-lyon1.fr": {
     "port": 993,
     "server": "mail.univ-lyon1.fr"
@@ -178372,6 +181206,10 @@
   "univ-sba.dz": {
     "port": 993,
     "server": "mail.univ-sba.dz"
+  },
+  "univ-st-etienne.fr": {
+    "port": 993,
+    "server": "imap.univ-st-etienne.fr"
   },
   "univ-tours.fr": {
     "port": 993,
@@ -178464,6 +181302,10 @@
   "universtelecom.net": {
     "port": 993,
     "server": "imap.universtelecom.net"
+  },
+  "universtores.com": {
+    "port": 993,
+    "server": "imap.universtores.com"
   },
   "univmdo.ac.id": {
     "port": 993,
@@ -179286,6 +182128,10 @@
     "port": 143,
     "server": "mail.utiliseremail.com"
   },
+  "utilitymind.live": {
+    "port": 993,
+    "server": "mail.utilitymind.live"
+  },
   "utkarshtechnologies.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -179518,6 +182364,10 @@
     "port": 993,
     "server": "ssl0.ovh.net"
   },
+  "v3rtice.com": {
+    "port": 993,
+    "server": "imap.v3rtice.com"
+  },
   "v4test05.dreamersi.net": {
     "port": 993,
     "server": "imap.dreamersi.net"
@@ -179554,6 +182404,10 @@
   "vacimuv.hu": {
     "port": 993,
     "server": "mail.vacimuv.hu"
+  },
+  "vacorps.com": {
+    "port": 993,
+    "server": "imap.vacorps.com"
   },
   "vad.md": {
     "port": 993,
@@ -179788,6 +182642,10 @@
     "port": 993,
     "server": "vallim.com.br"
   },
+  "vallovalor.dk": {
+    "port": 993,
+    "server": "mail.vallovalor.dk"
+  },
   "valnerainsurance.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -179835,6 +182693,10 @@
   "valpoalegre.cl": {
     "port": 993,
     "server": "valpoalegre.cl"
+  },
+  "valsa.mx": {
+    "port": 993,
+    "server": "imap.valsa.mx"
   },
   "valscotech.com": {
     "port": 993,
@@ -180268,6 +183130,10 @@
     "port": 993,
     "server": "mail.vaysaperu.com"
   },
+  "vayupak.net": {
+    "port": 993,
+    "server": "mail.vayupak.net"
+  },
   "vayuproduction.com": {
     "port": 993,
     "server": "mail.simply.com"
@@ -180515,6 +183381,10 @@
   "vegital.hu": {
     "port": 993,
     "server": "imap.vegital.hu"
+  },
+  "vegymail.com": {
+    "port": 993,
+    "server": "mail.vegymail.com"
   },
   "vehemence.com.ar": {
     "port": 993,
@@ -180997,6 +183867,10 @@
     "port": 143,
     "server": "mail.verritv.co.uk"
   },
+  "versatel.nl": {
+    "port": 993,
+    "server": "imap.versatel.nl"
+  },
   "versattisolucoes.com.br": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -181177,6 +184051,11 @@
   "vetor.am": {
     "port": 993,
     "server": "imap.vetor.am"
+  },
+  "vetorial.net": {
+    "port": 993,
+    "server": "imap.vetorial.net",
+    "ssl": true
   },
   "vetorialimoveisearquitetura.com": {
     "port": 993,
@@ -181902,6 +184781,10 @@
     "port": 993,
     "server": "mail.vikingstechnologies.com"
   },
+  "vikkikristine.com": {
+    "port": 993,
+    "server": "mail.vikkikristine.com"
+  },
   "vilaabogados.com": {
     "port": 993,
     "server": "mail.vilaabogados.com"
@@ -182367,6 +185250,10 @@
     "port": 993,
     "server": "mail.vipinfo.hu"
   },
+  "vipnet.it": {
+    "port": 993,
+    "server": "mail.vipnet.it"
+  },
   "vipowernet.net": {
     "port": 993,
     "server": "mail.vipowernet.net"
@@ -182410,6 +185297,10 @@
   "viralnewtgiveaway.com": {
     "port": 993,
     "server": "imap.mail.com"
+  },
+  "viralsurf.fr": {
+    "port": 993,
+    "server": "imap.viralsurf.fr"
   },
   "viralvideo.at": {
     "port": 993,
@@ -182628,6 +185519,10 @@
     "port": 993,
     "server": "vision-land.com"
   },
+  "vision-plast.com": {
+    "port": 993,
+    "server": "mail.vision-plast.com"
+  },
   "vision-tech.vn": {
     "port": 993,
     "server": "mail.vision-tech.vn"
@@ -182695,6 +185590,10 @@
   "visitasanimadas.com.ar": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "visitburundi.bi": {
+    "port": 993,
+    "server": "mail.visitburundi.bi"
   },
   "visitingangelsmexico.com": {
     "port": 993,
@@ -183036,6 +185935,10 @@
     "port": 993,
     "server": "mail.vivomaiil.com"
   },
+  "vivre3age.com": {
+    "port": 993,
+    "server": "mail.vivre3age.com"
+  },
   "vivreamaurice.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -183047,6 +185950,10 @@
   "vixtemper.com.br": {
     "port": 993,
     "server": "imap.vixtemper.com.br"
+  },
+  "viyellatexgroup.com": {
+    "port": 993,
+    "server": "viyellatexgroup.com"
   },
   "vizaypalautomobiles.com": {
     "port": 993,
@@ -183945,6 +186852,11 @@
     "port": 993,
     "server": "imap.hostinger.com"
   },
+  "w3nt.com": {
+    "port": 993,
+    "server": "imap.w3nt.com",
+    "ssl": true
+  },
   "w3sols.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -184253,6 +187165,10 @@
     "port": 993,
     "server": "wankey.co.uk"
   },
+  "wannabe.com.co": {
+    "port": 993,
+    "server": "mail.wannabe.com.co"
+  },
   "wanner.fr": {
     "port": 993,
     "server": "imap.wanner.fr"
@@ -184413,6 +187329,10 @@
     "port": 993,
     "server": "wasteofinc.co.uk"
   },
+  "wat-inc.jp": {
+    "port": 993,
+    "server": "imap.wat-inc.jp"
+  },
   "watantraining.us": {
     "port": 993,
     "server": "ssl0.ovh.net"
@@ -184472,6 +187392,10 @@
   "watersnetwork.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "waterspringsschool.com.ng": {
+    "port": 993,
+    "server": "mail.waterspringsschool.com.ng"
   },
   "watertankcheck.com": {
     "port": 993,
@@ -184598,6 +187522,10 @@
     "port": 993,
     "server": "mailpro1.tn.oxa.host"
   },
+  "waymail.com.br": {
+    "port": 993,
+    "server": "imap.waymail.com.br"
+  },
   "wayneesolutions.com": {
     "port": 993,
     "server": "imap.hostinger.com"
@@ -184625,6 +187553,10 @@
   "wazssaucehut.co.uk": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "wb376cisce.org": {
+    "port": 993,
+    "server": "imap.wb376cisce.org"
   },
   "wbc.net.sa": {
     "port": 993,
@@ -184705,6 +187637,10 @@
   "wcosmeticsuae.com": {
     "port": 993,
     "server": "mail.wcosmeticsuae.com"
+  },
+  "wcso.us": {
+    "port": 993,
+    "server": "imap.wcso.us"
   },
   "wctc.net": {
     "port": 143,
@@ -184793,6 +187729,10 @@
   "wearetraining.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "wearevision.com": {
+    "port": 993,
+    "server": "imap.wearevision.com"
   },
   "wearmaisur.com": {
     "port": 993,
@@ -184898,6 +187838,10 @@
   "webbing-studio.com": {
     "port": 993,
     "server": "imap.webbing-studio.com"
+  },
+  "webbler.dk": {
+    "port": 993,
+    "server": "mail.webbler.dk"
   },
   "webbo.co.za": {
     "port": 993,
@@ -185460,6 +188404,10 @@
     "port": 993,
     "server": "mail.wegoadventures.ro"
   },
+  "wei-go.fr": {
+    "port": 993,
+    "server": "imap.wei-go.fr"
+  },
   "weige666.vip": {
     "port": 993,
     "server": "imap.weige666.vip"
@@ -185752,6 +188700,11 @@
     "port": 993,
     "server": "mail.westafcom.com"
   },
+  "westcall.net": {
+    "port": 993,
+    "server": "mail.westcall.net",
+    "ssl": true
+  },
   "westcoastcakes.co.uk": {
     "port": 993,
     "server": "imap.stackmail.com"
@@ -185963,6 +188916,10 @@
   "whistlergravitylogic.com": {
     "port": 993,
     "server": "mail.whistlergravitylogic.com"
+  },
+  "whiteboardps.com": {
+    "port": 993,
+    "server": "mail.whiteboardps.com"
   },
   "whitebox.id": {
     "port": 993,
@@ -186301,6 +189258,10 @@
     "port": 993,
     "server": "imap.stackmail.com"
   },
+  "wildpineapple.co.uk": {
+    "port": 993,
+    "server": "imap.wildpineapple.co.uk"
+  },
   "wildposting.org": {
     "port": 993,
     "server": "mail.wildposting.org"
@@ -186324,6 +189285,10 @@
   "wildwaadi.com": {
     "port": 993,
     "server": "wildwaadi.com"
+  },
+  "wilesphoto.com": {
+    "port": 993,
+    "server": "mail.wilesphoto.com"
   },
   "wilinvest.eu": {
     "port": 993,
@@ -186836,6 +189801,10 @@
     "port": 993,
     "server": "imap.wlad.com.br"
   },
+  "wlanthymail.a2hosted.com": {
+    "port": 993,
+    "server": "wlanthymail.a2hosted.com"
+  },
   "wlkp.com.pl": {
     "port": 993,
     "server": "mail.wlkp.com.pl"
@@ -187128,6 +190097,10 @@
   "wookiapp.com": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "woolgatheringmail.ru": {
+    "port": 993,
+    "server": "imap.woolgatheringmail.ru"
   },
   "woorales.com": {
     "port": 993,
@@ -187600,6 +190573,10 @@
   "wutracing.pl": {
     "port": 993,
     "server": "imap.wutracing.pl"
+  },
+  "wvb.com": {
+    "port": 993,
+    "server": "imap.wvb.com"
   },
   "wvceac.net": {
     "port": 993,
@@ -188882,6 +191859,10 @@
     "port": 993,
     "server": "imaps.yazdani.at"
   },
+  "yazdfair.com": {
+    "port": 993,
+    "server": "mail.yazdfair.com"
+  },
   "yaziciogluturizm.com": {
     "port": 993,
     "server": "imap.yandex.com"
@@ -188909,6 +191890,11 @@
   "ycat.sakura.ne.jp": {
     "port": 993,
     "server": "ycat.sakura.ne.jp"
+  },
+  "ycinet.net": {
+    "port": 993,
+    "server": "mail.ycinet.net",
+    "ssl": true
   },
   "yct.es": {
     "port": 993,
@@ -189410,6 +192396,10 @@
     "port": 993,
     "server": "mail.yookye.io"
   },
+  "yooymail.com": {
+    "port": 993,
+    "server": "mail.yooymail.com"
+  },
   "yopemails.xyz": {
     "port": 993,
     "server": "mail.yopemails.xyz"
@@ -189898,6 +192888,10 @@
     "port": 993,
     "server": "imap.hostinger.es"
   },
+  "yurttutan.net": {
+    "port": 993,
+    "server": "mail.yurttutan.net"
+  },
   "yuseikogyo.co": {
     "port": 993,
     "server": "pop17.gmoserver.jp"
@@ -189954,6 +192948,11 @@
     "port": 993,
     "server": "mail.ywpl.pl"
   },
+  "yx11.net": {
+    "port": 993,
+    "server": "imap.yx11.net",
+    "ssl": true
+  },
   "yxemailyx.com": {
     "port": 993,
     "server": "imap.yxemailyx.com"
@@ -190009,6 +193008,10 @@
   "zabihllc.store": {
     "port": 993,
     "server": "imap.hostinger.com"
+  },
+  "zac-sol.co.jp": {
+    "port": 993,
+    "server": "imap.zac-sol.co.jp"
   },
   "zacdi.com": {
     "port": 993,
@@ -190326,6 +193329,10 @@
     "port": 993,
     "server": "mail.zcaremodelacoes.pt"
   },
+  "zcgmail.com": {
+    "port": 993,
+    "server": "imap.zcgmail.com"
+  },
   "zcmxa.com": {
     "port": 993,
     "server": "mail.zcmxa.com"
@@ -190497,6 +193504,10 @@
   "zemarone.com": {
     "port": 993,
     "server": "ssl0.ovh.net"
+  },
+  "zemascollege.com": {
+    "port": 993,
+    "server": "mail.zemascollege.com"
   },
   "zemljasrbija.com": {
     "port": 993,
@@ -190764,6 +193775,11 @@
     "port": 993,
     "server": "imap.zhinc.com.cn"
   },
+  "zhinuogame.vip": {
+    "port": 993,
+    "server": "imap.zhinuogame.vip",
+    "ssl": true
+  },
   "zhiyungpt.com": {
     "port": 993,
     "server": "mail.zhiyungpt.com"
@@ -190936,6 +193952,10 @@
     "port": 993,
     "server": "mail.hostedemail.com"
   },
+  "zippyttech.com": {
+    "port": 993,
+    "server": "imap.zippyttech.com"
+  },
   "zipway.com.br": {
     "port": 993,
     "server": "mail.zipway.com.br"
@@ -191087,6 +194107,10 @@
   "zogla.com": {
     "port": 993,
     "server": "mail.zogla.com"
+  },
+  "zoho.eu": {
+    "port": 993,
+    "server": "imap.zoho.eu"
   },
   "zoiscrossfit.com": {
     "port": 993,
