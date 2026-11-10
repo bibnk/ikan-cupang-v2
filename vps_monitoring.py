@@ -492,12 +492,25 @@ def record_already_combos_master(combos):
     # made mixed-case passwords never match, so a combo could be appended twice.
     from filelock import FileLock
 
-    targets = [
+    # Deduplicate by real path: os.path.expanduser("~") and os.path.dirname(__file__)
+    # both resolve to the same location when the app runs from /opt/imap-checker as
+    # the imapchecker user, so the same file was opened twice and every append
+    # landed double.
+    targets, seen = [], set()
+    for p in (
         "/opt/pmj/imap/already_accounts.txt",
         "/opt/imap-checker/already_accounts.txt",
         os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "already_accounts.txt"),
-        os.path.join(os.path.dirname(__file__), "already_accounts.txt"),
-    ]
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "already_accounts.txt"),
+    ):
+        try:
+            rp = os.path.realpath(p)
+        except Exception:
+            rp = p
+        if rp not in seen:
+            seen.add(rp)
+            targets.append(rp)
+
     added = 0
     for t in targets:
         try:

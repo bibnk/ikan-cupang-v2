@@ -13,6 +13,7 @@ import time
 import json
 import gzip
 import shutil
+import base64
 from concurrent.futures import ThreadPoolExecutor
 
 try:
@@ -56,6 +57,14 @@ LOCAL_MASTER_ALREADY = os.path.join(LOCAL_MASTER_DIR, "already_accounts.txt")
 REMOTE_ALREADY_PATHS = [
     "/opt/pmj/imap/already_accounts.txt",
     "/opt/imap-checker/already_accounts.txt",
+    # Per-node "local master" copies. The service runs as imapchecker, so its
+    # ~/Desktop master resolves to /home/imapchecker/... — a separate file the
+    # engine also appends to and which the post-job auto-sync (running the sync
+    # script ON the node) used to push back over /opt, overwriting live data with
+    # a stale seed. Included here so a sync refreshes them to the merged set
+    # instead of letting them stay stale and overwrite good data on the next run.
+    "/home/imapchecker/Desktop/PMJ/imap/already_accounts.txt",
+    "/root/Desktop/PMJ/imap/already_accounts.txt",
 ]
 REMOTE_NODES_PATHS = [
     "/opt/pmj/imap/vps_nodes.json",
@@ -179,6 +188,28 @@ def remote_read_compressed(ssh, path):
     except Exception:
         pass
     return None
+
+
+def remote_merge_lines(ssh, path, content_bytes):
+    """Union content_bytes into path on the remote, never deleting lines.
+
+    A plain overwrite loses data whenever the pushed set is stale: the push path
+    runs on every node (post-job auto-sync) as well as from the RDP master, and
+    whoever pushes last would otherwise win. Merging on the remote side means the
+    file only ever grows within a sync; shrinking requires an explicit repair."""
+    try:
+        b64 = base64.b64encode(content_bytes).decode("ascii")
+        cmd = (
+            f"mkdir -p $(dirname {path}) && "
+            f"echo {b64} | base64 -d > {path}.push && "
+            f"cat {path} {path}.push 2>/dev/null | sed 's/\\r$//' | "
+            f"grep -v '^$' | sort -u > {path}.merged && "
+            f"mv {path}.merged {path} && rm -f {path}.push"
+        )
+        stdin, stdout, stderr = ssh.exec_command(cmd)
+        return stdout.channel.recv_exit_status() == 0
+    except Exception:
+        return False
 
 
 def remote_write_compressed(ssh, path, content_bytes):
@@ -314,16 +345,32 @@ def push_node_data(node, master_configs, master_unusable):
 
         if os.path.exists(LOCAL_MASTER_ALREADY):
             try:
-                # Canonicalise before pushing instead of shipping the file's raw
-                # bytes. A CRLF or stale local master was being copied verbatim
-                # onto every node, so its line ending and content drift spread
-                # cluster-wide and the per-file hash check could never converge.
-                with open(LOCAL_MASTER_ALREADY, "r", encoding="utf-8", errors="replace") as af:
-                    keys = {normalize_already_key(l) for l in af if l.strip()}
+                # Union, never replace. This push runs on every node (the
+                # post-job auto-sync hook) and LOCAL_MASTER_ALREADY resolves to
+                # that node's own ~/Desktop/PMJ/imap copy — not the RDP master.
+                # Pushing it verbatim overwrote a node's complete file with its
+                # stale local copy, silently deleting every combo the node had
+                # learned since: a node that had 16,604 rows fell back to 11,898
+                # and the loss then propagated cluster-wide on the next sync.
+                # Merging the node's on-disk set with the local master keeps both
+                # sides; deletions only ever come from an explicit repair pass.
+                keys = set()
+                for src in (LOCAL_MASTER_ALREADY, *REMOTE_ALREADY_PATHS):
+                    if not os.path.exists(src):
+                        continue
+                    try:
+                        with open(src, "r", encoding="utf-8", errors="replace") as af:
+                            keys.update(normalize_already_key(l) for l in af if l.strip())
+                    except Exception:
+                        continue
                 keys.discard("")
-                already_bytes = ("\n".join(sorted(keys)) + "\n").encode("utf-8")
-                for rp in REMOTE_ALREADY_PATHS:
-                    remote_write_compressed(ssh, rp, already_bytes)
+                if keys:
+                    already_bytes = ("\n".join(sorted(keys)) + "\n").encode("utf-8")
+                    for rp in REMOTE_ALREADY_PATHS:
+                        # Merge on the remote, not overwrite: this push also runs
+                        # on the nodes themselves (post-job auto-sync), so the
+                        # target may hold combos newer than the pushing master.
+                        remote_merge_lines(ssh, rp, already_bytes)
             except Exception:
                 pass
 
