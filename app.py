@@ -396,6 +396,24 @@ def api_monitoring_sync_all_stream():
     return Response(vps_monitoring.stream_sync_all(), mimetype="text/event-stream")
 
 
+@app.route("/api/sync/push-config", methods=["POST"])
+def api_sync_push_config():
+    """Receive newly discovered IMAP configs in realtime from cluster runners.
+
+    Accepts {"configs": {"domain": {"server": ..., "port": ...}, ...}} or a
+    {"domains": [...]} list of bare domains (the caller has no config yet).
+    Domains already known to the master are skipped, so re-sending is safe.
+    """
+    data = request.get_json(silent=True) or {}
+    configs = data.get("configs") or {}
+    domains = data.get("domains") or []
+    if not configs and not domains:
+        return jsonify({"ok": True, "added": 0, "skipped": 0})
+    import vps_monitoring
+    res = vps_monitoring.record_configs_master(configs, domains)
+    return jsonify({"ok": True, **res})
+
+
 @app.route("/api/sync/push-already", methods=["POST"])
 def api_sync_push_already():
     """Receive live verified already accounts in realtime from cluster runners."""
@@ -911,6 +929,14 @@ def resolve_unreg_job(job_id):
 
     if new_configs:
         save_master_imap_configs(new_configs)
+        # Mirror each discovery to the master in realtime; this node may not be
+        # the master and the master's copy is what every other node syncs from.
+        try:
+            from imap_engine import record_config_to_master
+            for _d, _c in new_configs.items():
+                record_config_to_master(_d, _c)
+        except Exception:
+            pass
     if unusable_domains:
         save_master_unusable_domains(unusable_domains)
 
@@ -1065,6 +1091,12 @@ def resolve_unreg_bg(job_id):
                 if count % 50 == 0:
                     if new_configs:
                         save_master_imap_configs(new_configs)
+                        try:
+                            from imap_engine import record_config_to_master
+                            for _d, _c in new_configs.items():
+                                record_config_to_master(_d, _c)
+                        except Exception:
+                            pass
                         new_configs.clear()
                     if unusable_domains:
                         save_master_unusable_domains(unusable_domains)
@@ -1073,6 +1105,12 @@ def resolve_unreg_bg(job_id):
         # Final flush
         if new_configs:
             save_master_imap_configs(new_configs)
+            try:
+                from imap_engine import record_config_to_master
+                for _d, _c in new_configs.items():
+                    record_config_to_master(_d, _c)
+            except Exception:
+                pass
         if unusable_domains:
             save_master_unusable_domains(unusable_domains)
 

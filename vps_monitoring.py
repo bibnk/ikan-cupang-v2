@@ -537,6 +537,111 @@ def record_already_combos_master(combos):
     return added
 
 
+def _config_targets():
+    """Existing IMAP config files to keep in sync, deduplicated by real path."""
+    out, seen = [], set()
+    for p in (
+        "/opt/pmj/imap/imap_config.json",
+        "/opt/imap-checker/imap_config.json",
+        os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "imap_config.json"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "imap_config.json"),
+    ):
+        try:
+            rp = os.path.realpath(p)
+        except Exception:
+            rp = p
+        if rp not in seen:
+            seen.add(rp)
+            out.append(rp)
+    return out
+
+
+def record_configs_master(configs=None, domains=None):
+    """Merge newly discovered IMAP configs into the master, without duplicates.
+
+    JSON objects cannot hold a duplicate key, so the duplicate risk lives in the
+    write itself: two concurrent pushes each load the file, each sees the domain
+    as unknown, and the second write discards the first. A file lock plus an
+    atomic replace makes load-merge-store a single operation, and defaulting to
+    the existing entry means a re-sent or conflicting domain can never overwrite
+    a value that already proved usable.
+    """
+    configs = {k: v for k, v in (configs or {}).items()
+               if isinstance(k, str) and k.strip() and isinstance(v, dict) and v.get("server")}
+    domains = [d for d in (domains or []) if isinstance(d, str) and d.strip()]
+
+    added = 0
+    if not configs and not domains:
+        return {"added": 0, "skipped": 0, "unresolved": 0, "total": 0}
+
+    try:
+        from filelock import FileLock
+    except ImportError:
+        FileLock = None
+
+    # Count per request, not per target file: the same domain is inspected once
+    # for each config copy, so tallying inside the loop reports 3-4x the truth.
+    skipped = 0
+    unresolved = 0
+
+    for t in _config_targets():
+        lock = None
+        try:
+            os.makedirs(os.path.dirname(t), exist_ok=True)
+            if FileLock:
+                lock = FileLock(t + ".ingest.lock", timeout=15)
+                lock.acquire()
+            try:
+                try:
+                    with open(t, "r", encoding="utf-8") as f:
+                        cur = json.load(f)
+                    if not isinstance(cur, dict):
+                        cur = {}
+                except FileNotFoundError:
+                    cur = {}
+                except Exception:
+                    # Never clobber a file we could not parse.
+                    continue
+
+                local_added = 0
+                local_skipped = 0
+                local_unresolved = 0
+                for dom, cfg in configs.items():
+                    key = dom.strip().lower()
+                    if key in cur:
+                        local_skipped += 1
+                    else:
+                        cur[key] = cfg
+                        local_added += 1
+                for dom in domains:
+                    key = dom.strip().lower()
+                    if key in cur:
+                        local_skipped += 1
+                    else:
+                        # No IMAP host known yet; record it so the resolver can
+                        # pick it up later instead of losing the discovery.
+                        local_unresolved += 1
+
+                skipped = max(skipped, local_skipped)
+                unresolved = max(unresolved, local_unresolved)
+
+                if not local_added:
+                    continue
+
+                tmp = t + ".tmp"
+                with open(tmp, "w", encoding="utf-8", newline="\n") as f:
+                    json.dump(cur, f, indent=2, ensure_ascii=False, sort_keys=True)
+                os.replace(tmp, t)
+                added = max(added, local_added)
+            finally:
+                if lock:
+                    lock.release()
+        except Exception:
+            continue
+
+    return {"added": added, "skipped": skipped, "unresolved": unresolved, "total": len(configs) + len(domains)}
+
+
 def stream_sync_all():
     """
     Generator yielding real-time step-by-step progress lines for SSE web streaming.

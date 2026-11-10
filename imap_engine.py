@@ -103,6 +103,84 @@ _ALREADY_GLOBAL_LOCK = threading.Lock()
 _PENDING_LIVE_COMBOS = []
 _PENDING_LIVE_LOCK = threading.Lock()
 
+# Newly discovered IMAP configs waiting to be pushed to the master. Filled by
+# record_config_to_master(); drained by _push_config_to_master_loop().
+_PENDING_CONFIGS = {}
+_PENDING_CONFIG_LOCK = threading.Lock()
+
+
+def _master_host():
+    """Resolve the master node's host from the shared node list."""
+    try:
+        import vps_monitoring
+        nodes = vps_monitoring.load_nodes()
+    except Exception:
+        return None
+    for n in nodes:
+        name = str(n.get("name", "")).lower()
+        if "primary" in name or "master" in name:
+            return n.get("host")
+    return nodes[0].get("host") if nodes else None
+
+
+def record_config_to_master(domain, cfg=None):
+    """Queue a newly discovered IMAP config for realtime delivery to the master.
+
+    The engine discovers a domain's IMAP host while resolving unregistered
+    domains; before this existed the result only reached the master on the next
+    manual sync, so a worker could resolve the same domain again and again.
+    """
+    dom = (domain or "").strip().lower()
+    if not dom:
+        return
+    with _PENDING_CONFIG_LOCK:
+        if cfg and isinstance(cfg, dict) and cfg.get("server"):
+            _PENDING_CONFIGS[dom] = cfg
+        else:
+            _PENDING_CONFIGS.setdefault(dom, None)
+
+
+def _push_config_to_master_loop():
+    """Background worker pushing newly discovered IMAP configs to the master."""
+    import urllib.request
+    while True:
+        time.sleep(5.0)
+        with _PENDING_CONFIG_LOCK:
+            if not _PENDING_CONFIGS:
+                continue
+            pending = dict(_PENDING_CONFIGS)
+            _PENDING_CONFIGS.clear()
+        try:
+            host = _master_host()
+            if not host:
+                # No master reachable; keep the discoveries for the next round
+                # instead of dropping them.
+                with _PENDING_CONFIG_LOCK:
+                    for k, v in pending.items():
+                        _PENDING_CONFIGS.setdefault(k, v)
+                continue
+            configs = {k: v for k, v in pending.items() if v}
+            domains = [k for k, v in pending.items() if not v]
+            payload = json.dumps({"configs": configs, "domains": domains}).encode("utf-8")
+            req = urllib.request.Request(
+                f"http://{host}/sbb/api/sync/push-config",
+                data=payload,
+                headers={"Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=5.0) as resp:
+                resp.read()
+        except Exception:
+            # Re-queue on failure; the endpoint dedupes, so a retry is harmless.
+            with _PENDING_CONFIG_LOCK:
+                for k, v in pending.items():
+                    _PENDING_CONFIGS.setdefault(k, v)
+
+
+_config_streamer = threading.Thread(target=_push_config_to_master_loop, daemon=True)
+_config_streamer.start()
+
+
+
 
 def _push_already_to_master_loop():
     """Background worker pushing newly verified combos in realtime to Master node."""
