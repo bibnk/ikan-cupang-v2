@@ -62,11 +62,7 @@ def reload_configs():
             with open(_local_cfg_path, "r", encoding="utf-8") as _f:
                 cfg = json.load(_f)
             if cfg and os.path.isdir(IMAP_DB_DIR) and IMAP_CONFIG_PATH != _local_cfg_path:
-                try:
-                    with open(IMAP_CONFIG_PATH, "w", encoding="utf-8") as _f:
-                        json.dump(cfg, _f, indent=2)
-                except Exception:
-                    pass
+                _atomic_write(IMAP_CONFIG_PATH, json.dumps(cfg, indent=2))
         except Exception:
             pass
 
@@ -205,12 +201,7 @@ def load_imap_success():
 
 def save_imap_success(data):
     """Save imap_success.json ke central database."""
-    try:
-        os.makedirs(os.path.dirname(IMAP_SUCCESS_PATH), exist_ok=True)
-        with open(IMAP_SUCCESS_PATH, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-    except Exception:
-        pass
+    _atomic_write(IMAP_SUCCESS_PATH, json.dumps(data, indent=2, ensure_ascii=False))
 
 
 import socket, struct
@@ -456,11 +447,29 @@ def save_master_unusable_domains(domains):
     except Exception:
         pass
     if _local_unusable_path != IMAP_UNUSABLE_PATH and os.path.exists(os.path.dirname(_local_unusable_path)):
-        try:
-            with open(_local_unusable_path, "w", encoding="utf-8") as f:
-                json.dump(unusable_list, f, indent=2, ensure_ascii=False)
-        except Exception:
-            pass
+        _atomic_write(_local_unusable_path, json.dumps(unusable_list, indent=2, ensure_ascii=False))
+
+
+def _atomic_write(path, text):
+    """Write via tmp + os.replace so a concurrent reader never sees a partial file.
+
+    A plain open(path, 'w') truncates in place: a reader (the dashboard's SSH
+    probe, another process, the sync pull) can observe the file mid-write. That
+    surfaced as a burst of VPS-165 reads showing 48,558 configs when the real
+    count was 47,882 -- the file was being rewritten underneath the reader.
+    os.replace is atomic within a filesystem, so a reader sees either the old
+    file or the new one, never a mix.
+    """
+    tmp = path + ".tmp"
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(tmp, "w", encoding="utf-8", newline="\n") as f:
+            f.write(text)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, path)
+    except Exception:
+        pass
 
 
 def save_master_imap_configs(new_configs):
@@ -468,19 +477,7 @@ def save_master_imap_configs(new_configs):
     if not new_configs:
         return
     DEFAULT_IMAP_CONFIG.update(new_configs)
-    tmp_path = IMAP_CONFIG_PATH + ".tmp"
-    try:
-        os.makedirs(os.path.dirname(IMAP_CONFIG_PATH), exist_ok=True)
-        with open(tmp_path, "w", encoding="utf-8") as f:
-            json.dump(DEFAULT_IMAP_CONFIG, f, indent=2, ensure_ascii=False)
-            f.flush()
-            os.fsync(f.fileno())
-        os.replace(tmp_path, IMAP_CONFIG_PATH)
-    except Exception:
-        pass
+    payload = json.dumps(DEFAULT_IMAP_CONFIG, indent=2, ensure_ascii=False)
+    _atomic_write(IMAP_CONFIG_PATH, payload)
     if _local_cfg_path != IMAP_CONFIG_PATH and os.path.exists(_local_cfg_path):
-        try:
-            with open(_local_cfg_path, "w", encoding="utf-8") as f:
-                json.dump(DEFAULT_IMAP_CONFIG, f, indent=2, ensure_ascii=False)
-        except Exception:
-            pass
+        _atomic_write(_local_cfg_path, payload)
