@@ -509,6 +509,21 @@ def main():
     print(f"\n[*] Total new valid configs pulled: +{pulled_configs}", flush=True)
     print(f"[*] Total new unusable domains pulled: +{pulled_unusable}", flush=True)
     print(f"[*] Total new already accounts pulled: +{pulled_already}", flush=True)
+
+    # A domain with a working config must not stay blacklisted. The config set and
+    # the skip set were merged independently, so one node marking a domain
+    # unusable -- a timeout mid-check, a bad resolve -- spread cluster-wide and
+    # then blocked the config every other node had. ua.fm sat in both: pop.ua.fm:995
+    # answers, yet no node checked it because the domain was in the skip set.
+    # A config wins: it is the only side backed by an actual connection.
+    resolved_here = {d.lower().strip() for d, c in local_configs.items()
+                     if isinstance(c, dict) and c.get("server")}
+    conflicted = local_unusable & resolved_here
+    if conflicted:
+        local_unusable -= conflicted
+        pulled_unusable += len(conflicted)
+        print(f"[*] {len(conflicted)} domain dilepas dari unusable karena punya config valid "
+              f"(mis. {sorted(conflicted)[:5]})", flush=True)
     print(f"[*] Unified Local Master: {len(local_configs):,} valid | {len(local_unusable):,} unusable | {len(local_already):,} already\n", flush=True)
 
     # Step 2: SAVE LOCAL MASTER
@@ -540,7 +555,19 @@ def main():
         if res["error"]:
             continue
         cfg_diff = len(local_configs) - len(res["remote_configs"])
-        unusable_diff = len(local_unusable) - len(res["remote_unusable"])
+        # Compare unusable both ways, like already below. A length difference only
+        # catches a node that is SHORT: when the node holds domains the master has
+        # since cleared (normal after a repair pass -- the master dropped 119
+        # stale blacklist entries, the node still had them) the diff goes negative,
+        # the node is judged in-sync, and the cleaned list never reaches it. Both
+        # sets must match, so any difference in either direction forces an update.
+        remote_unusable = res["remote_unusable"]
+        local_unusable_set = set(local_unusable)
+        unusable_missing = len(local_unusable_set - remote_unusable)
+        unusable_extra = len(remote_unusable - local_unusable_set)
+        unusable_diff = unusable_missing - unusable_extra
+        cfg_missing = len(set(local_configs) - set(res["remote_configs"]))
+        cfg_extra = len(set(res["remote_configs"]) - set(local_configs))
         # Compare the sets both ways. A length difference misses the case where
         # the node holds records the master lacks (normal: a worker verifies a
         # new combo mid-run) — the count then goes negative, the node is judged
@@ -549,7 +576,8 @@ def main():
         already_missing = len(local_already - remote_already)
         already_extra = len(remote_already - local_already)
         already_diff = already_missing
-        if cfg_diff > 0 or unusable_diff > 0 or already_missing > 0 or already_extra > 0:
+        if cfg_missing > 0 or cfg_extra > 0 or unusable_missing > 0 or unusable_extra > 0 \
+                or already_missing > 0 or already_extra > 0:
             nodes_to_update.append((res["node"], cfg_diff, unusable_diff, already_diff))
         else:
             print(f"  ✔️  [{res['name']}] Sudah 100% ke-sync (Tidak perlu update)", flush=True)
