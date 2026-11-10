@@ -142278,6 +142278,10 @@
     "port": 993,
     "server": "mail.radiolifeline.be"
   },
+  "radiolivepower.net": {
+    "port": 993,
+    "server": "mail.radiolivepower.net"
+  },
   "radiologie-saint-etienne.fr": {
     "port": 993,
     "server": "ssl0.ovh.net"
