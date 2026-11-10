@@ -484,6 +484,14 @@ def record_already_combos_master(combos):
     if not clean:
         return 0
 
+    # Serialize writers: concurrent pushes (gunicorn threads) each read the file,
+    # find the same combo "new", and both append -> duplicates. A file lock makes
+    # read-check-append atomic across processes. And compare against existing
+    # keys normalised the SAME way as incoming keys (normalize_ingest_key folds
+    # only the email, keeping the password verbatim); .lower() on whole lines
+    # made mixed-case passwords never match, so a combo could be appended twice.
+    from filelock import FileLock
+
     targets = [
         "/opt/pmj/imap/already_accounts.txt",
         "/opt/imap-checker/already_accounts.txt",
@@ -492,25 +500,27 @@ def record_already_combos_master(combos):
     ]
     added = 0
     for t in targets:
-        existing = set()
-        if os.path.exists(t):
-            try:
-                with open(t, "r", encoding="utf-8", errors="replace") as f:
-                    existing = set(l.strip().lower() for l in f if l.strip())
-            except Exception:
+        try:
+            os.makedirs(os.path.dirname(t), exist_ok=True)
+            with FileLock(t + ".ingest.lock", timeout=10):
                 existing = set()
-        new_items = clean - existing
-        if new_items:
-            try:
-                os.makedirs(os.path.dirname(t), exist_ok=True)
+                if os.path.exists(t):
+                    try:
+                        with open(t, "r", encoding="utf-8", errors="replace") as f:
+                            existing = set(normalize_ingest_key(l) for l in f if l.strip())
+                    except Exception:
+                        existing = set()
+                new_items = clean - existing
+                if not new_items:
+                    continue
                 # newline="\n": identical content must hash identically on every
                 # node, otherwise sync's in-sync check compares unequal files.
                 with open(t, "a", encoding="utf-8", newline="\n") as f:
                     for item in new_items:
                         f.write(item + "\n")
                 added = max(added, len(new_items))
-            except Exception:
-                pass
+        except Exception:
+            pass
     return added
 
 
