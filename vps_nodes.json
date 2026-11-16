@@ -1,13 +1,6 @@
 [
   {
-    "name": "VPS-201 (Primary Checker)",
-    "host": "201.79.20.232",
-    "port": 22,
-    "user": "root",
-    "pass": "Jembut!23Je"
-  },
-  {
-    "name": "VPS-166 (Worker)",
+    "name": "VPS-166 (Primary Checker)",
     "host": "166.88.227.2",
     "port": 22,
     "user": "root",
@@ -21,15 +14,29 @@
     "pass": "YzCreative1717Abc@"
   },
   {
-    "name": "VPS-63 (Worker)",
-    "host": "165.245.143.63",
+    "name": "VPS-new-38.136",
+    "host": "201.79.38.136",
     "port": 22,
     "user": "root",
     "pass": "Jembut!23Je"
   },
   {
-    "name": "165 baru1",
-    "host": "165.245.172.219",
+    "name": "VPS-new-138.100",
+    "host": "165.245.138.100",
+    "port": 22,
+    "user": "root",
+    "pass": "Jembut!23Je"
+  },
+  {
+    "name": "VPS-new-140.82",
+    "host": "201.79.140.82",
+    "port": 22,
+    "user": "root",
+    "pass": "Jembut!23Je"
+  },
+  {
+    "name": "VPS-new-43.236",
+    "host": "201.79.43.236",
     "port": 22,
     "user": "root",
     "pass": "Jembut!23Je"
