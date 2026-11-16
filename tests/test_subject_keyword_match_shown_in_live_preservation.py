@@ -126,6 +126,15 @@ def _force_known_domain(monkeypatch, domain="example.com"):
         "DEFAULT_IMAP_CONFIG",
         {domain: {"server": f"imap.{domain}", "port": 993}},
     )
+    # The engine also consults the real blacklist file. Stub it so the test
+    # exercises behaviour rather than whatever the shipped database happens to
+    # contain -- but keep hotmail.com, which the file-names test relies on to
+    # produce a domain_skipped entry.
+    # engine does `from imap_config import load_imap_unusable`, so patch the
+    # module the import resolves against.
+    import imap_config as _cfg_mod
+    monkeypatch.setattr(_cfg_mod, "load_imap_unusable",
+                        lambda *a, **k: {"hotmail.com"})
 
 
 def _make_mock_imap_factory(mock_conn):

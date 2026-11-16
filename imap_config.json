@@ -148248,10 +148248,6 @@
     "port": 993,
     "server": "mail.realpropertyphotography.com.au"
   },
-  "realtime-proof-70fd49a1.example": {
-    "port": 993,
-    "server": "imap.realtime-proof-70fd49a1.example"
-  },
   "realtime.ng": {
     "port": 993,
     "server": "mail.realtime.ng"
@@ -152920,14 +152916,6 @@
   "rszaveri.com": {
     "port": 993,
     "server": "imap.hostinger.com"
-  },
-  "rt-cfg-a5ddc1ff.example": {
-    "port": 993,
-    "server": "imap.rt-cfg-a5ddc1ff.example"
-  },
-  "rt-cfg-c27ff864.example": {
-    "port": 993,
-    "server": "imap.rt-cfg-c27ff864.example"
   },
   "rtasrilanka.lk": {
     "port": 993,

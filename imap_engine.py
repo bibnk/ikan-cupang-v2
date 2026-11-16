@@ -110,7 +110,7 @@ _PENDING_CONFIG_LOCK = threading.Lock()
 
 
 def _master_host():
-    """Resolve the master node's host from the shared node list."""
+    """Resolve the master's host from the shared node list."""
     try:
         import vps_monitoring
         nodes = vps_monitoring.load_nodes()
@@ -121,6 +121,40 @@ def _master_host():
         if "primary" in name or "master" in name:
             return n.get("host")
     return nodes[0].get("host") if nodes else None
+
+
+def _master_url():
+    """Base URL of the master, including its port.
+
+    The master is not necessarily on port 80 -- the RDP master runs on 8080
+    because port 80 belongs to an unrelated dashboard on the same host, and a
+    hardcoded http://{host}/ silently failed there (every push 404'd while the
+    cluster still looked synced, since the dashboard reads nodes directly).
+    The port comes from the node entry, defaulting to 80 for older entries.
+    """
+    try:
+        import vps_monitoring
+        nodes = vps_monitoring.load_nodes()
+    except Exception:
+        return None
+    entry = None
+    for n in nodes:
+        name = str(n.get("name", "")).lower()
+        if "primary" in name or "master" in name:
+            entry = n
+            break
+    if entry is None and nodes:
+        entry = nodes[0]
+    if not entry:
+        return None
+    host = entry.get("host")
+    if not host:
+        return None
+    port = int(entry.get("http_port") or entry.get("port") or 80)
+    # port 22 is the SSH port, not an HTTP one -- never build an HTTP URL from it
+    if port == 22:
+        port = 80
+    return host if port == 80 else f"{host}:{port}"
 
 
 def record_config_to_master(domain, cfg=None):
@@ -151,7 +185,7 @@ def _push_config_to_master_loop():
             pending = dict(_PENDING_CONFIGS)
             _PENDING_CONFIGS.clear()
         try:
-            host = _master_host()
+            host = _master_url()
             if not host:
                 # No master reachable; keep the discoveries for the next round
                 # instead of dropping them.
@@ -209,7 +243,7 @@ def _push_already_to_master_loop():
             if master_host:
                 payload = json.dumps({"combos": to_send}).encode("utf-8")
                 req = urllib.request.Request(
-                    f"http://{master_host}/sbb/api/sync/push-already",
+                    f"http://{_master_url()}/sbb/api/sync/push-already",
                     data=payload,
                     headers={"Content-Type": "application/json"}
                 )

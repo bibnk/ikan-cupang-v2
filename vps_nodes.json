@@ -1,10 +1,11 @@
 [
   {
-    "name": "VPS-166 (Primary Checker)",
-    "host": "166.88.227.2",
+    "name": "RDP-Master (Primary)",
+    "host": "77.216.8.22",
     "port": 22,
-    "user": "root",
-    "pass": "Jembut!23"
+    "user": "master",
+    "pass": "",
+    "http_port": 8080
   },
   {
     "name": "VPS-165 (Worker)",

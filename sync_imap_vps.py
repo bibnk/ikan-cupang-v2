@@ -120,8 +120,12 @@ DISALLOWED_KEYWORDS = [
 ]
 
 DEFAULT_NODES = [
-    {"name": "VPS-178 (Primary Checker)", "host": "178.128.0.98", "port": 22, "user": "root", "pass": "Jembut!23Je"},
-    {"name": "VPS-166 (Worker)", "host": "166.88.227.2", "port": 22, "user": "root", "pass": "Jembut!23"},
+    # Only used if every vps_nodes.json candidate is missing. Must not name a
+    # retired host: this list once pointed at VPS-166, so a node that lost its
+    # node list would have pushed accounts to a machine that was no longer part
+    # of the cluster instead of failing loudly.
+    {"name": "RDP-Master (Primary)", "host": "77.216.8.22", "port": 22,
+     "http_port": 8080, "user": "master", "pass": ""},
 ]
 
 
@@ -433,7 +437,17 @@ def main():
     print("=" * 70)
 
     nodes = load_nodes()
-    print(f"[*] Loaded {len(nodes)} target node(s) from vps_nodes.json")
+    # The master is this host, not a node: it has no imapchecker service and the
+    # SSH credentials here are the operator's own, so pulling/pushing to it over
+    # SSH would fail on every run and inflate the "not synced" count forever.
+    def _is_master(n):
+        nm = str(n.get("name", "")).lower()
+        return "primary" in nm or "master" in nm
+
+    all_nodes = nodes
+    nodes = [n for n in nodes if not _is_master(n)]
+    print(f"[*] Loaded {len(nodes)} target node(s) from vps_nodes.json "
+          f"({len(all_nodes) - len(nodes)} master entry skipped)")
 
     local_configs = load_local_json(LOCAL_MASTER_CONFIG, REPO_CONFIG, default={})
     local_unusable_raw = load_local_json(LOCAL_MASTER_UNUSABLE, REPO_UNUSABLE, default=[])
