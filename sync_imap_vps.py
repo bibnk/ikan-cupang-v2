@@ -129,7 +129,14 @@ DEFAULT_NODES = [
 ]
 
 
-def load_nodes():
+def load_nodes(include_master=False):
+    """Load the node list.
+
+    The master entry (this host, when the sync runs on the master) is dropped by
+    default: it has no sshd and no imapchecker service, so every SSH attempt to
+    it fails with a timeout and the dashboard reports the master as "Belum
+    Ke-sync" forever. Pass include_master=True to see the raw list.
+    """
     candidates = [
         "/opt/pmj/imap/vps_nodes.json",
         "/opt/imap-checker/vps_nodes.json",
@@ -137,19 +144,36 @@ def load_nodes():
         os.path.join(REPO_DIR, "vps_nodes.json"),
         os.path.join(os.path.dirname(__file__), "vps_nodes.json"),
     ]
+    data = None
     for p in candidates:
         if os.path.exists(p):
             try:
                 with open(p, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    if isinstance(data, list) and data:
-                        return data
+                    loaded = json.load(f)
+                    if isinstance(loaded, list) and loaded:
+                        data = loaded
+                        break
             except Exception as e:
                 print(f"[!] Error reading {p}: {e}")
-    if os.path.exists(os.path.dirname(NODES_CONFIG_PATH)):
-        with open(NODES_CONFIG_PATH, "w", encoding="utf-8") as f:
-            json.dump(DEFAULT_NODES, f, indent=2)
-    return DEFAULT_NODES
+    if data is None:
+        if os.path.exists(os.path.dirname(NODES_CONFIG_PATH)):
+            with open(NODES_CONFIG_PATH, "w", encoding="utf-8") as f:
+                json.dump(DEFAULT_NODES, f, indent=2)
+        data = DEFAULT_NODES
+
+    if include_master:
+        return data
+
+    def _is_master(n):
+        nm = str(n.get("name", "")).lower()
+        if "primary" in nm or "master" in nm:
+            return True
+        # An entry with an HTTP port and no SSH credentials is the master too:
+        # it is reached over HTTP, never SSH.
+        return bool(n.get("http_port")) and not n.get("pass")
+
+    return [n for n in data if not _is_master(n)]
+
 
 
 def load_local_json(path, fallback_path=None, default=None):
@@ -437,17 +461,8 @@ def main():
     print("=" * 70)
 
     nodes = load_nodes()
-    # The master is this host, not a node: it has no imapchecker service and the
-    # SSH credentials here are the operator's own, so pulling/pushing to it over
-    # SSH would fail on every run and inflate the "not synced" count forever.
-    def _is_master(n):
-        nm = str(n.get("name", "")).lower()
-        return "primary" in nm or "master" in nm
-
-    all_nodes = nodes
-    nodes = [n for n in nodes if not _is_master(n)]
     print(f"[*] Loaded {len(nodes)} target node(s) from vps_nodes.json "
-          f"({len(all_nodes) - len(nodes)} master entry skipped)")
+          f"(master entry excluded -- it is this host, reached over HTTP)")
 
     local_configs = load_local_json(LOCAL_MASTER_CONFIG, REPO_CONFIG, default={})
     local_unusable_raw = load_local_json(LOCAL_MASTER_UNUSABLE, REPO_UNUSABLE, default=[])
@@ -471,8 +486,32 @@ def main():
 
     # Step 1: PULL from all nodes
     print("--- [1/3] PULLING NEW DATA FROM ALL VPS NODES ---", flush=True)
-    with ThreadPoolExecutor(max_workers=len(nodes) or 1) as pool:
-        fetched_results = list(pool.map(fetch_node_data, nodes))
+
+    def _fetch_with_retry(node):
+        """Pull one node, retrying a transient drop.
+
+        Pulling every node concurrently opened one SSH session per node at once
+        and the last one timed out, so a healthy node was reported offline and
+        its data never reached the master. Serialise and retry the transient
+        socket errors; a real refusal still fails fast.
+        """
+        transient = ("10054", "not active", "forcibly", "timed out",
+                     "Connection reset", "Broken pipe", "No route")
+        last = None
+        for attempt in range(3):
+            res = fetch_node_data(node)
+            if not res.get("error"):
+                return res
+            last = res
+            if not any(t in str(res["error"]) for t in transient):
+                return res
+            time.sleep(2 + attempt * 3)
+        return last
+
+    fetched_results = []
+    for n in nodes:
+        fetched_results.append(_fetch_with_retry(n))
+        time.sleep(1)
 
     pulled_configs = 0
     pulled_unusable = 0
@@ -599,8 +638,43 @@ def main():
     if not nodes_to_update:
         print("  🎉 Semua VPS yang online sudah 100% ke-sync!", flush=True)
     else:
-        with ThreadPoolExecutor(max_workers=len(nodes_to_update) or 1) as pool:
-            push_results = list(pool.map(lambda item: push_node_data(item[0], local_configs, local_unusable), nodes_to_update))
+        def _push_with_retry(item):
+            """Push to one node, retrying transient SSH drops.
+
+            These used to run in a pool sized to the node count, so four SSH
+            sessions hit this host at once. Windows closes them with 10054
+            ("existing connection was forcibly closed") and every push in the
+            batch failed while pull had already succeeded -- the cluster looked
+            half-synced for no data reason. Serialise, and retry the socket
+            errors rather than reporting them as unsynced.
+            """
+            node = item[0]
+            last = None
+            for attempt in range(3):
+                try:
+                    res = push_node_data(node, local_configs, local_unusable)
+                    if res.get("updated"):
+                        return res
+                    last = res
+                    err = str(res.get("error") or "")
+                    if not any(t in err for t in ("10054", "not active", "forcibly",
+                                                  "timed out", "Connection reset",
+                                                  "Socket exception", "Broken pipe")):
+                        return res
+                except Exception as e:
+                    last = {"name": node.get("name"), "host": node.get("host"),
+                            "updated": False, "error": str(e)}
+                    if not any(t in str(e) for t in ("10054", "not active", "forcibly",
+                                                     "timed out", "Connection reset",
+                                                     "Broken pipe")):
+                        return last
+                time.sleep(2 + attempt * 3)
+            return last
+
+        push_results = []
+        for item in nodes_to_update:
+            push_results.append(_push_with_retry(item))
+            time.sleep(1)
 
         for (node, cdiff, udiff, adiff), pres in zip(nodes_to_update, push_results):
             name = pres["name"]
