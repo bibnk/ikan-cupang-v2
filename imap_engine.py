@@ -77,12 +77,15 @@ def load_already_accounts() -> set:
     The password half must stay as written: it is passed to LOGIN, which is
     case-sensitive, and folding it here makes every mixed-case record miss the
     already-checked gate and get re-verified on each run.
+
+    The repo-local copy is not read: when the engine is imported from a checkout
+    that path is the package directory, and it collected test fixtures there.
+    Reading it unioned those fixtures into the master on every sync.
     """
     candidates = [
         "/opt/pmj/imap/already_accounts.txt",
         "/opt/imap-checker/already_accounts.txt",
         os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "already_accounts.txt"),
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), "already_accounts.txt"),
     ]
     res = set()
     for path in candidates:
@@ -257,27 +260,44 @@ _streamer_thread.start()
 
 
 def record_live_to_already(email_addr: str, password: str):
-    """Save verified live combo to global already_accounts.txt across all locations and push to master."""
+    """Save a verified live combo to the global already_accounts.txt.
+
+    Appends only when the combo is not already present. The append used to be
+    unconditional, so a re-verified account (or a test fixture hitting a live
+    endpoint) accumulated duplicate lines -- one address reached 27 copies, and
+    because the sync compares sets while `wc -l` counts lines, every copy
+    disagreed byte-wise while reading as "in sync".
+    """
+    if os.environ.get("IMAP_NO_MASTER_WRITE"):
+        # Test harnesses and scratch probes set this: without it an imported
+        # engine writes fixtures straight into the production master list.
+        return
     clean_combo = f"{email_addr.strip().lower()}:{password.strip()}"
     line = f"{clean_combo}\n"
     targets = [
         "/opt/pmj/imap/already_accounts.txt",
         "/opt/imap-checker/already_accounts.txt",
         os.path.join(os.path.expanduser("~"), "Desktop", "PMJ", "imap", "already_accounts.txt"),
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), "already_accounts.txt"),
     ]
+    # The repo-local copy is deliberately absent: when the engine is imported
+    # from a checkout (tests, scratch scripts) that path is the package
+    # directory, so it collected test fixtures as if they were verified
+    # accounts -- a@ok.test / alice@example.com kept reappearing there and were
+    # then unioned into the master.
     with _ALREADY_GLOBAL_LOCK:
         for t in targets:
             try:
+                if not os.path.exists(t):
+                    if not os.path.exists(os.path.dirname(t)):
+                        continue
+                existing = set()
                 if os.path.exists(t):
-                    # newline="\n" keeps every copy byte-identical across nodes;
-                    # a platform-default CRLF makes identical content hash
-                    # differently and hides real drift during sync.
-                    with open(t, "a", encoding="utf-8", newline="\n") as f:
-                        f.write(line)
-                elif os.path.exists(os.path.dirname(t)):
-                    with open(t, "a", encoding="utf-8", newline="\n") as f:
-                        f.write(line)
+                    with open(t, "r", encoding="utf-8", errors="replace") as f:
+                        existing = {_normalize_already_key(l) for l in f if l.strip()}
+                if _normalize_already_key(clean_combo) in existing:
+                    continue
+                with open(t, "a", encoding="utf-8", newline="\n") as f:
+                    f.write(line)
             except Exception:
                 pass
     with _PENDING_LIVE_LOCK:
