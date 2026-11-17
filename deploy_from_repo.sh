@@ -75,8 +75,26 @@ deploy_one() {
   log "deps ok"
 
   chown -R imapchecker:imapchecker "$APP_DIR" "$DATA_DIR" 2>/dev/null
+
+  # Kill leftover bytecode before restarting. A stale __pycache__ is a silent
+  # rollback: the process keeps running the old module even though the source on
+  # disk is current, which is exactly how a fixed bug kept reproducing for hours.
+  find "$APP_DIR" -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null
+
+  # Verify what the process ACTUALLY imports, not what the file says. `systemctl
+  # restart` returns as soon as the unit is up; if an old worker still holds the
+  # module, the running code and the on-disk code disagree and every check that
+  # only stats files passes while behaviour stays broken.
   systemctl restart imap-checker >/dev/null 2>&1
   sleep 6
+  log "boot=$(systemctl show imap-checker -p ActiveEnterTimestamp --value)"
+  log "engine_md5=$(md5sum "$APP_DIR/imap_engine.py" 2>/dev/null | cut -d' ' -f1)"
+  log "loaded_md5=$("$APP_DIR/venv/bin/python" -c "
+import sys, hashlib
+sys.path.insert(0, '$APP_DIR')
+import imap_engine
+print(hashlib.md5(open(imap_engine.__file__, 'rb').read()).hexdigest())
+" 2>/dev/null)"
 
   # 4. verify what the operator will actually open
   log "service=$(systemctl is-active imap-checker)"
