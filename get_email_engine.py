@@ -408,7 +408,10 @@ def _fetch_emails_pop3(cfg, email_address, password, senders=None, keywords=None
     senders = senders or []
     keywords = keywords or []
     limit = max(1, min(int(limit), 100))
-    is_all_search = (senders == ["*"])
+    # Same "-"/"*" skip-sender contract as the IMAP path.
+    _SKIP_SENDER = {"*", "-"}
+    sender_sentinels = [s for s in senders if str(s).strip() in _SKIP_SENDER]
+    real_senders = [s for s in senders if str(s).strip() not in _SKIP_SENDER]
 
     server = cfg['server']
     port = int(cfg.get('port', 995))
@@ -467,16 +470,16 @@ def _fetch_emails_pop3(cfg, email_address, password, senders=None, keywords=None
                 fmt_date = date_raw
 
             matched = False
-            if is_all_search or (not senders and not keywords):
+            if keywords and (sender_sentinels or not senders):
+                # Subject-only: the keyword IS the query.
+                matched = any(kw.lower() in subj.lower() for kw in keywords)
+            elif keywords:
+                matched = (sender_matches(from_addr or from_raw, real_senders)
+                           or any(kw.lower() in subj.lower() for kw in keywords))
+            elif sender_sentinels or not senders:
                 matched = True
             else:
-                if senders and sender_matches(from_addr or from_raw, senders):
-                    matched = True
-                if not matched and keywords:
-                    for kw in keywords:
-                        if kw.lower() in subj.lower():
-                            matched = True
-                            break
+                matched = sender_matches(from_addr or from_raw, real_senders)
 
             if matched:
                 matched_count += 1
@@ -526,7 +529,13 @@ def fetch_emails(email_address, password, senders=None, keywords=None, search_da
     if cfg and (cfg.get("protocol") == "pop3" or cfg.get("port") in (995, 110)):
         return _fetch_emails_pop3(cfg, email_address, password, senders, keywords, limit)
 
-    is_all_search = (senders == ["*"])
+    # "-" and "*" are skip-sender sentinels: no sender constraint, and the
+    # subject is the whole query. Sending FROM "-" searches for a literal
+    # hyphen and returns nothing, so the account looked like it had no mail.
+    _SKIP_SENDER = {"*", "-"}
+    sender_sentinels = [s for s in senders if str(s).strip() in _SKIP_SENDER]
+    real_senders = [s for s in senders if str(s).strip() not in _SKIP_SENDER]
+    subject_only = bool(sender_sentinels) and not real_senders
 
     # Connect using the unified connect_imap function
     mail, error = connect_imap(email_address, password)
@@ -539,20 +548,28 @@ def fetch_emails(email_address, password, senders=None, keywords=None, search_da
         mail.select("INBOX", readonly=True)
 
         all_uids = set()
-        if is_all_search:
-            try:
-                status, messages = mail.uid('SEARCH', None, f'(SINCE "{since_date}")')
-                if status == "OK" and messages and messages[0]:
-                    all_uids.update(messages[0].split())
-            except Exception:
+        if subject_only:
+            # Subject-only mode: keywords are the entire query, so they must not
+            # be skipped and must not be narrowed by SINCE -- an old match then
+            # returns nothing and looks identical to "no email at all".
+            for kw in keywords:
                 try:
-                    status, messages = mail.uid('SEARCH', None, 'ALL')
+                    status, messages = mail.uid('SEARCH', None, f'(SUBJECT "{kw}")')
+                    if status == "OK" and messages and messages[0]:
+                        all_uids.update(messages[0].split())
+                except Exception:
+                    continue
+            if not keywords:
+                # Explicit "no filter at all" -- worth honouring only because the
+                # sentinel was typed on purpose.
+                try:
+                    status, messages = mail.uid('SEARCH', None, f'(SINCE "{since_date}")')
                     if status == "OK" and messages and messages[0]:
                         all_uids.update(messages[0].split())
                 except Exception:
                     pass
         else:
-            for sender in senders:
+            for sender in real_senders:
                 clean_s = sender.lstrip("@") if sender.startswith("@") else sender
                 try:
                     criteria = f'(SINCE "{since_date}" FROM "{clean_s}")'
@@ -601,8 +618,19 @@ def fetch_emails(email_address, password, senders=None, keywords=None, search_da
                     date_header = decode_mime_words(msg.get("Date", ""))
 
                     _name, from_addr = email.utils.parseaddr(from_header)
-                    if not is_all_search and senders and not sender_matches(from_addr, senders):
-                        continue
+                    # Gate. In subject-only mode the search already asked for the
+                    # keyword, so a message only belongs here if its subject
+                    # really matched -- otherwise every message in the box lands
+                    # in the result and the operator gets "all email" instead of
+                    # the subject they asked for.
+                    if subject_only and keywords:
+                        subj_l = subject.lower()
+                        if not any(kw.lower() in subj_l for kw in keywords):
+                            continue
+                    elif not subject_only and real_senders:
+                        if not sender_matches(from_addr, real_senders) and \
+                                not any(kw.lower() in subject.lower() for kw in keywords):
+                            continue
 
                     body_html, body_text, links = get_email_body_html(msg)
 
