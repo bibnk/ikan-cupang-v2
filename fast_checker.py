@@ -956,12 +956,23 @@ class FastImapEngine:
 
             # Search by sender / keyword
             matching_ids = set()
+            subject_matched_ids = set()
             tag_idx = 3
 
+            # Sentinel senders mean "skip the sender check": the subject is the
+            # whole query. They must never reach the server -- IMAP has no
+            # wildcard in the FROM key, so FROM "-" searches for a literal
+            # hyphen and returns nothing.
+            _SKIP_SENDER = {"*", "-", "/"}
+            subject_only = (any(str(s).strip() in _SKIP_SENDER
+                                for s in self.target_senders)
+                            and not [s for s in self.target_senders
+                                     if str(s).strip() not in _SKIP_SENDER])
+            senders = [s for s in self.target_senders
+                       if str(s).strip() not in _SKIP_SENDER]
+
             # Search target senders
-            for sender in self.target_senders:
-                if sender == "*":
-                    continue
+            for sender in senders:
                 tag = f"A{tag_idx}".encode()
                 tag_idx += 1
                 clean_s = sender.lstrip("@") if sender.startswith("@") else sender
@@ -978,11 +989,14 @@ class FastImapEngine:
                     if line.startswith(tag):
                         break
 
-            # Search keywords
+            # Search keywords. In subject-only mode the keyword IS the query, so
+            # it must not be narrowed by SINCE -- an old hit otherwise returns
+            # nothing and looks identical to "no such mail".
             for kw in self.keywords:
                 tag = f"A{tag_idx}".encode()
                 tag_idx += 1
-                crit = f'{tag.decode()} SEARCH SINCE {self.search_since} SUBJECT "{kw}"\r\n'
+                date_clause = "" if subject_only else f"SINCE {self.search_since} "
+                crit = f'{tag.decode()} SEARCH {date_clause}SUBJECT "{kw}"\r\n'
                 writer.write(crit.encode())
                 await self._drain(writer)
                 while True:
@@ -992,6 +1006,8 @@ class FastImapEngine:
                     if line.startswith(b"* SEARCH"):
                         parts = line.split()[2:]
                         matching_ids.update(parts)
+                        if subject_only:
+                            subject_matched_ids.update(parts)
                     if line.startswith(tag):
                         break
 
@@ -1003,6 +1019,16 @@ class FastImapEngine:
                 sorted_ids.reverse()
 
                 raw_emails = await self._fetch_headers_for_ids(reader, writer, sorted_ids)
+                # Gate. In subject-only mode a message belongs here only if its
+                # subject really matched; otherwise every message in the box is
+                # reported and the operator sees "all email" instead of the
+                # subject they asked for.
+                if subject_only and self.keywords:
+                    raw_emails = [
+                        em for em in raw_emails
+                        if any(kw.lower() in em.get("subject", "").lower()
+                               for kw in self.keywords)
+                    ]
                 emails_data = [
                     em for em in raw_emails
                     if not _subject_excluded(em.get("subject", ""), self.subject_exclusion_patterns)
