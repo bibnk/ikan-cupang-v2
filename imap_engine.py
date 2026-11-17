@@ -557,7 +557,7 @@ def sender_matches(from_address, target_senders):
         t = target.lower().strip()
         if not t:
             continue
-        if t == "*":
+        if t in ("*", "-"):
             return True
         if t.startswith("@"):
             t_domain = t.lstrip("@")
@@ -1448,14 +1448,19 @@ class ImapChecker:
                 mail_conn.select("INBOX")
                 email_ids = set()
                 subject_matched_ids = set()  # bytes UIDs from SUBJECT branch — consumed by post-fetch gate
-                # "*" means "any sender". It must NOT be sent to the server as
-                # FROM "*": IMAP has no wildcard there, so the literal string
-                # matches nothing, the id set stays empty, and every account that
-                # logs in successfully is filed as noemail instead of live. Treat
-                # it as "no sender constraint" and enumerate the mailbox instead.
-                any_sender = any(str(s).strip() == "*" for s in self.target_senders)
+                # Sender sentinels: "*" and "-" both mean "skip the sender check
+                # and filter by subject only".
+                #
+                # They must NEVER reach the server. IMAP has no wildcard in the
+                # FROM key, so sending FROM "*" matches a literal asterisk and
+                # returns nothing: the login succeeds, email_ids is empty, and a
+                # healthy account is filed as noemail. That is the false "no
+                # email" the operator kept hitting.
+                _SKIP_SENDER = {"*", "-"}
+                any_sender = any(str(s).strip() in _SKIP_SENDER
+                                 for s in self.target_senders)
                 senders_to_search = [s for s in self.target_senders
-                                     if str(s).strip() != "*"]
+                                     if str(s).strip() not in _SKIP_SENDER]
 
                 # Search by sender (with fallback for proprietary servers like Aliyun)
                 for sender in senders_to_search:
@@ -1472,8 +1477,7 @@ class ImapChecker:
                         email_ids.update(msgs[0].split())
 
                 if any_sender and not self.keywords:
-                    # No sender filter and no subject filter: the operator wants
-                    # every message in the mailbox.
+                    # No sender filter and no subject filter: take the whole box.
                     try:
                         status, msgs = mail_conn.search(None, "ALL")
                         if status == "OK" and msgs and msgs[0]:
@@ -1482,7 +1486,15 @@ class ImapChecker:
                         pass
                 # Search by keyword (SUBJECT)
                 for kw in self.keywords:
-                    criteria = f'(SINCE "{self.search_since_date}" SUBJECT "{_escape_imap_string(kw)}")'
+                    kw_esc = _escape_imap_string(kw)
+                    # When the operator supplied no sender, the subject IS the
+                    # query -- so it must not be narrowed by SINCE. A hit older
+                    # than search_days looked identical to "this domain cannot
+                    # search subject", which sent a batch of healthy providers to
+                    # the blacklist.
+                    date_clause = "" if (any_sender and not senders_to_search) \
+                        else f'SINCE "{self.search_since_date}" '
+                    criteria = f'({date_clause}SUBJECT "{kw_esc}")'
                     try:
                         status, msgs = mail_conn.search(None, criteria)
                     except Exception:
