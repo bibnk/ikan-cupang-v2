@@ -36,7 +36,20 @@ fi
 # 4. Copy app files
 echo "[4/7] Setting up application directory..."
 sudo mkdir -p $APP_DIR
-sudo cp -r ./* $APP_DIR/
+# Copy the code, but never the data snapshots: the repo's imap_config.json /
+# imap_unusable.json / already_accounts.txt lag the live cluster, and
+# `cp -r ./*` dropped them straight into $APP_DIR where the app reads them.
+# The master owns data; the repo only bootstraps a brand-new node (handled below).
+(
+    cd "$(dirname "$0")" || exit 1
+    for item in *; do
+        case "$item" in
+            imap_config.json|imap_unusable.json|imap_success.json|already_accounts.txt|.git|jobs)
+                continue ;;
+        esac
+        sudo cp -r "$item" "$APP_DIR/"
+    done
+)
 sudo rm -f $APP_DIR/setup.sh $APP_DIR/nginx.conf $APP_DIR/imap-checker.service
 
 # 5. Create virtual environment & install deps
@@ -48,30 +61,46 @@ sudo $VENV_DIR/bin/pip install -r $APP_DIR/requirements.txt
 # Create jobs directory
 sudo mkdir -p $APP_DIR/jobs
 
-# Seed IMAP config DB:
-# If app repo bundles imap_config.json or skip_domains.json, seed them into /opt/pmj/imap.
-# Otherwise create minimal valid JSON to avoid FileNotFoundError.
+# Seed IMAP config DB from the bundled repo snapshots -- but only when the live
+# file is missing.
+#
+# These used to overwrite unconditionally, so re-running setup.sh (a redeploy, a
+# repair, a new node joining an existing one) reset the node's blacklist and
+# config to whatever was committed. The cluster's live data is newer than any
+# snapshot: blacklist entries added at runtime, and every config discovered since
+# the commit, were silently rolled back. The master is the source of truth for
+# data; the repo snapshot only bootstraps a brand-new node.
 echo "  Seeding IMAP config DB..."
 CENTRAL_IMAP_DIR="/opt/pmj/imap"
 sudo mkdir -p "$CENTRAL_IMAP_DIR"
 
 if [ -s "$APP_DIR/imap_config.json" ]; then
-    echo "  Seeding /opt/pmj/imap/imap_config.json from app repository..."
-    sudo cp "$APP_DIR/imap_config.json" "$CENTRAL_IMAP_DIR/imap_config.json"
+    if [ -s "$CENTRAL_IMAP_DIR/imap_config.json" ]; then
+        echo "  Keeping existing /opt/pmj/imap/imap_config.json (live data newer than the repo snapshot)"
+    else
+        echo "  Seeding /opt/pmj/imap/imap_config.json from app repository..."
+        sudo cp "$APP_DIR/imap_config.json" "$CENTRAL_IMAP_DIR/imap_config.json"
+    fi
 elif [ ! -f "$CENTRAL_IMAP_DIR/imap_config.json" ]; then
     printf '{}\n' | sudo tee "$CENTRAL_IMAP_DIR/imap_config.json" >/dev/null
 fi
 
 if [ -s "$APP_DIR/imap_unusable.json" ]; then
-    echo "  Seeding /opt/pmj/imap/imap_unusable.json from app repository..."
-    sudo cp "$APP_DIR/imap_unusable.json" "$CENTRAL_IMAP_DIR/imap_unusable.json"
+    if [ -s "$CENTRAL_IMAP_DIR/imap_unusable.json" ]; then
+        echo "  Keeping existing /opt/pmj/imap/imap_unusable.json (live blacklist must not be rolled back)"
+    else
+        echo "  Seeding /opt/pmj/imap/imap_unusable.json from app repository..."
+        sudo cp "$APP_DIR/imap_unusable.json" "$CENTRAL_IMAP_DIR/imap_unusable.json"
+    fi
 elif [ ! -f "$CENTRAL_IMAP_DIR/imap_unusable.json" ]; then
     printf '[]\n' | sudo tee "$CENTRAL_IMAP_DIR/imap_unusable.json" >/dev/null
 fi
 
 if [ -s "$APP_DIR/skip_domains.json" ]; then
-    echo "  Seeding /opt/pmj/imap/skip_domains.json from app repository..."
-    sudo cp "$APP_DIR/skip_domains.json" "$CENTRAL_IMAP_DIR/skip_domains.json"
+    if [ ! -s "$CENTRAL_IMAP_DIR/skip_domains.json" ]; then
+        echo "  Seeding /opt/pmj/imap/skip_domains.json from app repository..."
+        sudo cp "$APP_DIR/skip_domains.json" "$CENTRAL_IMAP_DIR/skip_domains.json"
+    fi
 fi
 
 for f in "$APP_DIR/imap_config.json" "$APP_DIR/imap_unusable.json" "$APP_DIR/imap_success.json" \
