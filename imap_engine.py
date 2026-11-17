@@ -1448,8 +1448,17 @@ class ImapChecker:
                 mail_conn.select("INBOX")
                 email_ids = set()
                 subject_matched_ids = set()  # bytes UIDs from SUBJECT branch — consumed by post-fetch gate
+                # "*" means "any sender". It must NOT be sent to the server as
+                # FROM "*": IMAP has no wildcard there, so the literal string
+                # matches nothing, the id set stays empty, and every account that
+                # logs in successfully is filed as noemail instead of live. Treat
+                # it as "no sender constraint" and enumerate the mailbox instead.
+                any_sender = any(str(s).strip() == "*" for s in self.target_senders)
+                senders_to_search = [s for s in self.target_senders
+                                     if str(s).strip() != "*"]
+
                 # Search by sender (with fallback for proprietary servers like Aliyun)
-                for sender in self.target_senders:
+                for sender in senders_to_search:
                     criteria = f'(SINCE "{self.search_since_date}" FROM "{_escape_imap_string(sender)}")'
                     try:
                         status, msgs = mail_conn.search(None, criteria)
@@ -1461,6 +1470,16 @@ class ImapChecker:
                             status, msgs = "ERROR", []
                     if status == "OK" and msgs and msgs[0]:
                         email_ids.update(msgs[0].split())
+
+                if any_sender and not self.keywords:
+                    # No sender filter and no subject filter: the operator wants
+                    # every message in the mailbox.
+                    try:
+                        status, msgs = mail_conn.search(None, "ALL")
+                        if status == "OK" and msgs and msgs[0]:
+                            email_ids.update(msgs[0].split())
+                    except Exception:
+                        pass
                 # Search by keyword (SUBJECT)
                 for kw in self.keywords:
                     criteria = f'(SINCE "{self.search_since_date}" SUBJECT "{_escape_imap_string(kw)}")'
@@ -1473,8 +1492,26 @@ class ImapChecker:
                         email_ids.update(ids)
                         subject_matched_ids.update(ids)
 
-                sorted_ids = sorted(list(email_ids), key=lambda x: int(x))[-20:]
-                sorted_ids.reverse()  # Newest first
+                # Newest 20, but subject-matched UIDs win outright. Taking
+                # `[-20:]` over the merged set discards a subject hit whenever the
+                # mailbox has 20 newer messages from other senders -- the search
+                # matched, then the result was thrown away, and the account was
+                # filed as noemail.
+                def _uid_int(x):
+                    try:
+                        return int(x)
+                    except Exception:
+                        return -1
+
+                limit = 20
+                if subject_matched_ids:
+                    chosen = sorted(subject_matched_ids, key=_uid_int)[-limit:]
+                    rest = [u for u in sorted(email_ids - set(chosen), key=_uid_int)
+                            if u not in set(chosen)][-(limit - len(chosen)):] if len(chosen) < limit else []
+                    sorted_ids = chosen + rest
+                else:
+                    sorted_ids = sorted(list(email_ids), key=_uid_int)[-limit:]
+                sorted_ids.sort(key=_uid_int, reverse=True)  # Newest first
                 emails_data = []
 
                 if sorted_ids:
@@ -1495,11 +1532,22 @@ class ImapChecker:
                                 if not _subject_excluded(subject, self.subject_exclusion_patterns):
                                     from_ = decode_mime_words(msg.get("From", ""))
                                     _name, from_addr = email.utils.parseaddr(from_)
-                                    if (
-                                        (not self.target_senders)
-                                        or sender_matches(from_addr, self.target_senders)
-                                        or eid_bytes in subject_matched_ids
-                                    ):
+                                    # Gate. A keyword job keeps only messages the
+                                    # server matched by SUBJECT -- with "*" or no
+                                    # sender list, sender_matches() is True for
+                                    # everything, so the old OR bypassed the
+                                    # keyword filter entirely. An empty sender
+                                    # list means "no constraint", not "no match".
+                                    keep = False
+                                    if eid_bytes in subject_matched_ids:
+                                        keep = True
+                                    elif not self.keywords and not senders_to_search:
+                                        keep = not self.target_senders or any_sender
+                                    elif not self.keywords:
+                                        keep = sender_matches(from_addr, senders_to_search)
+                                    elif senders_to_search:
+                                        keep = sender_matches(from_addr, senders_to_search)
+                                    if keep:
                                         date_str = decode_mime_words(msg.get("Date", ""))
                                         emails_data.append({
                                             "subject": subject,

@@ -293,6 +293,11 @@ def test_sender_only_byte_identical_output(tmp_path_factory, target_senders, ema
             "example.com": {"server": "imap.example.com", "port": 993}
         }
         imap_engine._atomic_update_master = lambda updater_fn: False
+        # The domain blacklist is checked before any IMAP work and the
+        # Hypothesis generators legitimately use .test addresses, which are real
+        # blacklist entries -- unstubbed, the worker never issues a search.
+        import imap_config as _cfg_mod
+        _cfg_mod.load_imap_unusable = lambda *a, **k: set()
 
         # Build per-UID RFC822 lookup so fetch can answer for any UID.
         records = {
@@ -681,6 +686,11 @@ def test_email_ids_union_invariance(tmp_path_factory, inputs):
             "example.com": {"server": "imap.example.com", "port": 993}
         }
         imap_engine._atomic_update_master = lambda updater_fn: False
+        # example.com is a genuine blacklist entry, and the domain check runs
+        # before any IMAP work -- so without this stub the worker files the
+        # account as domain_skipped and never issues a single search.
+        import imap_config as _cfg_mod
+        _cfg_mod.load_imap_unusable = lambda *a, **k: set()
 
         from_bytes = b" ".join(str(u).encode("ascii") for u in from_uids) or b""
         subject_bytes = b" ".join(str(u).encode("ascii") for u in subject_uids) or b""
