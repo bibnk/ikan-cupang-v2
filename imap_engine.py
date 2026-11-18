@@ -557,7 +557,7 @@ def sender_matches(from_address, target_senders):
         t = target.lower().strip()
         if not t:
             continue
-        if t in ("*", "-"):
+        if t in ("*", "-", "/"):
             return True
         if t.startswith("@"):
             t_domain = t.lstrip("@")
@@ -1456,7 +1456,7 @@ class ImapChecker:
                 # returns nothing: the login succeeds, email_ids is empty, and a
                 # healthy account is filed as noemail. That is the false "no
                 # email" the operator kept hitting.
-                _SKIP_SENDER = {"*", "-"}
+                _SKIP_SENDER = {"*", "-", "/"}
                 any_sender = any(str(s).strip() in _SKIP_SENDER
                                  for s in self.target_senders)
                 senders_to_search = [s for s in self.target_senders

@@ -284,7 +284,7 @@ def sender_matches(from_address, target_senders):
         t = target.lower().strip()
         if not t:
             continue
-        if t == "*":
+        if t in ("*", "-", "/"):
             return True
         if t.startswith("@"):
             t_domain = t.lstrip("@")
@@ -409,7 +409,7 @@ def _fetch_emails_pop3(cfg, email_address, password, senders=None, keywords=None
     keywords = keywords or []
     limit = max(1, min(int(limit), 100))
     # Same "-"/"*" skip-sender contract as the IMAP path.
-    _SKIP_SENDER = {"*", "-"}
+    _SKIP_SENDER = {"*", "-", "/"}
     sender_sentinels = [s for s in senders if str(s).strip() in _SKIP_SENDER]
     real_senders = [s for s in senders if str(s).strip() not in _SKIP_SENDER]
 
@@ -532,7 +532,7 @@ def fetch_emails(email_address, password, senders=None, keywords=None, search_da
     # "-" and "*" are skip-sender sentinels: no sender constraint, and the
     # subject is the whole query. Sending FROM "-" searches for a literal
     # hyphen and returns nothing, so the account looked like it had no mail.
-    _SKIP_SENDER = {"*", "-"}
+    _SKIP_SENDER = {"*", "-", "/"}
     sender_sentinels = [s for s in senders if str(s).strip() in _SKIP_SENDER]
     real_senders = [s for s in senders if str(s).strip() not in _SKIP_SENDER]
     subject_only = bool(sender_sentinels) and not real_senders
